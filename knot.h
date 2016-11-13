@@ -1,7 +1,7 @@
 /*
  * Samantha Kacir
- * The purpose of this is to create a Circular List class to hold knots
- * and the functions needed to work with it.
+ * The purpose of this is to define the classes necessary to store knots
+ * and the functions needed to work with them.
 */
 
 #ifndef KNOT_H
@@ -24,6 +24,18 @@ class Point{
   double * getX();
   double * getY();
 };
+
+  /*
+  Point * olsfp; //over line segment first point a/c
+  Point * olssp; //over line segment second point a/c
+  Point * ulsfp; //under line segment first point b/d
+  Point * ulssp; //under line segment second point b/d
+
+  KnotVertex * a; //over line segment going out
+  KnotVertex * b; //ccw from a
+  KnotVertex * c; //ccw from b
+  KnotVertex * d; //ccw from c
+  */
 
 class Crossing{
   int identity;
@@ -76,12 +88,18 @@ class knotNot{
   KnotVertex * fromD;
  public:
   knotNot();
+  knotNot(int i, KnotVertex * over1, KnotVertex * over2, KnotVertex * under1, KnotVertex * under2);
   ~knotNot();
   void setLabel(int n);
   void setA(KnotVertex *a);
   void setB(KnotVertex *b);
   void setC(KnotVertex *c);
   void setD(KnotVertex *d);
+  int getLabel();
+  KnotVertex * getA();
+  KnotVertex * getB();
+  KnotVertex * getC();
+  KnotVertex * getD();
 };
 
 vector<knotNot> generateNotation(KnotVertex * head);
