@@ -8,8 +8,8 @@
 Looked at:
 http://stackoverflow.com/questions/14176776/find-out-if-2-lines-intersect
  */
-//enum ListType{INTEGER, FLOAT, CHAR, STRING, GENERIC_LIST};
 
+//enum ListType{INTEGER, FLOAT, CHAR, STRING, GENERIC_LIST};
 
 #include "knot.h"
 #include <string>
@@ -20,48 +20,10 @@ http://stackoverflow.com/questions/14176776/find-out-if-2-lines-intersect
 
 using namespace std;
 
-Point::Point(double* xval, double* yval){
-  x = xval;
-  y = yval;
-}
-double * Point::getX(){
-  return this->x;
-}
-double * Point::getY(){
-  return this->y;
-}
-
-Crossing::Crossing(double* overFirstX, double* overFirstY, double* overSecondX, double* overSecondY, double* underFirstX, double* underFirstY, double* underSecondX, double* underSecondY){
-  identity = 0;
-  olsfpx = overFirstX,
-    olsfpy = overFirstY,
-    olsspx = overSecondX,
-    olsspy = overSecondY,
-    ulsfpx = underFirstX,
-    ulsfpy = underFirstY,
-    ulsspx = underSecondX,
-    ulsspy = underSecondY;
-}
-Crossing::~Crossing(){
-}
-
-void Crossing::updateIdent(int n){
-  this->identity = n;
-}
-
-int Crossing::getIdent(){
-  #ifdef DEBUG
-  std::cout << this->identity << std::endl;
-  #endif
-  return this->identity;
-}
-
 KnotVertex::KnotVertex(){
-  //static float sTn;
   this->x = NULL;
   this->y = NULL;
   c = new vector<Crossing>();
-  //this->slopeToNext = &sTn;
   this->slopeToNext = 0;
   prev = this;
   next = this;
@@ -70,7 +32,6 @@ KnotVertex::KnotVertex (double * x, double * y) {
   this->x = x;
   this->y = y;
   c = new vector<Crossing>();
-  //this->slopeToNext = NULL;
   this->slopeToNext = 0;
   prev = this;
   next = this;
@@ -128,82 +89,6 @@ bool KnotVertex::checkCrossing(KnotVertex* v){
   }
 }
 
-bool validPoint(KnotVertex *head, double *xval, double *yval){
-  KnotVertex *k = head;
-  while(k->next != head){
-    //test if point is already in the knot
-    if(*(k->getX()) == *xval && *(k->getY()) == *(yval)){
-      return false;
-    }
-    //test if point intersects with a line segment
-    //ADD CHECK FOR IF BETWEEN ENDPOINTS!!!
-    double b = (k->getSlopeToNext())*(*(k->getX())) - (*(k->getY()));
-    if((((k->getSlopeToNext())*(*(xval))+b) == *(yval))){
-      return false;
-    }
-    k = k->next;
-  }
-  //test if point is already the last point in the knot
-  if(*(k->getX()) == *xval && *(k->getY()) == *(yval)){
-    return false;
-  }
-  
-  return true;
-}
-
-void returnCrossingIfCrossing(KnotVertex *k, double *xval, double *yval){
-  KnotVertex* last = k->prev;
-  float slopeToNew = (float)(*(yval)-*(last->getY()))/(*(xval)-*(last->getX()));
-  
-  while( k->next != last->next){
-    double firstTest = ((*(k->getX()) - *(last->getX()))*(*yval - *(last->getY()))
-	  - (*(k->getY())-*(last->getY()))*(*xval - *(last->getX()))
-	 ) * ((*(k->next->getX()) - *(last->getX()))*(*yval - *(last->getY()))
-	      - (*(k->next->getY()) - *(last->getY()))*(*xval - *(last->getX()))),
-      secondTest = ((*(last->getX()) - *(k->getX()))*(*(k->next->getY()) - *(k->getY()))
-	  - (*yval-*(k->getY()))*(*(k->next->getX()) - *(k->getX()))
-         ) * (
-              (*(last->getX()) - *(k->getX()))*(*(k->next->getY()) - *(k->getY()))
-              -	(*(last->getY()) - *(k->getY()))*(*(k->next->getX()) - *(k->getX())));
-
-    #ifdef DEBUG
-    std::cout << "first test: " << signbit(firstTest)<< std::endl;
-
-    std::cout << "second test: " <<  signbit(secondTest) << std:: endl;
-    #endif
-    
-    if ((signbit(firstTest)==1) && (signbit(secondTest) == 1)){
-      Point *over1, *over2, *under1, *under2;
-      if(k->getSlopeToNext() < slopeToNew){
-	//new line under
-	over1 = new Point(k->getX(), k->getY());
-	over2 = new Point(k->next->getX(), k->next->getY());
-	under1 = new Point(last->getX(), last->getY());
-	under2 = new Point(xval, yval);
-      }
-      else{	  
-	//new line over
-	under1 = new Point(k->getX(), k->getY());
-	under2 = new Point(k->next->getX(), k->next->getY());
-	over1 = new Point(last->getX(), last->getY());
-	over2 = new Point(xval, yval);
-      }
-      k->insert(Crossing(over1->getX(), over1->getY(),
-			 over2->getX(), over2->getY(),
-			 under1->getX(), under1->getY(),
-			 under2->getX(), under2->getY()));
-      last->insert(Crossing(over1->getX(), over1->getY(),
-			 over2->getX(), over2->getY(),
-			 under1->getX(), under1->getY(),
-			 under2->getX(), under2->getY()));
-      k->getCrossing()->updateIdent(1);
-      last->getCrossing()->updateIdent(1);
-    }
-    
-    k = k->next;
-  }
-}
-
 float KnotVertex::getSlopeToNext(){
   return this->slopeToNext;
 }
@@ -221,7 +106,7 @@ int KnotVertex::getCrossingIdent() {
     return 0;
   }
   
-  return this->c->data()->getIdent();
+  return this->getCrossing()->getIdent();
 }
 
 void KnotVertex::remove(){

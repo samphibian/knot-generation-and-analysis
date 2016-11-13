@@ -4,6 +4,9 @@
  * and the functions needed to work with it.
 */
 
+#ifndef KNOT_H
+#define KNOT_H
+
 #include <iostream>
 #include <stdio.h>
 #include <vector>
@@ -65,7 +68,10 @@ class KnotVertex{
   void print(int index); // prints the data index points away from the given one
 };
 
+bool validPoint(KnotVertex *head, double *xval, double *yval);
 void returnCrossingIfCrossing(KnotVertex *k, double *xval, double *yval);
 void testKnot();
+
+#endif
 
 
