@@ -59,15 +59,32 @@ class KnotVertex{
   void insert(Crossing crossing);
   double* getX();
   double* getY();
-  bool checkCrossing(KnotVertex* v);
+  bool checkCrossing();
   float getSlopeToNext();
-  Crossing* getCrossing();
-  int getCrossingIdent();
+  Crossing* getFirstCrossing();
+  vector<Crossing>* getC();
   void remove();
   void printAll(); // prints all data
   void print(int index); // prints the data index points away from the given one
 };
 
+class knotNot{
+  int label;
+  KnotVertex * fromA;
+  KnotVertex * fromB;
+  KnotVertex * fromC;
+  KnotVertex * fromD;
+ public:
+  knotNot();
+  ~knotNot();
+  void setLabel(int n);
+  void setA(KnotVertex *a);
+  void setB(KnotVertex *b);
+  void setC(KnotVertex *c);
+  void setD(KnotVertex *d);
+};
+
+vector<knotNot> generateNotation(KnotVertex * head);
 bool validPoint(KnotVertex *head, double *xval, double *yval);
 void returnCrossingIfCrossing(KnotVertex *k, double *xval, double *yval);
 void testKnot();

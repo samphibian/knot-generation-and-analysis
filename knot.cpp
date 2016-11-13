@@ -28,6 +28,7 @@ KnotVertex::KnotVertex(){
   prev = this;
   next = this;
 }
+
 KnotVertex::KnotVertex (double * x, double * y) {
   this->x = x;
   this->y = y;
@@ -80,33 +81,28 @@ double* KnotVertex::getY() {
   return this->y;
 }
 
-bool KnotVertex::checkCrossing(KnotVertex* v){
-  if (!this->c->empty()){
-    return true;
+bool KnotVertex::checkCrossing(){
+  if (this->c->empty()){
+    return 0;
   }
-  else{
-    return false;
-  }
+  return 1;
 }
 
 float KnotVertex::getSlopeToNext(){
   return this->slopeToNext;
 }
 
-Crossing* KnotVertex::getCrossing() {
+Crossing* KnotVertex::getFirstCrossing() {
   if(this->c->empty()){
+    std::cerr << "ERROR: vertex does not have a crossing" << std::endl;
     return 0;
   }
   
   return this->c->data();
 }
 
-int KnotVertex::getCrossingIdent() {
-  if(this->c->empty()){
-    return 0;
-  }
-  
-  return this->getCrossing()->getIdent();
+vector<Crossing>* KnotVertex::getC(){
+  return this->c;
 }
 
 void KnotVertex::remove(){
@@ -162,9 +158,8 @@ void KnotVertex::print(int index){
   }
 
   
-  cout << "The index " << index << " vertex is located at (" << *(current->x) << ", " << *(current->y) << ") and the slope to the next vertex is: " << current->slopeToNext << ". Does it have a crossing? " << ((current->getCrossingIdent() == 0) ? ("No") : ("Yes")) << endl;
+  cout << "The index " << index << " vertex is located at (" << *(current->x) << ", " << *(current->y) << ") and the slope to the next vertex is: " << current->slopeToNext << ". Does it have a crossing? " << (current->checkCrossing() ? ("Yes") : ("No")) << endl;
 }
-
 
 void testKnot(){
   int numKnot = 2;
@@ -187,7 +182,7 @@ void testKnot(){
   KnotVertex * k2 = new KnotVertex(k->getX(), k1->getY());
   k->add(k2);
 
-  std::cout << std::endl << "Testing: isCrossing()" << std::endl;
+  std::cout << std::endl << "Testing: checkCrossing()" << std::endl;
   KnotVertex * k3 = new KnotVertex(k1->getX(), k->getY());
   k->add(k3);
 

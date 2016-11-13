@@ -74,10 +74,36 @@ void returnCrossingIfCrossing(KnotVertex *k, double *xval, double *yval){
 			 over2->getX(), over2->getY(),
 			 under1->getX(), under1->getY(),
 			 under2->getX(), under2->getY()));
-      k->getCrossing()->updateIdent(1);
-      last->getCrossing()->updateIdent(1);
+      k->getFirstCrossing()->updateIdent(1);
+      last->getFirstCrossing()->updateIdent(1);
     }
     
     k = k->next;
+  }
+}
+
+vector<knotNot> generateNotation(KnotVertex * head){
+  KnotVertex * k = head;
+  static vector<knotNot> kNotation;
+  int count = 0;
+
+  if (k->checkCrossing()){
+    for(int i=0; i<k->getC()->size(); ++i){
+      ++count;
+      kNotation.push_back(knotNot());
+      kNotation[i].setLabel(count);
+      /*
+//a is the over strand pointing outwards
+      kNotation[i].data().setA(k->getC()->at(i).getNextOver);
+//nextUnder should be the understrand whose x value is between the two overs -- calc center point (avg(x), avg(y)); calc angle to each over; calc 1 under angle -> if between 2 over, = next; else prev
+      kNotation[i].setB(k->getC()->at(i).getNextUnder);
+      kNotation[i].setC(k->getC()->at(i).getPrevOver);
+      kNotation[i].setD(k->getC()->at(i).getPrevUnder); 
+      */     
+    }
+  }
+  
+
+  while(k != head){
   }
 }
