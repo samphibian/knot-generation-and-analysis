@@ -10,9 +10,9 @@ int main(){
 
   int n = 10;
   
-  //#ifdef DEBUG
+  #ifdef DEBUG
   testKnot();
-  // #endif
+   #endif
 
   generateKnot(knot, n);
 }

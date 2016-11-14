@@ -8,6 +8,9 @@
 
 bool validPoint(KnotVertex *head, double *xval, double *yval){
   KnotVertex *k = head;
+  if(k->getX() == NULL){
+    return true;
+  }
   while(k->next != head){
     //test if point is already in the knot
     if(*(k->getX()) == *xval && *(k->getY()) == *(yval)){
@@ -54,41 +57,35 @@ void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n){
     #endif
     
     if ((signbit(firstTest)==1) && (signbit(secondTest) == 1)){
-      Point *over1, *over2, *under1, *under2;
+      KnotVertex *over1, *over2, *under1, *under2;
       if(k->getSlopeToNext() < slopeToNew){
 	//new line under
-	over1 = new Point(k->getX(), k->getY());
-	over2 = new Point(k->next->getX(), k->next->getY());
-	under1 = new Point(last->getX(), last->getY());
-	under2 = new Point(xval, yval);
+	over1 = k;
+	over2 = k->next;
+	under1 = last;
+	under2 = n;
       }
       else{	  
 	//new line over
-	under1 = new Point(k->getX(), k->getY());
-	under2 = new Point(k->next->getX(), k->next->getY());
-	over1 = new Point(last->getX(), last->getY());
-	over2 = new Point(xval, yval);
+	under1 = k;
+	under2 =k->next;
+	over1 = last;
+	over2 = n;
       }
-      
-	knotNot knt = knotNot(k, k->next, last, n);
-	knotNot knt2 = knotNot(k, k->next, n, last); 
-	knotNot knt3 = knotNot(k->next, k, last, n);
-	knotNot knt4 = knotNot(k->next, k, n, last); 
-	knt.printNot();
-	knt2.printNot();
-	knt3.printNot();
-	knt4.printNot();
+
+      #ifdef DEBUG
+      knotNot knt = knotNot(k, k->next, last, n);
+      knotNot knt2 = knotNot(k, k->next, n, last); 
+      knotNot knt3 = knotNot(k->next, k, last, n);
+      knotNot knt4 = knotNot(k->next, k, n, last); 
+      knt.printNot();
+      knt2.printNot();
+      knt3.printNot();
+      knt4.printNot();
+      #endif
 	
-      k->insert(Crossing(over1->getX(), over1->getY(),
-			 over2->getX(), over2->getY(),
-			 under1->getX(), under1->getY(),
-			 under2->getX(), under2->getY()));
-      last->insert(Crossing(over1->getX(), over1->getY(),
-			 over2->getX(), over2->getY(),
-			 under1->getX(), under1->getY(),
-			 under2->getX(), under2->getY()));
-      k->getFirstCrossing()->updateIdent(1);
-      last->getFirstCrossing()->updateIdent(1);
+      k->insert(knotNot(over1, over2, under1, under2));
+      last->insert(knotNot(over1, over2, under1, under2));
     }
     
     k = k->next;
@@ -103,16 +100,8 @@ vector<knotNot> generateNotation(KnotVertex * head){
   if (k->checkCrossing()){
     for(int i=0; i<k->getC()->size(); ++i){
       ++count;
-      kNotation.push_back(knotNot());
-      kNotation[i].setLabel(count);
-      /*
-//a is the over strand pointing outwards
-      kNotation[i].data().setA(k->getC()->at(i).getNextOver);
-//nextUnder should be the understrand whose x value is between the two overs -- calc center point (avg(x), avg(y)); calc angle to each over; calc 1 under angle -> if between 2 over, = next; else prev
-      kNotation[i].setB(k->getC()->at(i).getNextUnder);
-      kNotation[i].setC(k->getC()->at(i).getPrevOver);
-      kNotation[i].setD(k->getC()->at(i).getPrevUnder); 
-      */     
+      kNotation.push_back(k->getC()->at(i));
+      kNotation[i].setLabel(kNotation[i].getLabel()*count);
     }
   }
   
@@ -125,11 +114,17 @@ void generateKnot(KnotVertex* k, int n) {
   double xvals[n], yvals[n];
 
   for (int i=0; i<n; ++i){
-    xvals[i] = ((double) rand() / (RAND_MAX));
-    yvals[i] = ((double) rand() / (RAND_MAX));
-  }
+    double tempx = ((double) rand() / (RAND_MAX)),
+      tempy = ((double) rand() / (RAND_MAX));
+    while(!validPoint(k, &tempx, &tempy)){
+      tempx = ((double) rand() / (RAND_MAX));
+      tempy = ((double) rand() / (RAND_MAX));
+    }
+    xvals[i] = tempx;
+    yvals[i] = tempy;
 
-  //check if line between final and first cross any others
+    k->add(new KnotVertex(xvals + i, yvals + i));    
+  }
 
   //calculate
 }

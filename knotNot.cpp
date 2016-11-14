@@ -17,7 +17,6 @@ knotNot::knotNot(){
 }
 
 knotNot::knotNot(KnotVertex * over1, KnotVertex * over2, KnotVertex * under1, KnotVertex * under2){
-  //NEED TO COME UP WITH +/-
   label = 0;
   fromA = over2;
   fromC = over1;
@@ -49,29 +48,15 @@ knotNot::knotNot(KnotVertex * over1, KnotVertex * over2, KnotVertex * under1, Kn
   #endif
 
   //bcd clockwise
-  if(plus){
-    if(thetaUnder1 > (thetaA - M_PI)  && thetaUnder1 < thetaA){
-      fromB = under1;
-      fromD = under2;
-      label = 1;
-    }
-    else{
-      fromB = under2;
-      fromD = under1;
-      label = -1;
-    }
+  if(thetaUnder1 > (thetaA - M_PI)  && thetaUnder1 < thetaA){
+    fromB = under1;
+    fromD = under2;
+    label = 1;
   }
   else{
-    if(thetaUnder1 > (thetaA - M_PI)  && thetaUnder1 > thetaA){
-      fromB = under1;
-      fromD = under2;
-      label = 1;
-    }
-    else{
-      fromB = under2;
-      fromD = under1;
-      label = -1;
-    }
+    fromB = under2;
+    fromD = under1;
+    label = -1;
   }
 }
 

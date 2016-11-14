@@ -18,7 +18,7 @@ using namespace std;
 KnotVertex::KnotVertex(){
   this->x = NULL;
   this->y = NULL;
-  c = new vector<Crossing>();
+  c = new vector<knotNot>();
   this->slopeToNext = 0;
   prev = this;
   next = this;
@@ -27,7 +27,7 @@ KnotVertex::KnotVertex(){
 KnotVertex::KnotVertex (double * x, double * y) {
   this->x = x;
   this->y = y;
-  c = new vector<Crossing>();
+  c = new vector<knotNot>();
   this->slopeToNext = 0;
   prev = this;
   next = this;
@@ -37,34 +37,40 @@ KnotVertex::~KnotVertex(){
 }
 
 void KnotVertex::add(KnotVertex* v){
-  KnotVertex* temp = this;
-  while(temp->next != this) {
-    temp = temp->next;
+  if(this->x == NULL){
+    this->x = v->getX();
+    this->y = v->getY();
   }
+  else{
+    KnotVertex* temp = this;
+    while(temp->next != this) {
+      temp = temp->next;
+  }
+    
+    returnCrossingIfCrossing(this, v);
   
-  returnCrossingIfCrossing(this, v);
+    temp->next = v;
+    v->prev = temp;
+    v->next = this;
+    this -> prev = v;
+    
+    float curSlopeToNext = (float)(*(temp->next->y)-*(temp->y))/(*(temp->next->x)-*(temp->x));
+    temp->slopeToNext = curSlopeToNext;
+    
+#ifdef DEBUG
+    std::cout << "temp x: " << *(temp->getX()) << ", temp y: " << *(temp->getY()) << ", tempnext x: " << *(temp->next->getX()) << ", tempnext y: " << *(temp->next->getY()) << " - slope: " << curSlopeToNext << std::endl;
+#endif
   
-  temp->next = v;
-  v->prev = temp;
-  v->next = this;
-  this -> prev = v;
-  
-  float curSlopeToNext = (float)(*(temp->next->y)-*(temp->y))/(*(temp->next->x)-*(temp->x));
-  temp->slopeToNext = curSlopeToNext;
-  
-  #ifdef DEBUG
-  std::cout << "temp x: " << *(temp->getX()) << ", temp y: " << *(temp->getY()) << ", tempnext x: " << *(temp->next->getX()) << ", tempnext y: " << *(temp->next->getY()) << " - slope: " << curSlopeToNext << std::endl;
-  #endif
-  
-  float vSlopeToNext =  (float)(*(v->next->y)-*(v->y))/(*(v->next->x)-*(v->x));
-  temp->slopeToNext = vSlopeToNext;
-  
-  #ifdef DEBUG
-  std::cout << "v x: " << *(v->getX()) << ", v y: " << *(v->getY()) << ", vnext x: " << *(v->next->getX()) << ", vnext y: " << *(v->next->getY()) << " - slope: "  << vSlopeToNext << std::endl;
-  #endif
+    float vSlopeToNext =  (float)(*(v->next->y)-*(v->y))/(*(v->next->x)-*(v->x));
+    temp->slopeToNext = vSlopeToNext;
+    
+#ifdef DEBUG
+    std::cout << "v x: " << *(v->getX()) << ", v y: " << *(v->getY()) << ", vnext x: " << *(v->next->getX()) << ", vnext y: " << *(v->next->getY()) << " - slope: "  << vSlopeToNext << std::endl;
+#endif
+  }
 }
 
-void KnotVertex::insert(Crossing crossing){
+void KnotVertex::insert(knotNot crossing){
   this->c->push_back(crossing);
 }
 
@@ -87,7 +93,7 @@ float KnotVertex::getSlopeToNext(){
   return this->slopeToNext;
 }
 
-Crossing* KnotVertex::getFirstCrossing() {
+knotNot* KnotVertex::getFirstCrossing() {
   if(this->c->empty()){
     std::cerr << "ERROR: vertex does not have a crossing" << std::endl;
     return 0;
@@ -96,7 +102,7 @@ Crossing* KnotVertex::getFirstCrossing() {
   return this->c->data();
 }
 
-vector<Crossing>* KnotVertex::getC(){
+vector<knotNot>* KnotVertex::getC(){
   return this->c;
 }
 
@@ -107,7 +113,6 @@ void KnotVertex::remove(){
     x = NULL;
     y = NULL;
     c = NULL;
-    //slopeToNext = NULL;
   }
   else{
     KnotVertex* n = next;
