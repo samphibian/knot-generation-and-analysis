@@ -29,8 +29,11 @@ bool validPoint(KnotVertex *head, double *xval, double *yval){
   return true;
 }
 
-void returnCrossingIfCrossing(KnotVertex *k, double *xval, double *yval){
+void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n){
   KnotVertex* last = k->prev;
+  double * xval = n->getX(),
+    * yval = n->getY();
+  
   float slopeToNew = (float)(*(yval)-*(last->getY()))/(*(xval)-*(last->getX()));
   
   while( k->next != last->next){
@@ -67,10 +70,10 @@ void returnCrossingIfCrossing(KnotVertex *k, double *xval, double *yval){
 	over2 = new Point(xval, yval);
       }
       
-	knotNot knt = knotNot(k, k->next, last, new KnotVertex(xval, yval));
-	knotNot knt2 = knotNot(k, k->next, new KnotVertex(xval, yval), last); 
-	knotNot knt3 = knotNot(k->next, k, last, new KnotVertex(xval, yval));
-	knotNot knt4 = knotNot(k->next, k, new KnotVertex(xval, yval), last); 
+	knotNot knt = knotNot(k, k->next, last, n);
+	knotNot knt2 = knotNot(k, k->next, n, last); 
+	knotNot knt3 = knotNot(k->next, k, last, n);
+	knotNot knt4 = knotNot(k->next, k, n, last); 
 	knt.printNot();
 	knt2.printNot();
 	knt3.printNot();

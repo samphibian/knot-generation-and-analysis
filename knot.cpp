@@ -42,7 +42,7 @@ void KnotVertex::add(KnotVertex* v){
     temp = temp->next;
   }
   
-  returnCrossingIfCrossing(this, v->getX(), v->getY());
+  returnCrossingIfCrossing(this, v);
   
   temp->next = v;
   v->prev = temp;

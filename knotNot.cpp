@@ -30,11 +30,18 @@ knotNot::knotNot(KnotVertex * over1, KnotVertex * over2, KnotVertex * under1, Kn
     thetaUnder1 = atan((*(under1->getY())-yavg)
 			 /(*(under1->getX()) - xavg));
 
+  bool plus = 0;
+
   if((*(over2->getX()) - xavg) < 0){
     thetaA += M_PI;
+    plus = 1;
   }
   if((*(under1->getX())-xavg)<0){
     thetaUnder1 += M_PI;
+  }
+
+  if(plus && signbit(thetaUnder1)){
+    thetaUnder1 += 2*M_PI;
   }
 
   #ifdef DEBUG
@@ -42,15 +49,29 @@ knotNot::knotNot(KnotVertex * over1, KnotVertex * over2, KnotVertex * under1, Kn
   #endif
 
   //bcd clockwise
-  if(thetaUnder1 > (thetaA - M_PI)  && thetaUnder1 > thetaA){
+  if(plus){
+    if(thetaUnder1 > (thetaA - M_PI)  && thetaUnder1 < thetaA){
       fromB = under1;
       fromD = under2;
       label = 1;
     }
+    else{
+      fromB = under2;
+      fromD = under1;
+      label = -1;
+    }
+  }
   else{
-    fromB = under2;
-    fromD = under1;
-    label = -1;
+    if(thetaUnder1 > (thetaA - M_PI)  && thetaUnder1 > thetaA){
+      fromB = under1;
+      fromD = under2;
+      label = 1;
+    }
+    else{
+      fromB = under2;
+      fromD = under1;
+      label = -1;
+    }
   }
 }
 

@@ -93,10 +93,8 @@ class knotNot{
 
 vector<knotNot> generateNotation(KnotVertex * head);
 bool validPoint(KnotVertex *head, double *xval, double *yval);
-void returnCrossingIfCrossing(KnotVertex *k, double *xval, double *yval);
+void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n);
 void testKnot();
 void generateKnot(KnotVertex* k, int n);
 
 #endif
-
-
