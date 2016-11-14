@@ -45,10 +45,12 @@ knotNot::knotNot(KnotVertex * over1, KnotVertex * over2, KnotVertex * under1, Kn
   if(thetaUnder1 > (thetaA - M_PI)  && thetaUnder1 > thetaA){
       fromB = under1;
       fromD = under2;
+      label = 1;
     }
   else{
     fromB = under2;
     fromD = under1;
+    label = -1;
   }
 }
 
@@ -106,4 +108,3 @@ void knotNot::printNot(){
     *(this->getD()->getX()) << ", " <<
     *(this->getD()->getY()) << ")" << std::endl;
 }
-

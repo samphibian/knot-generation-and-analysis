@@ -66,6 +66,16 @@ void returnCrossingIfCrossing(KnotVertex *k, double *xval, double *yval){
 	over1 = new Point(last->getX(), last->getY());
 	over2 = new Point(xval, yval);
       }
+      
+	knotNot knt = knotNot(k, k->next, last, new KnotVertex(xval, yval));
+	knotNot knt2 = knotNot(k, k->next, new KnotVertex(xval, yval), last); 
+	knotNot knt3 = knotNot(k->next, k, last, new KnotVertex(xval, yval));
+	knotNot knt4 = knotNot(k->next, k, new KnotVertex(xval, yval), last); 
+	knt.printNot();
+	knt2.printNot();
+	knt3.printNot();
+	knt4.printNot();
+	
       k->insert(Crossing(over1->getX(), over1->getY(),
 			 over2->getX(), over2->getY(),
 			 under1->getX(), under1->getY(),
@@ -106,4 +116,17 @@ vector<knotNot> generateNotation(KnotVertex * head){
 
   while(k != head){
   }
+}
+
+void generateKnot(KnotVertex* k, int n) {
+  double xvals[n], yvals[n];
+
+  for (int i=0; i<n; ++i){
+    xvals[i] = ((double) rand() / (RAND_MAX));
+    yvals[i] = ((double) rand() / (RAND_MAX));
+  }
+
+  //check if line between final and first cross any others
+
+  //calculate
 }

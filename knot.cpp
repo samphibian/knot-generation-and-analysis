@@ -4,11 +4,6 @@
  * and the functions needed to work with it.
 */
 
-/*
-Looked at:
-http://stackoverflow.com/questions/14176776/find-out-if-2-lines-intersect
- */
-
 //enum ListType{INTEGER, FLOAT, CHAR, STRING, GENERIC_LIST};
 
 #include "knot.h"

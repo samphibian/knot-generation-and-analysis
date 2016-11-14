@@ -25,18 +25,6 @@ class Point{
   double * getY();
 };
 
-  /*
-  Point * olsfp; //over line segment first point a/c
-  Point * olssp; //over line segment second point a/c
-  Point * ulsfp; //under line segment first point b/d
-  Point * ulssp; //under line segment second point b/d
-
-  KnotVertex * a; //over line segment going out
-  KnotVertex * b; //ccw from a
-  KnotVertex * c; //ccw from b
-  KnotVertex * d; //ccw from c
-  */
-
 class Crossing{
   int identity;
   double *olsfpx; //over line segment first point x
@@ -107,6 +95,7 @@ vector<knotNot> generateNotation(KnotVertex * head);
 bool validPoint(KnotVertex *head, double *xval, double *yval);
 void returnCrossingIfCrossing(KnotVertex *k, double *xval, double *yval);
 void testKnot();
+void generateKnot(KnotVertex* k, int n);
 
 #endif
 
