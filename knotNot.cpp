@@ -17,6 +17,7 @@ knotNot::knotNot(){
 }
 
 knotNot::knotNot(KnotVertex * over1, KnotVertex * over2, KnotVertex * under1, KnotVertex * under2){
+  //NEED TO COME UP WITH +/-
   label = 0;
   fromA = over2;
   fromC = over1;
@@ -26,30 +27,28 @@ knotNot::knotNot(KnotVertex * over1, KnotVertex * over2, KnotVertex * under1, Kn
 
   double thetaA = atan((*(over2->getY())-yavg)
 			 /(*(over2->getX()) - xavg)),
-    thetaC = atan((*(over1->getY())-yavg)
-		    /(*(over1->getX()) - xavg)),
     thetaUnder1 = atan((*(under1->getY())-yavg)
 			 /(*(under1->getX()) - xavg));
-  
-  if(thetaA > thetaC){
-    if(thetaA > thetaUnder1 && thetaUnder1 > thetaC){
-      fromB = under1;
-      fromD = under2;
-    }
-    else{
-      fromB = under2;
-      fromD = under1;
-    }
+
+  if((*(over2->getX()) - xavg) < 0){
+    thetaA += M_PI;
   }
-  else{
-    if(thetaA < thetaUnder1 && thetaUnder1 < thetaC){
+  if((*(under1->getX())-xavg)<0){
+    thetaUnder1 += M_PI;
+  }
+
+  #ifdef DEBUG
+  std::cout << "xavg: " << xavg << " yavg: " << yavg  << " " << thetaA << " " << thetaUnder1 << std::endl;
+  #endif
+
+  //bcd clockwise
+  if(thetaUnder1 > (thetaA - M_PI)  && thetaUnder1 > thetaA){
       fromB = under1;
       fromD = under2;
     }
-    else{
-      fromB = under2;
-      fromD = under1;
-    }
+  else{
+    fromB = under2;
+    fromD = under1;
   }
 }
 

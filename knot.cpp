@@ -158,7 +158,7 @@ void KnotVertex::print(int index){
   }
 
   
-  cout << "The index " << index << " vertex is located at (" << *(current->x) << ", " << *(current->y) << ") and the slope to the next vertex is: " << current->slopeToNext << ". Does it have a crossing? " << (current->checkCrossing() ? ("Yes") : ("No")) << endl;
+  cout << "The index " << index << " vertex is located at (" << *(current->getX()) << ", " << *(current->getY()) << ") and the slope to the next vertex is: " << current->slopeToNext << ". Does it have a crossing? " << (current->checkCrossing() ? ("Yes") : ("No")) << endl;
 }
 
 void testKnot(){

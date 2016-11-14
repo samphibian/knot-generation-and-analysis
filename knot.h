@@ -88,7 +88,7 @@ class knotNot{
   KnotVertex * fromD;
  public:
   knotNot();
-  knotNot(int i, KnotVertex * over1, KnotVertex * over2, KnotVertex * under1, KnotVertex * under2);
+  knotNot(KnotVertex * over1, KnotVertex * over2, KnotVertex * under1, KnotVertex * under2);
   ~knotNot();
   void setLabel(int n);
   void setA(KnotVertex *a);
@@ -100,6 +100,7 @@ class knotNot{
   KnotVertex * getB();
   KnotVertex * getC();
   KnotVertex * getD();
+  void printNot();
 };
 
 vector<knotNot> generateNotation(KnotVertex * head);
