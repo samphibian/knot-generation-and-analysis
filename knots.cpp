@@ -12,7 +12,7 @@ int main(){
   
   #ifdef DEBUG
   testKnot();
-   #endif
+  #endif
 
   generateKnot(knot, n);
 }

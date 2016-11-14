@@ -13,9 +13,9 @@
 #include <vector>
 #include <cmath>
 
-using namespace std;
+ using namespace std;
 
-KnotVertex::KnotVertex(){
+ KnotVertex::KnotVertex(){
   this->x = NULL;
   this->y = NULL;
   c = new vector<knotNot>();
@@ -45,10 +45,10 @@ void KnotVertex::add(KnotVertex* v){
     KnotVertex* temp = this;
     while(temp->next != this) {
       temp = temp->next;
-  }
+    }
     
     returnCrossingIfCrossing(this, v);
-  
+    
     temp->next = v;
     v->prev = temp;
     v->next = this;
@@ -60,7 +60,7 @@ void KnotVertex::add(KnotVertex* v){
 #ifdef DEBUG
     std::cout << "temp x: " << *(temp->getX()) << ", temp y: " << *(temp->getY()) << ", tempnext x: " << *(temp->next->getX()) << ", tempnext y: " << *(temp->next->getY()) << " - slope: " << curSlopeToNext << std::endl;
 #endif
-  
+    
     float vSlopeToNext =  (float)(*(v->next->y)-*(v->y))/(*(v->next->x)-*(v->x));
     temp->slopeToNext = vSlopeToNext;
     
@@ -134,7 +134,7 @@ void KnotVertex::printAll(){
   
   bool d = 1;
   int index = 0;
-    
+  
   KnotVertex* first = current;
   
   this->print(0);
@@ -158,7 +158,14 @@ void KnotVertex::print(int index){
   }
 
   
-  cout << "The index " << index << " vertex is located at (" << *(current->getX()) << ", " << *(current->getY()) << ") and the slope to the next vertex is: " << current->slopeToNext << ". Does it have a crossing? " << (current->checkCrossing() ? ("Yes") : ("No")) << endl;
+  cout << "The index " << index << " vertex is located at (" << *(current->getX()) << ", " << *(current->getY()) << ") and the slope to the next vertex is: " 
+  << current->slopeToNext << ". Does it have a crossing? " << (current->checkCrossing() ? ("Yes") : ("No")) << endl;
+  if(current->checkCrossing()){
+    cout << "\t";
+    for( int i=0; i<current->getC()->size(); ++i){
+      current->getC()->at(i).printNot();
+    }
+  }
 }
 
 void testKnot(){
@@ -176,7 +183,7 @@ void testKnot(){
   k->add(k1);
 
   std::cout << "Testing: validPoint check - on line - " << ((validPoint(k, &dt, &dt) == 0) ? ("Invalid") : ("Valid")) << std::endl
-	    << "Testing: validPoint check - valid point - " << ((validPoint(k, &d1, &d2) == 0) ? ("Invalid") : ("Valid")) << std::endl;
+  << "Testing: validPoint check - valid point - " << ((validPoint(k, &d1, &d2) == 0) ? ("Invalid") : ("Valid")) << std::endl;
   
   std::cout << std::endl << "Testing: getX() and getY()" << std::endl;
   KnotVertex * k2 = new KnotVertex(k->getX(), k1->getY());
