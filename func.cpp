@@ -33,21 +33,41 @@ if(*(k->getX()) == *xval && *(k->getY()) == *(yval)){
 return true;
 }
 
-void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n){
-  KnotVertex* last = k->prev;
-  double * xval = n->getX(),
-  * yval = n->getY();
-  
-  float slopeToNew = (float)(*(yval)-*(last->getY()))/(*(xval)-*(last->getX()));
-  
-  while( k->next != last){
-    if(k!=n){
-      double firstTest = ((*(k->getX()) - *(last->getX()))*(*yval - *(last->getY()))
-       - (*(k->getY())-*(last->getY()))*(*xval - *(last->getX()))
-       ) * ((*(k->next->getX()) - *(last->getX()))*(*yval - *(last->getY()))
+bool checkIntersect(Point a1, Point a2, Point b1, Point b2){
+  /*
+  ((A2-A0)*(B1-B0) - (B2-B0)*(A1-A0)) * ((A3-A0)*(B1-B0) - (B3-B0)*(A1-A0)) < 0
+&&
+((A0-A2)*(B3-B2) - (B0-B2)*(A3-A2)) * ((A1-A2)*(B3-B2) - (B1-B2)*(A3-A2)) < 0
+*/
+
+double a1x = *(a1.getX()),
+a1y = *(a1.getY()),
+a2x = *(a2.getX()),
+a2y = *(a2.getY()),
+b1x = *(b1.getX()),
+b1y = *(b1.getY()),
+b2x = *(b2.getX()),
+b2y = *(b2.getY());
+
+  double firstTest = ((b1x - a1x)*(a2y - a1y) - (b1y - a1y)*(a2x - a1x)) * ((b2x - a1x)*(a2y - a1y) - (b2y - a1y)*(a2x - a1x)),
+        secondTest = ((a1x - b1x)*(b2y - b1y) - (a1y - b1y)*(b2x - b1x)) * ((a2x - b1x)*(b2y - b1y) - (a2y - b1y)*(b2x - b1x));
+
+return (signbit(firstTest) && signbit(secondTest));
+
+/*
+double CCW(point a, point b, point c)
+{ return (b.x-a.x)*(c.y-a.y) - (b.y-a.y)*(c.x-a.x); }
+
+int intersect(point a, point b, point c, point d)
+{ return (CCW(a,b,c)*CCW(a,b,d)<0 && CCW(c,d,b)*CCW(c,d,a)<0); 
+
+
+      double firstTest = ((*(a1->getX()) - *(b1->getX()))*(*yval - *(last->getY()))
+       - (*(a1->getY())-*(last->getY()))*(*xval - *(last->getX()))
+       ) * ((*(a2->getX()) - *(last->getX()))*(*yval - *(last->getY()))
        - (*(k->next->getY()) - *(last->getY()))*(*xval - *(last->getX()))),
-       secondTest = ((*(last->getX()) - *(k->getX()))*(*(k->next->getY()) - *(k->getY()))
-         - (*yval-*(k->getY()))*(*(k->next->getX()) - *(k->getX()))
+       secondTest = ((*(last->getX()) - *(a1->getX()))*(*(a2->getY()) - *(a1->getY()))
+         - (*yval-*(a1->getY()))*(*(a2->getX()) - *(a1->getX()))
          ) * (
          (*(last->getX()) - *(k->getX()))*(*(k->next->getY()) - *(k->getY()))
          -  (*(last->getY()) - *(k->getY()))*(*(k->next->getX()) - *(k->getX())));
@@ -57,8 +77,24 @@ void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n){
 
          std::cout << "second test: " <<  signbit(secondTest) << std:: endl;
     #endif
+    */
+}
 
-         if ((signbit(firstTest)==1) && (signbit(secondTest) == 1)){
+void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n){
+  KnotVertex* last = k->prev;
+  double * xval = n->getX(),
+  * yval = n->getY();
+  
+  float slopeToNew = (float)(*(yval)-*(last->getY()))/(*(xval)-*(last->getX()));
+  
+  while( k->next != last){
+    if(k!=n){
+      Point a1 = Point(k->getX(), k->getY()),
+      a2 = Point(k->next->getX(), k->next->getY()),
+      b1 = Point(last->getX(), last->getY()),
+      b2 = Point(xval, yval);
+
+         if (checkIntersect(a1, a2, b1, b2)){
           KnotVertex *over1, *over2, *under1, *under2;
           if(k->getSlopeToNext() < slopeToNew){
          //new line under

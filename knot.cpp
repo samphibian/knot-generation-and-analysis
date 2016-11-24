@@ -143,6 +143,7 @@ void KnotVertex::printAll(){
     current = current->next;
     ++index;
     this->print(index);
+    std::cout << std::endl;
   }
 }
 
@@ -161,8 +162,8 @@ void KnotVertex::print(int index){
   cout << "The index " << index << " vertex is located at (" << *(current->getX()) << ", " << *(current->getY()) << ") and the slope to the next vertex is: " 
   << current->slopeToNext << ". Does it have a crossing? " << (current->checkCrossing() ? ("Yes") : ("No")) << endl;
   if(current->checkCrossing()){
-    cout << "\t";
     for( int i=0; i<current->getC()->size(); ++i){
+      cout << "\t";
       current->getC()->at(i).printNot();
     }
   }

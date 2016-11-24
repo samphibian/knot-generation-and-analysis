@@ -8,6 +8,9 @@ Point::Point(double* xval, double* yval){
   x = xval;
   y = yval;
 }
+Point::~Point(){
+	
+}
 double * Point::getX(){
   return this->x;
 }
