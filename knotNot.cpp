@@ -99,16 +99,9 @@ knotNot::~knotNot(){
 }
 
 
-// Point knotNot::computeIntersection(){
-//   //p+tr=q+us
-//   //t = (q − p) × s / (r × s)
-//   //u = (q − p) × r / (r × s)
-//   //r = p2-p1
-//   //s = q2-q1
-
-//   Point p = Point(*(this->fromA->getX()), *(this->fromA->getY())),
-//   r = Point(*(this->fromC->getX())-*(this->fromA->getX()), *(this->fromC->getY())-*(this->fromA->getY()));
-// }
+Point knotNot::getIntersection(){
+  return this->intersection;
+}
 
 void knotNot::setSign(int n){
   this->sign = n;

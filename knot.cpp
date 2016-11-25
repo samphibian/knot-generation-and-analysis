@@ -65,7 +65,7 @@ void KnotVertex::add(KnotVertex* v){
 #endif
     
     float vSlopeToNext =  (float)(*(v->next->y)-*(v->y))/(*(v->next->x)-*(v->x));
-    temp->slopeToNext = vSlopeToNext;
+    v->slopeToNext = vSlopeToNext;
     
 #ifdef DEBUG
     std::cout << "v x: " << *(v->getX()) << ", v y: " << *(v->getY()) << ", vnext x: " << *(v->next->getX()) << ", vnext y: " << *(v->next->getY()) << " - slope: "  << vSlopeToNext << std::endl;
@@ -73,10 +73,44 @@ void KnotVertex::add(KnotVertex* v){
   }
 }
 
-int KnotVertex::insert(knotNot crossing){
+void KnotVertex::insert(knotNot crossing){
+  int loc = 0; //location of crossing
+
+  Point intersectionOfCrossing = crossing.getIntersection();
   //find proper location
-  this->c->push_back(crossing);
+  for(int i = 0; i<this->c->size(); ++i){
+    if(*(this->next->getX()) - *(this->getX()) < 0){
+      //compare x vals
+      if(*(intersectionOfCrossing.getX()) > *(this->c->at(i).getIntersection().getX())){
+        goto foundloc;
+      }
+    }
+    else if(*(this->next->getY())-*(this->getY()) < 0){
+      //compare y vals
+      if(*(intersectionOfCrossing.getY()) > *(this->c->at(i).getIntersection().getY())){
+        goto foundloc;
+      }
+    }
+    else{
+      //compare x vals
+      if(*(intersectionOfCrossing.getX()) < *(this-> c->at(i).getIntersection().getX())){
+        goto foundloc;
+      }
+    }
+    ++loc;
+  }
+  //goto addToEnd;
+
+  foundloc:
+  std::vector<knotNot>::iterator it;
+  it = this->c->begin();
+  this->c->insert(it + loc, crossing);
+
+  // addToEnd:
+  // this->c->push_back(crossing);
+
   //return order
+  //return loc;
 }
 
 double* KnotVertex::getX() {

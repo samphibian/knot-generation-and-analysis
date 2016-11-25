@@ -51,6 +51,7 @@ class knotNot{
   void setD(KnotVertex *d);
   int getSign();
   int getLabel();
+  Point getIntersection();
   KnotVertex * getA();
   KnotVertex * getB();
   KnotVertex * getC();
@@ -63,8 +64,6 @@ class KnotVertex{
   double *y;
   float slopeToNext;
   vector<knotNot> *c;
-  //KnotVertex *prev;
-  //KnotVertex *next;
  public:
   int ident;
   KnotVertex *prev;
@@ -73,7 +72,7 @@ class KnotVertex{
   KnotVertex(double * x, double * y);
   ~KnotVertex();
   void add(KnotVertex* v);
-  int insert(knotNot crossing);
+  void insert(knotNot crossing);
   double* getX();
   double* getY();
   bool checkCrossing();
