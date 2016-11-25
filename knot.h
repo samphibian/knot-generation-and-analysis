@@ -10,6 +10,8 @@
 #include <iostream>
 #include <stdio.h>
 #include <vector>
+#include <string>
+#include <cmath>
 
 using namespace std;
 
@@ -80,6 +82,7 @@ class KnotVertex{
   knotNot* getFirstCrossing();
   vector<knotNot>* getC();
   void remove();
+  // void setCrossingVals(); //loop through knot, assign numbers to crossings
   void printAll(); // prints all data
   void print(int index); // prints the data index points away from the given one
 };

@@ -1,7 +1,4 @@
 #include "knot.h"
-#include <string>
-#include <cmath>
-
 
 bool validPoint(KnotVertex *head, double *xval, double *yval){
   KnotVertex *k = head;
@@ -144,10 +141,11 @@ void generateKnot(KnotVertex* k, int n) {
     xvals[i] = tempx;
     yvals[i] = tempy;
 
-    k->add(new KnotVertex(xvals + i, yvals + i));   
-    //k->printAll(); 
+    k->add(new KnotVertex(xvals + i, yvals + i));
   }
   returnCrossingIfCrossing(k, k);
+
+  // k->setCrossingVals();
 
   k->printAll();
 }

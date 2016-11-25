@@ -7,11 +7,6 @@
 //enum ListType{INTEGER, FLOAT, CHAR, STRING, GENERIC_LIST};
 
 #include "knot.h"
-#include <string>
-#include <iostream>
-#include <stdio.h>
-#include <vector>
-#include <cmath>
 
  using namespace std;
 
@@ -99,18 +94,11 @@ void KnotVertex::insert(knotNot crossing){
     }
     ++loc;
   }
-  //goto addToEnd;
 
   foundloc:
   std::vector<knotNot>::iterator it;
   it = this->c->begin();
   this->c->insert(it + loc, crossing);
-
-  // addToEnd:
-  // this->c->push_back(crossing);
-
-  //return order
-  //return loc;
 }
 
 double* KnotVertex::getX() {
@@ -162,11 +150,33 @@ void KnotVertex::remove(){
     n->x = NULL;
     n->y = NULL;
     n->c = NULL;
-    //n->slopeToNext = NULL;
 
     this->slopeToNext = (float)(*(this->next->y)-*(this->y))/(*(this->next->x)-*(this->x));
   }
 }
+
+// void KnotVertex::setCrossingVals(){
+//   KnotVertex * k = this;
+//   int lab = 1;
+//   while(k->next != this){
+//     if(k->checkCrossing()){
+//       std::cout << lab << std::endl;
+//       for(int i=0; i<this->getC()->size(); ++i){
+//         k->getC()->at(i).setLabel(lab);
+//         ++lab;
+//       }
+//     }
+
+//     k = k->next;
+//   }
+//     if(k->checkCrossing()){
+//       std::cout << lab << std::endl;
+//       for(int i=0; i<this->getC()->size(); ++i){
+//         k->getC()->at(i).setLabel(lab);
+//         ++lab;
+//       }
+//     }
+// }
 
 void KnotVertex::printAll(){
   KnotVertex* current = this;
