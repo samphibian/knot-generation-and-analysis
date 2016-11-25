@@ -10,6 +10,8 @@
 
 knotNot::knotNot(){
   label = 0;
+  sign = 0;
+  intersection = Point();
   fromA = NULL;
   fromB = NULL;
   fromC = NULL;
@@ -18,8 +20,10 @@ knotNot::knotNot(){
 
 knotNot::knotNot(KnotVertex * over1, KnotVertex * over2, KnotVertex * under1, KnotVertex * under2){
   label = 0;
+  sign = 0;
   fromA = over2;
   fromC = over1;
+  intersection = Point();
 
   double xavg = (*(over1->getX()) + *(over2->getX()) + *(under1->getX()) + *(under2->getX()))/4.0,
     yavg = (*(over1->getY()) + *(over2->getY()) + *(under1->getY()) + *(under2->getY()))/4.0;
@@ -51,24 +55,75 @@ knotNot::knotNot(KnotVertex * over1, KnotVertex * over2, KnotVertex * under1, Kn
   if(thetaUnder1 > (thetaA - M_PI)  && thetaUnder1 < thetaA){
     fromB = under1;
     fromD = under2;
-    label = 1;
+    sign = 1;
   }
   else{
     fromB = under2;
     fromD = under1;
-    label = -1;
+    sign = -1;
   }
+
+  //p+tr=q+us
+  //t = (q − p) × s / (r × s)
+  //u = (q − p) × r / (r × s)
+  //r = p2-p1
+  //s = q2-q1
+
+  double rx = *(this->fromC->getX())-*(this->fromA->getX()),
+    ry = *(this->fromC->getY())-*(this->fromA->getY()),
+    sx = *(under2->getX())-*(under1->getX()), 
+    sy = *(under2->getY())-*(under1->getY());
+
+  Point p = Point(this->fromA->getX(), this->fromA->getY()),
+    r = Point(&rx, &ry),
+    q = Point(under1->getX(), under1->getY()),
+    s = Point(&sx, &sy);
+
+  double qminuspx = *(q.getX())-*(p.getX()),
+    qminuspy = *(q.getY())-*(p.getY());
+
+  Point qminusp = Point(&qminuspx, &qminuspy);
+
+  //vx wy − vy wx 
+  double tnum = ((*(qminusp.getX()))*(*(s.getY()))) - ((*(qminusp.getY()))*(*(s.getX()))), //t numerator
+    tden = ((*(r.getX()))*(*(s.getY()))) - ((*(r.getY()))*(*(s.getX()))),
+    t = tnum/tden;
+
+  //p + tr
+  //intersection = Point(new double(*(p.getX()) + t*(*(r.getX()))), new double(*(p.getY()) + t*(*(r.getY()))));
+    *(intersection.getX()) = *(p.getX()) + t*(*(r.getX()));
+    *(intersection.getY()) = *(p.getY()) + t*(*(r.getY()));
 }
 
 knotNot::~knotNot(){
+}
+
+
+// Point knotNot::computeIntersection(){
+//   //p+tr=q+us
+//   //t = (q − p) × s / (r × s)
+//   //u = (q − p) × r / (r × s)
+//   //r = p2-p1
+//   //s = q2-q1
+
+//   Point p = Point(*(this->fromA->getX()), *(this->fromA->getY())),
+//   r = Point(*(this->fromC->getX())-*(this->fromA->getX()), *(this->fromC->getY())-*(this->fromA->getY()));
+// }
+
+void knotNot::setSign(int n){
+  this->sign = n;
 }
 
 void knotNot::setLabel(int n){
   this->label = n;
 }
 
+int knotNot::getSign(){
+  return this->sign;
+}
+
 int knotNot::getLabel(){
-  return this->label;
+  return this->sign*this->label;
 }
 
 void knotNot::setA(KnotVertex *a){
@@ -105,7 +160,12 @@ KnotVertex * knotNot::getD(){
 
 void knotNot::printNot(){
   std::cout << "Crossing: " << this->getLabel() <<
-    ", a: (" << *(this->getA()->getX()) << ", " <<
+    " is at the point ";
+  
+  this->intersection.print();
+  
+  std::cout << std::endl << "\t\t" <<
+    "a: (" << *(this->getA()->getX()) << ", " <<
     *(this->getA()->getY()) << "), b: (" <<
     *(this->getB()->getX()) << ", " <<
     *(this->getB()->getY()) << "), c: (" <<

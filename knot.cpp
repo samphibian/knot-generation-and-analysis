@@ -16,6 +16,7 @@
  using namespace std;
 
  KnotVertex::KnotVertex(){
+  ident = 1;
   this->x = NULL;
   this->y = NULL;
   c = new vector<knotNot>();
@@ -25,6 +26,7 @@
 }
 
 KnotVertex::KnotVertex (double * x, double * y) {
+  ident = 1;
   this->x = x;
   this->y = y;
   c = new vector<knotNot>();
@@ -49,6 +51,7 @@ void KnotVertex::add(KnotVertex* v){
     
     returnCrossingIfCrossing(this, v);
     
+    v->ident = temp->ident + 1;
     temp->next = v;
     v->prev = temp;
     v->next = this;
@@ -70,8 +73,10 @@ void KnotVertex::add(KnotVertex* v){
   }
 }
 
-void KnotVertex::insert(knotNot crossing){
+int KnotVertex::insert(knotNot crossing){
+  //find proper location
   this->c->push_back(crossing);
+  //return order
 }
 
 double* KnotVertex::getX() {
@@ -159,7 +164,7 @@ void KnotVertex::print(int index){
   }
 
   
-  cout << "The index " << index << " vertex is located at (" << *(current->getX()) << ", " << *(current->getY()) << ") and the slope to the next vertex is: " 
+  cout << "The index " << current->ident << " vertex is located at (" << *(current->getX()) << ", " << *(current->getY()) << ") and the slope to the next vertex is: " 
   << current->slopeToNext << ". Does it have a crossing? " << (current->checkCrossing() ? ("Yes") : ("No")) << endl;
   if(current->checkCrossing()){
     for( int i=0; i<current->getC()->size(); ++i){

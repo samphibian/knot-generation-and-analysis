@@ -1,9 +1,10 @@
 
 #include "knot.h"
-#include <iostream>
-#include <stdio.h>
 
-
+Point::Point(){
+	x = new double();
+	y = new double();
+}
 Point::Point(double* xval, double* yval){
   x = xval;
   y = yval;
@@ -15,4 +16,7 @@ double * Point::getX(){
 }
 double * Point::getY(){
   return this->y;
+}
+void Point::print(){
+	std::cout << "(" << *(this->x) << ", " << *(this->y) << ")";
 }

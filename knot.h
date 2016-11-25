@@ -23,14 +23,18 @@ class Point{
   double *x;
   double *y;
  public:
+  Point();
   Point(double * xval, double * yval);
   ~Point();
   double * getX();
   double * getY();
+  void print();
 };
   
 class knotNot{
   int label;
+  int sign;
+  Point intersection;
   KnotVertex * fromA;
   KnotVertex * fromB;
   KnotVertex * fromC;
@@ -39,11 +43,13 @@ class knotNot{
   knotNot();
   knotNot(KnotVertex * over1, KnotVertex * over2, KnotVertex * under1, KnotVertex * under2);
   ~knotNot();
+  void setSign(int n);
   void setLabel(int n);
   void setA(KnotVertex *a);
   void setB(KnotVertex *b);
   void setC(KnotVertex *c);
   void setD(KnotVertex *d);
+  int getSign();
   int getLabel();
   KnotVertex * getA();
   KnotVertex * getB();
@@ -60,13 +66,14 @@ class KnotVertex{
   //KnotVertex *prev;
   //KnotVertex *next;
  public:
+  int ident;
   KnotVertex *prev;
   KnotVertex *next;
   KnotVertex();
   KnotVertex(double * x, double * y);
   ~KnotVertex();
   void add(KnotVertex* v);
-  void insert(knotNot crossing);
+  int insert(knotNot crossing);
   double* getX();
   double* getY();
   bool checkCrossing();
