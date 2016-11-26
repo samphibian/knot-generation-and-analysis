@@ -155,28 +155,165 @@ void KnotVertex::remove(){
   }
 }
 
-// void KnotVertex::setCrossingVals(){
-//   KnotVertex * k = this;
-//   int lab = 1;
-//   while(k->next != this){
-//     if(k->checkCrossing()){
-//       std::cout << lab << std::endl;
-//       for(int i=0; i<this->getC()->size(); ++i){
-//         k->getC()->at(i).setLabel(lab);
-//         ++lab;
-//       }
-//     }
+void KnotVertex::setCrossingVals(){
+  KnotVertex * k = this;
+  int lab = 0;
+  while(k->next != this){
+    if(k->checkCrossing()){
+      #ifdef DEBUG
+      std::cout << "crossings in k: " << k->getC()->size() << std::endl;
+      #endif
 
-//     k = k->next;
-//   }
-//     if(k->checkCrossing()){
-//       std::cout << lab << std::endl;
-//       for(int i=0; i<this->getC()->size(); ++i){
-//         k->getC()->at(i).setLabel(lab);
-//         ++lab;
-//       }
-//     }
-// }
+      for(int i=0; i < k->getC()->size(); ++i){
+        if(k->getC()->at(i).getLabel() < 0){
+          ++lab;
+
+          KnotVertex * a = k->getC()->at(i).getA(), //fromA will be same
+            * b = k->getC()->at(i).getB(), //check fromB to see if same a and d            
+            * c = k->getC()->at(i).getC(), //check fromC to see if same a and d
+            * d = k->getC()->at(i).getD(); //if not, check fromD
+
+          bool foundPair = false;
+          k->getC()->at(i).setLabel(lab);
+
+          if(a->checkCrossing() && a != k){
+            for(int j=0; j<a->getC()->size(); ++j){
+              if(a->getC()->at(j).getB() == b && a->getC()->at(j).getC() == c && a->getC()->at(j).getD() == d){
+                a->getC()->at(j).setLabel(lab);
+
+                #ifdef DEBUG
+                std::cout << "Setting a\n\tLabel: " << a->getC()->at(j).getLabel() <<std::endl;checkCrossing
+                #endif
+
+                foundPair = true;
+              }
+            }
+          }
+
+          if(b->checkCrossing() && b != k && !foundPair){
+            for(int j=0; j<b->getC()->size(); ++j){
+              if(b->getC()->at(j).getA() == a && b->getC()->at(j).getC() == c && b->getC()->at(j).getD() == d){
+                b->getC()->at(j).setLabel(lab);
+
+                #ifdef DEBUG
+                std::cout << "Setting b\n\tLabel: " << b->getC()->at(j).getLabel() <<std::endl;
+                #endif
+
+                foundPair = true;
+              }
+            }
+          }
+
+          if(c->checkCrossing() && c != k && !foundPair){
+            for(int j=0; j<c->getC()->size(); ++j){
+              if(c->getC()->at(j).getB() == b && c->getC()->at(j).getA() == a && c->getC()->at(j).getD() == d){
+                c->getC()->at(j).setLabel(lab);
+
+                #ifdef DEBUG
+                std::cout << "Setting c\n\tLabel: " << c->getC()->at(j).getLabel() <<std::endl;
+                #endif
+
+                foundPair = true;
+              }
+            }
+          }
+
+          if(d->checkCrossing() && d != k && !foundPair){
+            for(int j=0; j<d->getC()->size(); ++j){
+              if(d->getC()->at(j).getB() == b && d->getC()->at(j).getC() == c && d->getC()->at(j).getA() == a){
+                d->getC()->at(j).setLabel(lab);
+
+                #ifdef DEBUG
+                std::cout << "Setting d\n\tLabel: " << d->getC()->at(j).getLabel() <<std::endl;
+                #endif
+
+                foundPair = true;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    k = k->next;
+  }
+
+  if(k->checkCrossing()){
+    #ifdef DEBUG
+    std::cout << "crossings in k: " << k->getC()->size() << std::endl;
+    #endif
+
+    for(int i=0; i < k->getC()->size(); ++i){
+      if(k->getC()->at(i).getLabel() < 0){
+        ++lab;
+
+        KnotVertex * a = k->getC()->at(i).getA(), //fromA will be same
+          * b = k->getC()->at(i).getB(), //check fromB to see if same a and d            
+          * c = k->getC()->at(i).getC(), //check fromC to see if same a and d
+          * d = k->getC()->at(i).getD(); //if not, check fromD
+
+        bool foundPair = false;
+        k->getC()->at(i).setLabel(lab);
+
+        if(a->checkCrossing() && a != k){
+          for(int j=0; j<a->getC()->size(); ++j){
+            if(a->getC()->at(j).getB() == b && a->getC()->at(j).getC() == c && a->getC()->at(j).getD() == d){
+              a->getC()->at(j).setLabel(lab);
+
+              #ifdef DEBUG
+              std::cout << "Setting a\n\tLabel: " << a->getC()->at(j).getLabel() <<std::endl;checkCrossing
+              #endif
+
+              foundPair = true;
+            }
+          }
+        }
+
+        if(b->checkCrossing() && b != k && !foundPair){
+          for(int j=0; j<b->getC()->size(); ++j){
+            if(b->getC()->at(j).getA() == a && b->getC()->at(j).getC() == c && b->getC()->at(j).getD() == d){
+              b->getC()->at(j).setLabel(lab);
+
+              #ifdef DEBUG
+              std::cout << "Setting b\n\tLabel: " << b->getC()->at(j).getLabel() <<std::endl;
+              #endif
+
+              foundPair = true;
+            }
+          }
+        }
+
+        if(c->checkCrossing() && c != k && !foundPair){
+          for(int j=0; j<c->getC()->size(); ++j){
+            if(c->getC()->at(j).getB() == b && c->getC()->at(j).getA() == a && c->getC()->at(j).getD() == d){
+              c->getC()->at(j).setLabel(lab);
+
+              #ifdef DEBUG
+              std::cout << "Setting c\n\tLabel: " << c->getC()->at(j).getLabel() <<std::endl;
+              #endif
+
+              foundPair = true;
+            }
+          }
+        }
+
+        if(d->checkCrossing() && d != k && !foundPair){
+          for(int j=0; j<d->getC()->size(); ++j){
+            if(d->getC()->at(j).getB() == b && d->getC()->at(j).getC() == c && d->getC()->at(j).getA() == a){
+              d->getC()->at(j).setLabel(lab);
+
+              #ifdef DEBUG
+              std::cout << "Setting d\n\tLabel: " << d->getC()->at(j).getLabel() <<std::endl;
+              #endif
+
+              foundPair = true;
+            }
+          }
+        }
+      }
+    }
+  }
+}
 
 void KnotVertex::printAll(){
   KnotVertex* current = this;

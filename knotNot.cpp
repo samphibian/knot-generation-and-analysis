@@ -9,7 +9,7 @@
 #include <math.h>
 
 knotNot::knotNot(){
-  label = 0;
+  label = -1;
   sign = 0;
   intersection = Point();
   fromA = NULL;
@@ -19,7 +19,7 @@ knotNot::knotNot(){
 }
 
 knotNot::knotNot(KnotVertex * over1, KnotVertex * over2, KnotVertex * under1, KnotVertex * under2){
-  label = 0;
+  label = -1;
   sign = 0;
   fromA = over2;
   fromC = over1;
@@ -90,7 +90,6 @@ knotNot::knotNot(KnotVertex * over1, KnotVertex * over2, KnotVertex * under1, Kn
     t = tnum/tden;
 
   //p + tr
-  //intersection = Point(new double(*(p.getX()) + t*(*(r.getX()))), new double(*(p.getY()) + t*(*(r.getY()))));
     *(intersection.getX()) = *(p.getX()) + t*(*(r.getX()));
     *(intersection.getY()) = *(p.getY()) + t*(*(r.getY()));
 }
@@ -108,6 +107,10 @@ void knotNot::setSign(int n){
 }
 
 void knotNot::setLabel(int n){
+  #ifdef DEBUG
+  std::cout << "Set label to: " << n << std::endl;
+  #endif
+
   this->label = n;
 }
 
@@ -116,7 +119,7 @@ int knotNot::getSign(){
 }
 
 int knotNot::getLabel(){
-  return this->sign*this->label;
+  return this->label;
 }
 
 void knotNot::setA(KnotVertex *a){

@@ -145,7 +145,7 @@ void generateKnot(KnotVertex* k, int n) {
   }
   returnCrossingIfCrossing(k, k);
 
-  // k->setCrossingVals();
+  k->setCrossingVals();
 
   k->printAll();
 }
