@@ -110,22 +110,31 @@ void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n){
  }
 }
 
-vector<knotNot> generateNotation(KnotVertex * head){
+void generateNotation(KnotVertex * head, int numOcross){
   KnotVertex * k = head;
-  static vector<knotNot> kNotation;
-  int count = 0;
+  knotNot crossingList[numOcross];
 
-  if (k->checkCrossing()){
-    for(int i=0; i<k->getC()->size(); ++i){
-      ++count;
-      kNotation.push_back(k->getC()->at(i));
-      kNotation[i].setLabel(kNotation[i].getSign()*count);
+  static vector<int> kNotation;
+
+//check each crossing. note that the last doesn't need to be checked as all in that one shoud be duplicaties
+  while(k->next != head){
+    if (k->checkCrossing()){
+      for(int i=0; i<k->getC()->size(); ++i){
+        //empty crossing generated with label -1
+        if(crossingList[k->getC()->at(i).getLabel() - 1].getLabel() < 0){
+          crossingList[k->getC()->at(i).getLabel() - 1] = k->getC()->at(i);
+
+          #ifdef DEBUG
+          std::cout << "label: " << k->getC()->at(i).getLabel() - 1 << std::endl;
+          #endif
+        }
+      }
     }
+
+    k = k->next;
   }
 
-
-  while(k != head){
-  }
+  //have array of crossings from above. Starting with first, follow [a/b/c/d]->next->next->... until reach crossing; record label and a/b/c/d
 }
 
 void generateKnot(KnotVertex* k, int n) {
@@ -145,7 +154,14 @@ void generateKnot(KnotVertex* k, int n) {
   }
   returnCrossingIfCrossing(k, k);
 
-  k->setCrossingVals();
+  int numberOfCrossings = k->setCrossingVals();
 
   k->printAll();
+
+
+  #ifdef DEBUG
+  std::cout << "number of crossings: " << numOcross << std::endl;
+  #endif
+
+  generateNotation(k, numberOfCrossings);
 }

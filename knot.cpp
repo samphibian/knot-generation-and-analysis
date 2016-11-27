@@ -155,7 +155,7 @@ void KnotVertex::remove(){
   }
 }
 
-void KnotVertex::setCrossingVals(){
+int KnotVertex::setCrossingVals(){
   KnotVertex * k = this;
   int lab = 0;
   while(k->next != this){
@@ -311,6 +311,8 @@ void KnotVertex::setCrossingVals(){
           }
         }
       }
+
+      return lab;
     }
   }
 }
