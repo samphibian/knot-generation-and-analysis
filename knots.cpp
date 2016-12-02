@@ -30,4 +30,5 @@ http://stackoverflow.com/questions/9878965/c-rand-between-0-and-1
 http://www.cplusplus.com/forum/beginner/49408/ (Disch's answer)
 http://stackoverflow.com/questions/14176776/find-out-if-2-lines-intersect
 http://www.codeproject.com/Tips/862988/Find-the-intersection-point-of-two-line-segments
+http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
 *****/
