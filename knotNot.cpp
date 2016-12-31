@@ -155,7 +155,7 @@ KnotVertex * knotNot::getD(){
 }
 
 void knotNot::printNot(){
-  std::cout << "Crossing: " << this->getLabel() <<
+  std::cout << "Crossing " << this->getLabel() <<
     " is at the point ";
   
   this->intersection.print();

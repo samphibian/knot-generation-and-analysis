@@ -1,4 +1,5 @@
 #include "knot.h"
+#include <algorithm>
 
 bool validPoint(KnotVertex *head, double *xval, double *yval){
   KnotVertex *k = head;
@@ -111,21 +112,30 @@ void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n){
 }
 
 void generateNotation(KnotVertex * head, int numOcross){
+  int crossComps = 4; //a, b, c, d
   KnotVertex * k = head;
   knotNot crossingList[numOcross];
 
-  static vector<int> kNotation;
+  char notLetters[numOcross][crossComps];
+  int notNumbers[numOcross][crossComps];
+  typedef KnotVertex * (knotNot::*traceLettersFuncs)();
+
+  //static vector<int> kNotation;
 
 //check each crossing. note that the last doesn't need to be checked as all in that one shoud be duplicaties
   while(k->next != head){
     if (k->checkCrossing()){
       for(int i=0; i<k->getC()->size(); ++i){
-        //empty crossing generated with label -1
-        if(crossingList[k->getC()->at(i).getLabel() - 1].getLabel() < 0){
+        #ifdef DEBUG
+        std::cout << "current crossing label is: " << crossingList[k->getC()->at(i).getLabel() - 1].getLabel() << std::endl;
+        #endif
+        //empty crossing generated with label -1, filled between 0 and number of crossings
+        if(crossingList[k->getC()->at(i).getLabel() - 1].getLabel() < 0 || crossingList[k->getC()->at(i).getLabel() - 1].getLabel() > numOcross + 1){
           crossingList[k->getC()->at(i).getLabel() - 1] = k->getC()->at(i);
 
           #ifdef DEBUG
           std::cout << "label: " << k->getC()->at(i).getLabel() - 1 << std::endl;
+          crossingList[k->getC()->at(i).getLabel() - 1].printNot();
           #endif
         }
       }
@@ -134,7 +144,58 @@ void generateNotation(KnotVertex * head, int numOcross){
     k = k->next;
   }
 
+  std::cout << "crossingList: " << std::endl;
+  for(int i=0; i<numOcross; ++i){
+    crossingList[i].printNot();
+  }
+
+  //get function pointers
+  traceLettersFuncs traceLetters[] = { &knotNot::getA, &knotNot::getB, &knotNot::getC, &knotNot::getD };
+  char letters[] = { 'a', 'b', 'c', 'd' },
+    toLetters[] = { 'c', 'd', 'a', 'b' };
+
+
   //have array of crossings from above. Starting with first, follow [a/b/c/d]->next->next->... until reach crossing; record label and a/b/c/d
+  for (int i = 0; i < numOcross; ++i){
+    int nextI, prevI;
+    (i == numOcross - 1)?(nextI = 0):(nextI = i+1);
+    (i == 0)?(prevI = numOcross - 1):(prevI = i-1);
+
+    int numsToCheck[] = { nextI, nextI, prevI, prevI };
+    for (int j = 0; j < crossComps; ++j){
+      //trace a
+      if((crossingList[i].*traceLetters[j])() == (crossingList[numsToCheck[j]].*traceLetters[j])()){
+        notLetters[i][j] = toLetters[j];
+        notNumbers[i][j] = crossingList[numsToCheck[j]].getLabel();
+        std::cout << i << " is " << letters[j] << " to " << toLetters[j] << " with " << numsToCheck[j] << std::endl;
+      }
+      else{
+        while(!notNumbers[i][j]){
+          KnotVertex * check = (crossingList[i].*traceLetters[j])();
+          if(numsToCheck[j] == nextI){
+            check = check->next;
+            while(!check->checkCrossing()){
+              check = check->next;
+            }
+          }
+          else{
+            check = check->prev;
+            while(!check->checkCrossing()){
+              check = check->prev;
+            }
+          }
+          for (int l = 0; l < crossComps; ++l){
+            knotNot firstCross = check->getC()->at(0);
+            if(check == (firstCross.*traceLetters[l])()){
+              notLetters[i][j] = letters[l];
+              notNumbers[i][j] = firstCross.getLabel();
+              std::cout << i << " is " << letters[j] << " to " << letters[l] << " with " << firstCross.getLabel()-1 << std::endl;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 void generateKnot(KnotVertex* k, int n) {
