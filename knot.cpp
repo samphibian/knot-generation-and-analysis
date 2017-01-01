@@ -311,10 +311,10 @@ int KnotVertex::setCrossingVals(){
           }
         }
       }
-
-      return lab;
     }
   }
+
+  return lab;
 }
 
 void KnotVertex::printAll(){
