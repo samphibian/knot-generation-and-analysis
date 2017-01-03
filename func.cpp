@@ -218,9 +218,9 @@ void generateNotation(KnotVertex * head, int numOcross){
                 }
               }
             }
-              check = check->prev;
-              if(initial==check)
-                goto foundNextCrossing;            
+            check = check->prev;
+            if(initial==check)
+              goto foundNextCrossing;            
           }
         }
         foundNextCrossing:

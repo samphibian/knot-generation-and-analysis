@@ -1,4 +1,4 @@
-//given a knot, should output notation. notation should be {crossing id: a, b, c, d} - vector?
+//given a knot, should output notation. notation should have sign, crossing id, point of intersection, and the KnotVertex pointers for a, b, c, d
 
 #include "knot.h"
 #include <string>
@@ -35,12 +35,22 @@ knotNot::knotNot(KnotVertex * over1, KnotVertex * over2, KnotVertex * under1, Kn
     thetaUnder1 = atan((*(under1->getY())-yavg)
 			 /(*(under1->getX()) - xavg));
 
-  // #ifdef DEBUG
+  if((*(over2->getX()) - xavg) < 0){
+    thetaA -= M_PI;
+  }
+  if((*(over1->getX()) - xavg) < 0){
+    thetaC -= M_PI;
+  }
+  if((*(under1->getX()) - xavg) < 0){
+    thetaUnder1 -= M_PI;
+  }
+
+  #ifdef DEBUG
   std::cout << "xavg: " << xavg << " yavg: " << yavg  << " thetaA: " << thetaA << " thetaC: " << thetaC << " thetaUnder1: " << thetaUnder1 << std::endl;
-  // #endif
+  #endif
 
   //bcd clockwise
-  if((thetaC + 2*M_PI > thetaA + 2*M_PI && thetaUnder1<thetaC && thetaUnder1>thetaA)){
+  if((thetaC > thetaA && thetaUnder1 < thetaC && thetaUnder1 > thetaA)){
     fromB = under1;
     fromD = under2;
     sign = 1;
