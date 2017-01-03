@@ -194,33 +194,34 @@ void generateNotation(KnotVertex * head, int numOcross){
           std::cout << "initial" << initial << std::endl;
           #endif
 
-          for (int m = 0; m < numOcross; ++m){
-            for (int l = 0; l < crossComps; ++l){
-              if(l!=j && (crossingList[m].*traceLetters[l])() == check){
-                notLetters[i][j] = letters[l];
-                notNumbers[i][j] = crossingList[m].getLabel();
-                goto foundNextCrossing;
+          if(numsToCheck[j] == nextI){
+            for (int m = 0; m < numOcross; ++m){
+              for (int l = 0; l < crossComps; ++l){
+                if(l!=j && (crossingList[m].*traceLetters[l])() == check){
+                  notLetters[i][j] = letters[l];
+                  notNumbers[i][j] = crossingList[m].getLabel();
+                  goto foundNextCrossing;
+                }
               }
             }
-          }
-          if(numsToCheck[j] == nextI){
             check = check->next;
             if(initial==check)
               goto foundNextCrossing;
           }
           else{
+            for (int m = numOcross-1; m > -1; --m){
+              for (int l = 0; l < crossComps; ++l){
+                if(l!=j && (crossingList[m].*traceLetters[l])() == check){
+                  notLetters[i][j] = letters[l];
+                  notNumbers[i][j] = crossingList[m].getLabel();
+                  goto foundNextCrossing;
+                }
+              }
+            }
               check = check->prev;
               if(initial==check)
                 goto foundNextCrossing;            
           }
-          // for (int l = 0; l < crossComps; ++l){
-          //   knotNot firstCross = check->getC()->at(0);
-          //   if(check == (firstCross.*traceLetters[l])()){
-          //     notLetters[i][j] = letters[l];
-          //     notNumbers[i][j] = firstCross.getLabel();
-          //     std::cout << "Different lines: " << i << " is " << letters[j] << " to " << letters[l] << " with " << firstCross.getLabel()-1 << std::endl;
-          //   }
-          // }
         }
         foundNextCrossing:
         std::cout << "Different lines: " << notLetters[i][j] << notNumbers[i][j] << std::endl;
