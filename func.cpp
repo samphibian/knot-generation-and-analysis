@@ -47,6 +47,14 @@ bool checkIntersect(Point a1, Point a2, Point b1, Point b2){
     b2x = *(b2.getX()),
     b2y = *(b2.getY());
 
+  //doesn't count if if they share an endpoint
+  if((a1x == b1x && a1y == b1y) ||
+    (a2x == b1x && a2y == b1y) ||
+    (a1x == b2x && a1y == b2y) ||
+    (a2x == b2x && a2y == b2y)){
+    return false;
+  }
+
   double firstTest = ((b1x - a1x)*(a2y - a1y) - (b1y - a1y)*(a2x - a1x)) * ((b2x - a1x)*(a2y - a1y) - (b2y - a1y)*(a2x - a1x)),
     secondTest = ((a1x - b1x)*(b2y - b1y) - (a1y - b1y)*(b2x - b1x)) * ((a2x - b1x)*(b2y - b1y) - (a2y - b1y)*(b2x - b1x));
 
@@ -66,7 +74,7 @@ void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n){
 
   float slopeToNew = (float)(*(yval)-*(last->getY()))/(*(xval)-*(last->getX()));
 
-  while( k->next != last){
+  while( k != last){
     if(k!=n){
       Point a1 = Point(k->getX(), k->getY()),
       a2 = Point(k->next->getX(), k->next->getY()),
@@ -114,13 +122,11 @@ void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n){
 void generateNotation(KnotVertex * head, int numOcross){
   int crossComps = 4; //a, b, c, d
   KnotVertex * k = head;
-  knotNot crossingList[numOcross];
+  knotNot crossingList[numOcross] = {};
 
-  char notLetters[numOcross][crossComps];
+  char notLetters[numOcross][crossComps] = {};
   int notNumbers[numOcross][crossComps] = {};
   typedef KnotVertex * (knotNot::*traceLettersFuncs)();
-
-  //static vector<int> kNotation;
 
 //check each crossing. note that the last doesn't need to be checked as all in that one shoud be duplicaties
   while(k->next != head){
@@ -158,23 +164,33 @@ void generateNotation(KnotVertex * head, int numOcross){
   //have array of crossings from above. Starting with first, follow [a/b/c/d]->next->next->... until reach crossing; record label and a/b/c/d
   for (int i = 0; i < numOcross; ++i){
     int nextI, prevI;
-    (i == numOcross - 1)?(nextI = 0):(nextI = i+1);
-    (i == 0)?(prevI = numOcross-1):(prevI = i-1);
+    (i == numOcross - 1)?(nextI = -1):(nextI = i+1);
+    (i == 0)?(prevI = -3):(prevI = i-1);
 
     int numsToCheck[] = { nextI, nextI, prevI, prevI };
+    if (crossingList[i].getB()->next == crossingList[i].getD()){
+      numsToCheck[1] = prevI;
+      numsToCheck[3] = nextI;
+    }
     for (int j = 0; j < crossComps; ++j){
       //trace each
       if(numsToCheck[j]>-1 &&
        (crossingList[i].*traceLetters[j])() == (crossingList[numsToCheck[j]].*traceLetters[j])() &&
-       (crossingList[i].*traceLetters[(j+2)%crossComps])() == (crossingList[numsToCheck[j]].*traceLetters[(j+2)%crossComps])()){
+       (crossingList[i].*traceLetters[(j+2)%crossComps])() == (crossingList[numsToCheck[j]].*traceLetters[(j+2)%crossComps])() &&
+       i != numsToCheck[j]){
         notLetters[i][j] = toLetters[j];
         notNumbers[i][j] = crossingList[numsToCheck[j]].getLabel();
         std::cout << "Same line: " << i << " is " << letters[j] << " to " << toLetters[j] << " with " << numsToCheck[j] << std::endl;
       }
       else{
+        KnotVertex * initial = (crossingList[i].*traceLetters[j])(),
+          * check = initial;
         while(!notNumbers[i][j]){
-          KnotVertex * initial = (crossingList[i].*traceLetters[j])(),
-            * check = initial;
+
+          #ifdef DEBUG
+          std::cout << "initial" << initial << std::endl;
+          #endif
+
           for (int m = 0; m < numOcross; ++m){
             for (int l = 0; l < crossComps; ++l){
               if(l!=j && (crossingList[m].*traceLetters[l])() == check){
@@ -188,16 +204,11 @@ void generateNotation(KnotVertex * head, int numOcross){
             check = check->next;
             if(initial==check)
               goto foundNextCrossing;
-            // while(!check->checkCrossing()){
-            //   check = check->next;
-            // }
           }
           else{
-            // check = check->prev;
               check = check->prev;
               if(initial==check)
-                goto foundNextCrossing;
-            
+                goto foundNextCrossing;            
           }
           // for (int l = 0; l < crossComps; ++l){
           //   knotNot firstCross = check->getC()->at(0);
@@ -209,7 +220,7 @@ void generateNotation(KnotVertex * head, int numOcross){
           // }
         }
         foundNextCrossing:
-        std::cout << "Different lines" << std::endl;
+        std::cout << "Different lines: " << notLetters[i][j] << notNumbers[i][j] << std::endl;
       }
     }
   }
