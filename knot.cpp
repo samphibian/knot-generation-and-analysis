@@ -4,8 +4,6 @@
  * and the functions needed to work with it.
 */
 
-//enum ListType{INTEGER, FLOAT, CHAR, STRING, GENERIC_LIST};
-
 #include "knot.h"
 
  using namespace std;

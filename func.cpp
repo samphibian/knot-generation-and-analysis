@@ -151,9 +151,9 @@ void generateNotation(KnotVertex * head, int numOcross){
   }
 
   std::cout << "CrossingList with " << numOcross << " crossings: " << std::endl;
-  for(int i=0; i<numOcross; ++i){
-    crossingList[i].printNot();
-  }
+    for(int i=0; i<numOcross; ++i){
+      crossingList[i].printNot();
+    }
 
   //get function pointers
   traceLettersFuncs traceLetters[] = { &knotNot::getA, &knotNot::getB, &knotNot::getC, &knotNot::getD };
@@ -164,14 +164,17 @@ void generateNotation(KnotVertex * head, int numOcross){
   //have array of crossings from above. Starting with first, follow [a/b/c/d]->next->next->... until reach crossing; record label and a/b/c/d
   for (int i = 0; i < numOcross; ++i){
     int nextI, prevI;
-    (i == numOcross - 1)?(nextI = -1):(nextI = i+1);
-    (i == 0)?(prevI = -3):(prevI = i-1);
+
+    (i == numOcross - 1)?(nextI = 0):(nextI = i+1);
+    (i == 0)?(prevI = numOcross-1):(prevI = i-1);
 
     int numsToCheck[] = { nextI, nextI, prevI, prevI };
+
     if (crossingList[i].getB()->next == crossingList[i].getD()){
       numsToCheck[1] = prevI;
       numsToCheck[3] = nextI;
     }
+
     for (int j = 0; j < crossComps; ++j){
       //trace each
       if(numsToCheck[j]>-1 &&
