@@ -49,17 +49,20 @@ knotNot::knotNot(KnotVertex * over1, KnotVertex * over2, KnotVertex * under1, Kn
   std::cout << "xavg: " << xavg << " yavg: " << yavg  << " thetaA: " << thetaA << " thetaC: " << thetaC << " thetaUnder1: " << thetaUnder1 << std::endl;
   #endif
 
-  //bcd clockwise
-  if((thetaC > thetaA && thetaUnder1 < thetaC && thetaUnder1 > thetaA)){
-    fromB = under1;
-    fromD = under2;
-    sign = 1;
-  }
-  else{
+  if(((*(over1->getY())>*(under1->getY())) != (*(over2->getY())>*(under1->getY()))) &&
+      (*(under1->getX()) < 
+        (((*(over2->getX()) - *(over1->getX()))*(*(under1->getY()) - *(over1->getY()))/
+          (*(over2->getY()) - *(over1->getY()))) + *(over1->getX())))){
+    //b counterclockwise
     fromB = under2;
     fromD = under1;
     sign = -1;
   }
+  else{
+    fromB = under1;
+    fromD = under2;
+    sign = 1;
+ }
 
   //p+tr=q+us
   //t = (q − p) × s / (r × s)

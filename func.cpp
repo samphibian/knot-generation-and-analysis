@@ -160,7 +160,6 @@ void generateNotation(KnotVertex * head, int numOcross){
   char letters[] = { 'a', 'b', 'c', 'd' },
     toLetters[] = { 'c', 'd', 'a', 'b' };
 
-
   //have array of crossings from above. Starting with first, follow [a/b/c/d]->next->next->... until reach crossing; record label and a/b/c/d
   for (int i = 0; i < numOcross; ++i){
     int nextI, prevI;
@@ -183,47 +182,51 @@ void generateNotation(KnotVertex * head, int numOcross){
        i != numsToCheck[j]){
         notLetters[i][j] = toLetters[j];
         notNumbers[i][j] = crossingList[numsToCheck[j]].getLabel();
+
+        notLetters[numsToCheck[j]][(j+2)%crossComps] = letters[j];
+        notNumbers[numsToCheck[j]][(j+2)%crossComps] = crossingList[i].getLabel();
         std::cout << "Same line: " << i << " is " << letters[j] << " to " << toLetters[j] << " with " << numsToCheck[j] << std::endl;
       }
       else{
         KnotVertex * initial = (crossingList[i].*traceLetters[j])(),
           * check = initial;
         while(!notNumbers[i][j]){
-
-          #ifdef DEBUG
-          std::cout << "initial" << initial << std::endl;
-          #endif
-
           if(numsToCheck[j] == nextI){
             for (int m = 0; m < numOcross; ++m){
               for (int l = 0; l < crossComps; ++l){
                 if(l!=j && (crossingList[m].*traceLetters[l])() == check){
                   notLetters[i][j] = letters[l];
                   notNumbers[i][j] = crossingList[m].getLabel();
+
+                  notLetters[m][l] = letters[j];
+                  notNumbers[m][l] = crossingList[i].getLabel();
                   goto foundNextCrossing;
                 }
               }
             }
             check = check->next;
-            if(initial==check)
-              goto foundNextCrossing;
           }
+
           else{
             for (int m = numOcross-1; m > -1; --m){
               for (int l = 0; l < crossComps; ++l){
                 if(l!=j && (crossingList[m].*traceLetters[l])() == check){
                   notLetters[i][j] = letters[l];
                   notNumbers[i][j] = crossingList[m].getLabel();
+
+                  notLetters[m][l] = letters[j];
+                  notNumbers[m][l] = crossingList[i].getLabel();
                   goto foundNextCrossing;
                 }
               }
             }
-            check = check->prev;
-            if(initial==check)
-              goto foundNextCrossing;            
+            check = check->prev;           
           }
+          continue;
+
+          foundNextCrossing:
+          break;
         }
-        foundNextCrossing:
         std::cout << "Different lines: " << notLetters[i][j] << notNumbers[i][j] << std::endl;
       }
     }
