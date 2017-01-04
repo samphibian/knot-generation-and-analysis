@@ -22,6 +22,6 @@ http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segme
 http://stackoverflow.com/questions/20010909/how-to-loop-through-multiple-functions-in-c
 https://www.codeproject.com/Articles/7150/Member-Function-Pointers-and-the-Fastest-Possible
 http://www.cplusplus.com/forum/beginner/27582/
-http://stackoverflow.com/questions/11716268/point-in-polygon-algorithm
+http://stackoverflow.com/questions/1560492/how-to-tell-whether-a-point-is-to-the-right-or-left-side-of-a-line
 https://msdn.microsoft.com/en-us/library/7k66t42c.aspx
 *****/

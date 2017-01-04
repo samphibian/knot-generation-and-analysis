@@ -157,8 +157,7 @@ void generateNotation(KnotVertex * head, int numOcross){
 
   //get function pointers
   traceLettersFuncs traceLetters[] = { &knotNot::getA, &knotNot::getB, &knotNot::getC, &knotNot::getD };
-  char letters[] = { 'a', 'b', 'c', 'd' },
-    toLetters[] = { 'c', 'd', 'a', 'b' };
+  char letters[] = { 'a', 'b', 'c', 'd' };
 
   //have array of crossings from above. Starting with first, follow [a/b/c/d]->next->next->... until reach crossing; record label and a/b/c/d
   for (int i = 0; i < numOcross; ++i){
@@ -175,17 +174,17 @@ void generateNotation(KnotVertex * head, int numOcross){
     }
 
     for (int j = 0; j < crossComps; ++j){
+      int checkIndex = (j+2)%crossComps;
       //trace each
-      if(numsToCheck[j]>-1 &&
-       (crossingList[i].*traceLetters[j])() == (crossingList[numsToCheck[j]].*traceLetters[j])() &&
-       (crossingList[i].*traceLetters[(j+2)%crossComps])() == (crossingList[numsToCheck[j]].*traceLetters[(j+2)%crossComps])() &&
+      if((crossingList[i].*traceLetters[j])() == (crossingList[numsToCheck[j]].*traceLetters[j])() &&
+       (crossingList[i].*traceLetters[checkIndex])() == (crossingList[numsToCheck[j]].*traceLetters[checkIndex])() &&
        i != numsToCheck[j]){
-        notLetters[i][j] = toLetters[j];
+        notLetters[i][j] = letters[checkIndex];
         notNumbers[i][j] = crossingList[numsToCheck[j]].getLabel();
 
-        notLetters[numsToCheck[j]][(j+2)%crossComps] = letters[j];
-        notNumbers[numsToCheck[j]][(j+2)%crossComps] = crossingList[i].getLabel();
-        std::cout << "Same line: " << i << " is " << letters[j] << " to " << toLetters[j] << " with " << numsToCheck[j] << std::endl;
+        notLetters[numsToCheck[j]][checkIndex] = letters[j];
+        notNumbers[numsToCheck[j]][checkIndex] = crossingList[i].getLabel();
+        std::cout << "Same line: " << i << " is " << letters[j] << " to " << letters[checkIndex] << " with " << numsToCheck[j] << std::endl;
       }
       else{
         KnotVertex * initial = (crossingList[i].*traceLetters[j])(),

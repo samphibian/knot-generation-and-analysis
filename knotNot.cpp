@@ -25,43 +25,19 @@ knotNot::knotNot(KnotVertex * over1, KnotVertex * over2, KnotVertex * under1, Kn
   fromC = over1;
   intersection = Point();
 
-  double xavg = (*(over1->getX()) + *(over2->getX()) + *(under1->getX()) + *(under2->getX()))/4.0,
-    yavg = (*(over1->getY()) + *(over2->getY()) + *(under1->getY()) + *(under2->getY()))/4.0;
+// Use the sign of the determinant of vectors (O1O2,O1U1), where O1, O2 are the Over1/2 and U1 is Under1
 
-  double thetaA = atan((*(over2->getY())-yavg)
-			 /(*(over2->getX()) - xavg)),
-    thetaC = atan((*(over1->getY())-yavg)
-        /(*(over1->getX()) - xavg)),
-    thetaUnder1 = atan((*(under1->getY())-yavg)
-			 /(*(under1->getX()) - xavg));
-
-  if((*(over2->getX()) - xavg) < 0){
-    thetaA -= M_PI;
-  }
-  if((*(over1->getX()) - xavg) < 0){
-    thetaC -= M_PI;
-  }
-  if((*(under1->getX()) - xavg) < 0){
-    thetaUnder1 -= M_PI;
-  }
-
-  #ifdef DEBUG
-  std::cout << "xavg: " << xavg << " yavg: " << yavg  << " thetaA: " << thetaA << " thetaC: " << thetaC << " thetaUnder1: " << thetaUnder1 << std::endl;
-  #endif
-
-  if(((*(over1->getY())>*(under1->getY())) != (*(over2->getY())>*(under1->getY()))) &&
-      (*(under1->getX()) < 
-        (((*(over2->getX()) - *(over1->getX()))*(*(under1->getY()) - *(over1->getY()))/
-          (*(over2->getY()) - *(over1->getY()))) + *(over1->getX())))){
-    //b counterclockwise
-    fromB = under2;
-    fromD = under1;
-    sign = -1;
-  }
-  else{
+  if(((*(over2->getX()) - *(over1->getX())) * (*(under1->getY()) - *(over1->getY())))
+    <((*(over2->getY()) - *(over1->getY())) * (*(under1->getX()) - *(over1->getX())))){
+    //b clockwise
     fromB = under1;
     fromD = under2;
     sign = 1;
+  }
+  else{
+    fromB = under2;
+    fromD = under1;
+    sign = -1;
  }
 
   //p+tr=q+us
