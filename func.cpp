@@ -166,34 +166,60 @@ void generateNotation(KnotVertex * head, int numOcross){
     (i == numOcross - 1)?(nextI = 0):(nextI = i+1);
     (i == 0)?(prevI = numOcross-1):(prevI = i-1);
 
-    int numsToCheck[] = { nextI, nextI, prevI, prevI };
+    int numsToCheck[] = { nextI, nextI, prevI, prevI },
+      indicesONext[] = { 0, 1 };
 
     if (crossingList[i].getB()->next == crossingList[i].getD()){
       numsToCheck[1] = prevI;
       numsToCheck[3] = nextI;
+      indicesONext[1] = 3;
     }
 
     for (int j = 0; j < crossComps; ++j){
       int checkIndex = (j+2)%crossComps;
       //trace each
-      if((crossingList[i].*traceLetters[j])() == (crossingList[numsToCheck[j]].*traceLetters[j])() &&
-       (crossingList[i].*traceLetters[checkIndex])() == (crossingList[numsToCheck[j]].*traceLetters[checkIndex])() &&
-       i != numsToCheck[j]){
-        notLetters[i][j] = letters[checkIndex];
-        notNumbers[i][j] = crossingList[numsToCheck[j]].getLabel();
+      if((((crossingList[i].*traceLetters[j])() == (crossingList[numsToCheck[j]].*traceLetters[j])() &&
+       (crossingList[i].*traceLetters[checkIndex])() == (crossingList[numsToCheck[j]].*traceLetters[checkIndex])()) ||
+       ((crossingList[i].*traceLetters[j])() == (crossingList[numsToCheck[j]].*traceLetters[checkIndex])() &&
+       (crossingList[i].*traceLetters[checkIndex])() == (crossingList[numsToCheck[j]].*traceLetters[j])())) &&
+       i != numsToCheck[j] &&
+       !notNumbers[numsToCheck[j]][checkIndex]){
+        //shared line
 
-        notLetters[numsToCheck[j]][checkIndex] = letters[j];
-        notNumbers[numsToCheck[j]][checkIndex] = crossingList[i].getLabel();
-        std::cout << "Same line: " << i << " is " << letters[j] << " to " << letters[checkIndex] << " with " << numsToCheck[j] << std::endl;
+        if((crossingList[i].*traceLetters[checkIndex])() == (crossingList[numsToCheck[j]].*traceLetters[j])()){
+          notLetters[i][j] = letters[j];
+          notNumbers[i][j] = crossingList[numsToCheck[j]].getLabel();
+
+          notLetters[numsToCheck[j]][checkIndex] = letters[checkIndex];
+          notNumbers[numsToCheck[j]][checkIndex] = crossingList[i].getLabel();
+          std::cout << "Same line: " << i << " is " << letters[j] << " to " << letters[j] << " with " << numsToCheck[j] << std::endl;
+        }
+
+        else{
+          notLetters[i][j] = letters[checkIndex];
+          notNumbers[i][j] = crossingList[numsToCheck[j]].getLabel();
+
+          notLetters[numsToCheck[j]][checkIndex] = letters[j];
+          notNumbers[numsToCheck[j]][checkIndex] = crossingList[i].getLabel();
+          std::cout << "Same line: " << i << " is " << letters[j] << " to " << letters[checkIndex] << " with " << numsToCheck[j] << std::endl;
+        }
       }
-      else{
+      else if ((crossingList[i].*traceLetters[j])() == (crossingList[numsToCheck[j]].*traceLetters[j])() ||
+       (crossingList[i].*traceLetters[checkIndex])() == (crossingList[numsToCheck[j]].*traceLetters[checkIndex])() ||
+       (crossingList[i].*traceLetters[j])() == (crossingList[numsToCheck[j]].*traceLetters[checkIndex])() ||
+       (crossingList[i].*traceLetters[checkIndex])() == (crossingList[numsToCheck[j]].*traceLetters[j])()){
+        //v
+
+      }
+
+      // else{
         KnotVertex * initial = (crossingList[i].*traceLetters[j])(),
           * check = initial;
         while(!notNumbers[i][j]){
-          if(numsToCheck[j] == nextI){
+          if(j == 0 || j == indicesONext[1]){
             for (int m = 0; m < numOcross; ++m){
               for (int l = 0; l < crossComps; ++l){
-                if(l!=j && (crossingList[m].*traceLetters[l])() == check){
+                if(l!=j && (crossingList[m].*traceLetters[l])() == check && !notNumbers[m][l]){
                   notLetters[i][j] = letters[l];
                   notNumbers[i][j] = crossingList[m].getLabel();
 
@@ -209,7 +235,7 @@ void generateNotation(KnotVertex * head, int numOcross){
           else{
             for (int m = numOcross-1; m > -1; --m){
               for (int l = 0; l < crossComps; ++l){
-                if(l!=j && (crossingList[m].*traceLetters[l])() == check){
+                if(l!=j && (crossingList[m].*traceLetters[l])() == check && !notNumbers[m][l]){
                   notLetters[i][j] = letters[l];
                   notNumbers[i][j] = crossingList[m].getLabel();
 
@@ -224,9 +250,9 @@ void generateNotation(KnotVertex * head, int numOcross){
           continue;
 
           foundNextCrossing:
+          std::cout << "Different lines: " << notLetters[i][j] << notNumbers[i][j] << std::endl;
           break;
-        }
-        std::cout << "Different lines: " << notLetters[i][j] << notNumbers[i][j] << std::endl;
+        // }
       }
     }
   }
