@@ -21,6 +21,10 @@ Notation Generation:
 No-crossing knots
 One-crossing knots
 
+Known bugs:
+-Occasional infinite loops in the different next/prev sections
+--Probably due to miscalculation of CABD and similar same lines
+
 /****
 Sources:
 http://stackoverflow.com/questions/9878965/c-rand-between-0-and-1
