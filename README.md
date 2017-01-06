@@ -10,7 +10,16 @@ This project is designed to find the average shape of a Legendrian Knot. It does
 
 4) Repeat some large number of times, keeping track of the knot classification.
 
-5) Output the percentage of each knot created.
+5) Output the percentage of each knot created
+
+Working:
+Knot-Generation
+Crossing Generation
+Crossing Labelling
+
+Notation Generation:
+No-crossing knots
+One-crossing knots
 
 /****
 Sources:
