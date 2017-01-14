@@ -179,37 +179,151 @@ void generateNotation(KnotVertex * head, int numOcross){
     for (int j = 0; j < crossComps; ++j){
       std::cout << "Setting: " << letters[j] << i+1 << std::endl;
       int checkIndex = (j+2)%crossComps;
+
+      // if( numOcross > 1 &&
+      //  (crossingList[i].*traceLetters[j])() == (crossingList[numsToCheck[j]].*traceLetters[(j+1)%crossComps])() &&
+      //  (crossingList[i].*traceLetters[checkIndex])() == (crossingList[numsToCheck[j]].*traceLetters[(checkIndex+1)%crossComps])() ){
+      //   //shared line ACBD, BDCA, CADB, DBAC
+      //   std::cout << "Same 4+ line " << std::endl;
+      //   if( ((checkIndex == 0 || checkIndex == indicesONext[1]) &&
+      //    (crossingList[i].*traceLetters[checkIndex])()->next == (crossingList[i].*traceLetters[j])()) ||
+      //    (checkIndex != 0 && checkIndex != indicesONext[1] && 
+      //    (crossingList[i].*traceLetters[checkIndex])()->prev == (crossingList[i].*traceLetters[j])()) ){
+      //     notLetters[i][checkIndex] = letters[(j+1)%crossComps];
+      //     notNumbers[i][checkIndex] = crossingList[numsToCheck[j]].getLabel();
+
+      //     notLetters[numsToCheck[j]][(j+1)%crossComps] = letters[checkIndex];
+      //     notNumbers[numsToCheck[j]][(j+1)%crossComps] = crossingList[i].getLabel();
+      //     std::cout << "if: " << i << " is " << letters[checkIndex] << " to " << letters[(j+1)%crossComps]
+      //      << " with " << numsToCheck[j] << std::endl;
+      //   }
+      //   else{
+      //     notLetters[i][j] = letters[(checkIndex+1)%crossComps];
+      //     notNumbers[i][j] = crossingList[numsToCheck[j]].getLabel();
+
+      //     notLetters[numsToCheck[j]][(checkIndex+1)%crossComps] = letters[j];
+      //     notNumbers[numsToCheck[j]][(checkIndex+1)%crossComps] = crossingList[i].getLabel();
+      //     std::cout << "else: "<< i << " is " << letters[j] << " to " << letters[(checkIndex+1)%crossComps]
+      //      << " with " << numsToCheck[j] << std::endl;
+      //   }
+      // }
+      if( numOcross > 1 &&
+       (crossingList[i].*traceLetters[j])() == (crossingList[numsToCheck[j]].*traceLetters[(j + crossComps - 1)%crossComps])() &&
+       (crossingList[i].*traceLetters[checkIndex])() == (crossingList[numsToCheck[j]].*traceLetters[(checkIndex + crossComps - 1)%crossComps])() ){
+        ///shared line ACDB, BDAC, CABD, DBCA
+        std::cout << "Same 4- line " << std::endl;
+        if( ((checkIndex == 0 || checkIndex == indicesONext[1]) &&
+         (crossingList[i].*traceLetters[checkIndex])()->next == (crossingList[i].*traceLetters[j])()) ||
+         (checkIndex != 0 && checkIndex != indicesONext[1] && 
+         (crossingList[i].*traceLetters[checkIndex])()->prev == (crossingList[i].*traceLetters[j])()) ){
+          notLetters[i][checkIndex] = letters[(j + crossComps - 1)%crossComps];
+          notNumbers[i][checkIndex] = crossingList[numsToCheck[j]].getLabel();
+
+          notLetters[numsToCheck[j]][(j + crossComps - 1)%crossComps] = letters[checkIndex];
+          notNumbers[numsToCheck[j]][(j + crossComps - 1)%crossComps] = crossingList[i].getLabel();
+          std::cout << "if: " << i << " is " << letters[checkIndex] << " to " << letters[(j + crossComps - 1)%crossComps]
+           << " with " << numsToCheck[j] << std::endl;
+        }
+        else{
+          notLetters[i][j] = letters[(checkIndex + crossComps - 1)%crossComps];
+          notNumbers[i][j] = crossingList[numsToCheck[j]].getLabel();
+
+          notLetters[numsToCheck[j]][(checkIndex + crossComps - 1)%crossComps] = letters[j];
+          notNumbers[numsToCheck[j]][(checkIndex + crossComps - 1)%crossComps] = crossingList[i].getLabel();
+          std::cout << "else: " << i << " is " << letters[j] << " to " << letters[(checkIndex + crossComps - 1)%crossComps]
+           << " with " << numsToCheck[j] << std::endl;
+        }
+      }
       //trace each
-      if((((crossingList[i].*traceLetters[j])() == (crossingList[numsToCheck[j]].*traceLetters[j])() &&
-       (crossingList[i].*traceLetters[checkIndex])() == (crossingList[numsToCheck[j]].*traceLetters[checkIndex])()) ||
-       ((crossingList[i].*traceLetters[j])() == (crossingList[numsToCheck[j]].*traceLetters[checkIndex])() &&
-       (crossingList[i].*traceLetters[checkIndex])() == (crossingList[numsToCheck[j]].*traceLetters[j])())) &&
-       i != numsToCheck[j] &&
-       !notNumbers[numsToCheck[j]][checkIndex] && !notNumbers[i][j]){
+      if(i == 0  && numOcross > 2 &&
+       (((crossingList[i].*traceLetters[j])() == (crossingList[numOcross - 1].*traceLetters[j])() &&
+       (crossingList[i].*traceLetters[checkIndex])() == (crossingList[numOcross - 1].*traceLetters[checkIndex])()) ||
+       ((crossingList[i].*traceLetters[j])() == (crossingList[numOcross - 1].*traceLetters[checkIndex])() &&
+       (crossingList[i].*traceLetters[checkIndex])() == (crossingList[numOcross - 1].*traceLetters[j])())) &&
+       i != numOcross - 1 &&
+       !notNumbers[numOcross - 1][checkIndex] && !notNumbers[i][j]){
+        //shared line
+        std::cout << "Same line 0->numOcross-1 ";
+
+        if((crossingList[i].*traceLetters[checkIndex])() == (crossingList[numOcross - 1].*traceLetters[j])()){
+          if( ((j == 0 || j == indicesONext[1]) && numOcross - 1 < i) ||
+           (j != 0 && j != indicesONext[1] && numOcross - 1 > i) ){
+            notLetters[i][j] = letters[j];
+            notNumbers[i][j] = crossingList[numOcross - 1].getLabel();
+
+            notLetters[numOcross - 1][checkIndex] = letters[checkIndex];
+            notNumbers[numOcross - 1][checkIndex] = crossingList[i].getLabel();
+            std::cout << "j->cI: " << i << " is " << letters[j] << " to " << letters[j] << " with " << numOcross - 1 << std::endl;
+          }
+          else{
+            notLetters[i][checkIndex] = letters[j];
+            notNumbers[i][checkIndex] = crossingList[numOcross - 1].getLabel();
+
+            notLetters[numOcross - 1][j] = letters[checkIndex];
+            notNumbers[numOcross - 1][j] = crossingList[i].getLabel();
+            std::cout << "cI->j: " << i << " is " << letters[checkIndex] << " to " << letters[j] << " with " << numOcross - 1 << std::endl;
+          }
+        }
+      }
+      else if((((crossingList[i].*traceLetters[j])() == (crossingList[nextI].*traceLetters[j])() &&
+       (crossingList[i].*traceLetters[checkIndex])() == (crossingList[nextI].*traceLetters[checkIndex])()) ||
+       ((crossingList[i].*traceLetters[j])() == (crossingList[nextI].*traceLetters[checkIndex])() &&
+       (crossingList[i].*traceLetters[checkIndex])() == (crossingList[nextI].*traceLetters[j])())) &&
+       i != nextI &&
+       !notNumbers[nextI][checkIndex] && !notNumbers[i][j]){
         //shared line
         std::cout << "Same line ";
 
-        if((crossingList[i].*traceLetters[checkIndex])() == (crossingList[numsToCheck[j]].*traceLetters[j])() && 
-         ( ((j == 0 || j == indicesONext[1]) && numsToCheck[j] < i) || (j != 0 && j != indicesONext[1] && numsToCheck[j] > i)) ){
-          notLetters[i][j] = letters[j];
-          notNumbers[i][j] = crossingList[numsToCheck[j]].getLabel();
+        if((crossingList[i].*traceLetters[checkIndex])() == (crossingList[nextI].*traceLetters[j])()){
+          if ( ((j == 0 || j == indicesONext[1]) &&
+           (crossingList[i].*traceLetters[j])()->next != (crossingList[i].*traceLetters[(j+1)%crossComps])()) ||
+           (j != 0 && j != indicesONext[1] &&
+           (crossingList[i].*traceLetters[j])()->prev != (crossingList[i].*traceLetters[(j+1)%crossComps])()) ){
+            notLetters[i][j] = letters[j];
+            notNumbers[i][j] = crossingList[nextI].getLabel();
 
-          notLetters[numsToCheck[j]][checkIndex] = letters[checkIndex];
-          notNumbers[numsToCheck[j]][checkIndex] = crossingList[i].getLabel();
-          std::cout << "cI->j: " << i << " is " << letters[j] << " to " << letters[j] << " with " << numsToCheck[j] << std::endl;
+            notLetters[nextI][j] = letters[j];
+            notNumbers[nextI][j] = crossingList[i].getLabel();
+            std::cout << "cI->j: " << i << " is " << letters[j] << " to " << letters[j]
+             << " with " << nextI << std::endl;
+          }
         }
 
-        else if( ((checkIndex == 0 || checkIndex == indicesONext[1]) && numsToCheck[j] < i) ||
-         (checkIndex != 0 && checkIndex != indicesONext[1] && numsToCheck[j] > i) ){
+        else if( ((checkIndex == 0 || checkIndex == indicesONext[1]) &&
+           (crossingList[i].*traceLetters[checkIndex])()->next != (crossingList[i].*traceLetters[(j+1)%crossComps])()) ||
+         (checkIndex != 0 && checkIndex != indicesONext[1] &&
+           (crossingList[i].*traceLetters[checkIndex])()->prev != (crossingList[i].*traceLetters[(j+1)%crossComps])()) ){
           notLetters[i][j] = letters[checkIndex];
-          notNumbers[i][j] = crossingList[numsToCheck[j]].getLabel();
+          notNumbers[i][j] = crossingList[nextI].getLabel();
 
-          notLetters[numsToCheck[j]][checkIndex] = letters[j];
-          notNumbers[numsToCheck[j]][checkIndex] = crossingList[i].getLabel();
-          std::cout << "j->cI: " << i << " is " << letters[j] << " to " << letters[checkIndex] << " with " << numsToCheck[j] << std::endl;
+          notLetters[nextI][checkIndex] = letters[j];
+          notNumbers[nextI][checkIndex] = crossingList[i].getLabel();
+          std::cout << "j->cI: " << i << " is " << letters[j] << " to " << letters[checkIndex] << " with " << nextI << std::endl;
         }
       }
-      else if ((crossingList[i].*traceLetters[j])() == (crossingList[numsToCheck[j]].*traceLetters[j])() &&
+    }
+  }
+  for (int i = 0; i < numOcross; ++i){
+    int nextI, prevI;
+
+    (i == numOcross - 1)?(nextI = 0):(nextI = i+1);
+    (i == 0)?(prevI = numOcross-1):(prevI = i-1);
+
+    int numsToCheck[] = { nextI, nextI, prevI, prevI },
+      indicesONext[] = { 0, 1 };
+
+    if (crossingList[i].getB()->next == crossingList[i].getD()){
+      std::cout << "b goes prev" << std::endl;
+      numsToCheck[1] = prevI;
+      numsToCheck[3] = nextI;
+      indicesONext[1] = 3;
+    }
+
+    for (int j = 0; j < crossComps; ++j){
+      std::cout << "Setting: " << letters[j] << i+1 << std::endl;
+      int checkIndex = (j+2)%crossComps;
+
+      if ((crossingList[i].*traceLetters[j])() == (crossingList[numsToCheck[j]].*traceLetters[j])() &&
        i!=numsToCheck[j] &&
        !notNumbers[numsToCheck[j]][checkIndex]){
         //v
@@ -228,9 +342,7 @@ void generateNotation(KnotVertex * head, int numOcross){
           if(j == 0 || j == indicesONext[1]){
             std::cout << "next" << std::endl;
             for (int m = 0; m < numOcross; ++m){
-              std::cout << "m: " << m;
               for (int l = 0; l < crossComps; ++l){
-                std::cout << "\t l: " << l << std::endl;
                 if((l!=j || m!=i) && (crossingList[m].*traceLetters[l])() == check && !notNumbers[m][l]){
                   notLetters[i][j] = letters[l];
                   notNumbers[i][j] = crossingList[m].getLabel();
@@ -247,7 +359,6 @@ void generateNotation(KnotVertex * head, int numOcross){
           else{
             std::cout << "prev" << std::endl;
             for (int m = numOcross-1; m > -1; --m){
-              std::cout << "m: " << m << std::endl;
               for (int l = 0; l < crossComps; ++l){
                 if((l!=j || m!=i) && (crossingList[m].*traceLetters[l])() == check &&
                  (m != i+1 || i == numOcross-2) && !notNumbers[m][l]){
@@ -262,6 +373,10 @@ void generateNotation(KnotVertex * head, int numOcross){
             }
             check = check->prev;           
           }
+          if(check == initial){
+            std::cout << "No solution found for " << notLetters[i][j] << notNumbers[i][j] << std::endl;
+            break;
+          }
           continue;
 
           foundNextCrossing:
@@ -271,7 +386,6 @@ void generateNotation(KnotVertex * head, int numOcross){
       }
     }
   }
-
   for (int i = 0; i < numOcross; ++i){
     for (int j = 0; j < crossComps; ++j){
       std::cout << notLetters[i][j] << notNumbers[i][j] << " ";

@@ -38,3 +38,5 @@ http://www.cplusplus.com/forum/beginner/27582/
 http://stackoverflow.com/questions/1560492/how-to-tell-whether-a-point-is-to-the-right-or-left-side-of-a-line
 https://msdn.microsoft.com/en-us/library/7k66t42c.aspx
 *****/
+
+**Special thanks to Charles and Harold for letting me talk at them about this and acting as sounding boards**
