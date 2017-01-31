@@ -355,6 +355,36 @@ void KnotVertex::print(int index){
   }
 }
 
+bool KnotVertex::validPoint(double *xval, double *yval){
+  KnotVertex *k = this;
+  if(k->getX() == NULL){
+    return true;
+  }
+  
+  while(k->next != this){
+    //test if point is already in the knot
+    if(*(k->getX()) == *xval && *(k->getY()) == *(yval)){
+      return false;
+    }
+    //test if point intersects with a line segment
+    double b = (k->getSlopeToNext())*(*(k->getX())) - (*(k->getY()));
+
+    if((((k->getSlopeToNext())*(*(xval))+b) == *(yval)) 
+      && *xval > min(*(k->getX()), *(k->next->getX()))
+      && *xval < max(*(k->getX()), *(k->next->getX()))){
+      return false;
+    }
+
+    k = k->next;
+  }
+  //test if point is already the last point in the knot
+  if(*(k->getX()) == *xval && *(k->getY()) == *(yval)){
+    return false;
+  }
+
+  return true;
+}
+
 void testKnot(){
   int numKnot = 2;
   double d1 = 1.0, d2 = 2.0, dt = 1.5;
@@ -362,15 +392,15 @@ void testKnot(){
   std::cout << "Testing: creating a KnotVertex" << std::endl;
   k->printAll();
 
-  std::cout << "Testing: validPoint check - same point - " << ((validPoint(k, &d1, &d1) == 0) ? ("Invalid") : ("Valid")) << std::endl;
+  std::cout << "Testing: validPoint check - same point - " << ((k->validPoint(&d1, &d1) == 0) ? ("Invalid") : ("Valid")) << std::endl;
   
   std::cout << std::endl << "Testing: adding a KnotVertex" << std::endl;
   
   KnotVertex * k1 = new KnotVertex(&d2, &d2);
   k->add(k1);
 
-  std::cout << "Testing: validPoint check - on line - " << ((validPoint(k, &dt, &dt) == 0) ? ("Invalid") : ("Valid")) << std::endl
-  << "Testing: validPoint check - valid point - " << ((validPoint(k, &d1, &d2) == 0) ? ("Invalid") : ("Valid")) << std::endl;
+  std::cout << "Testing: validPoint check - on line - " << ((k->validPoint(&dt, &dt) == 0) ? ("Invalid") : ("Valid")) << std::endl
+  << "Testing: validPoint check - valid point - " << ((k->validPoint(&d1, &d2) == 0) ? ("Invalid") : ("Valid")) << std::endl;
   
   std::cout << std::endl << "Testing: getX() and getY()" << std::endl;
   KnotVertex * k2 = new KnotVertex(k->getX(), k1->getY());

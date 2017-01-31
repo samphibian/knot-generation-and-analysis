@@ -85,11 +85,11 @@ class KnotVertex{
   int setCrossingVals(); //loop through knot, assign numbers to crossings, return highest
   void printAll(); // prints all data
   void print(int index); // prints the data index points away from the given one
+  bool validPoint(double *xval, double *yval); // check if new point valid
 };
 
 
 // vector<knotNot> generateNotation(KnotVertex * head);
-bool validPoint(KnotVertex *head, double *xval, double *yval);
 void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n);
 void testKnot();
 void generateKnot(KnotVertex* k, int n);
