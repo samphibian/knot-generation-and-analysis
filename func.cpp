@@ -1,6 +1,8 @@
 #include "knot.h"
 #include <algorithm>
 
+#include <fstream>
+
 bool checkIntersect(Point a1, Point a2, Point b1, Point b2){
   /*
   ((A2-A0)*(B1-B0) - (B2-B0)*(A1-A0)) * ((A3-A0)*(B1-B0) - (B3-B0)*(A1-A0)) < 0
@@ -89,7 +91,7 @@ void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n){
  }
 }
 
-void generateNotation(KnotVertex * head, int numOcross){
+bool generateNotation(KnotVertex * head, int numOcross){
   int crossComps = 4; //a, b, c, d
   KnotVertex * k = head;
   knotNot crossingList[numOcross] = {};
@@ -390,12 +392,31 @@ void generateNotation(KnotVertex * head, int numOcross){
       }
     }
   }
+
+  ofstream outputFile;
+  k = head;
+
+  outputFile.open("generatedNotation.txt");
+
   for (int i = 0; i < numOcross; ++i){
+    char sign = '+';
+    if (crossingList[i].getSign()==-1) sign = '-';
+    outputFile << i+1 << sign;
     for (int j = 0; j < crossComps; ++j){
+      //write to file
+      outputFile << notNumbers[i][j] << notLetters[i][j];
+      //print to console
       std::cout << notLetters[i][j] << notNumbers[i][j] << " ";
+      if(notLetters[i][j] ==  0 || notNumbers[i][j] == 0){
+        outputFile.close();
+        return false;
+      }
     }
     std::cout << std::endl;
   }
+
+  outputFile.close();
+  return true;
 }
 
 void generateKnot(KnotVertex* k, int n) {
@@ -427,15 +448,9 @@ void generateKnot(KnotVertex* k, int n) {
   generateNotation(k, numberOfCrossings);
 
   //failsafe:
-
-  // for (int i = 0; i < numOcross; ++i){
-  //   for (int j = 0; j < crossComps; ++j){
-  //     if(notLetters[i][j] ==  0 || notNumbers[i][j] == 0){
-  //       free(k);
-  //       k = null;
-  //       k = new KnotVertex;
-  //       generateKnot(k, n);
-  //     }
-  //   }
-  // }
+  while (!generateNotation(k, numberOfCrossings)){
+    free(k);
+    k = new KnotVertex;
+    generateKnot(k, n);
+  }
 }
