@@ -380,6 +380,7 @@ bool generateNotation(KnotVertex * head, int numOcross){
             }
             if(check == initial){
               std::cout << "No solution found for " << notLetters[i][j] << notNumbers[i][j] << std::endl;
+              return false;
               break;
             }
             continue;
@@ -407,10 +408,6 @@ bool generateNotation(KnotVertex * head, int numOcross){
       outputFile << notNumbers[i][j] << notLetters[i][j];
       //print to console
       std::cout << notLetters[i][j] << notNumbers[i][j] << " ";
-      if(notLetters[i][j] ==  0 || notNumbers[i][j] == 0){
-        outputFile.close();
-        return false;
-      }
     }
     std::cout << std::endl;
   }
@@ -450,7 +447,7 @@ void generateKnot(KnotVertex* k, int n) {
   //failsafe:
   while (!generateNotation(k, numberOfCrossings)){
     free(k);
-    k = new KnotVertex;
+    KnotVertex * k = new KnotVertex;
     generateKnot(k, n);
   }
 }
