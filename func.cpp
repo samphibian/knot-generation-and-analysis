@@ -119,6 +119,10 @@ void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n){
  }
 }
 
+void checkSameLines(knotNot * crossingList, int ** notNumbers, char ** notLetters){
+
+}
+
 void generateNotation(KnotVertex * head, int numOcross){
   int crossComps = 4; //a, b, c, d
   KnotVertex * k = head;
