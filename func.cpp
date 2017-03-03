@@ -657,7 +657,7 @@ void generateKnot(KnotVertex* k, int n, ofstream &outputFile) {
   std::string generatedFileName = "tempGeneratedFile.txt";
 
   //failsafe:
-  while (!generateNotation(k, numberOfCrossings, generatedFileName)){
+  if (!generateNotation(k, numberOfCrossings, generatedFileName)){
     free(k);
     KnotVertex * k = new KnotVertex();
     generateKnot(k, n, outputFile);
