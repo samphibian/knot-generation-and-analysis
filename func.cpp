@@ -442,10 +442,8 @@ void generateKnot(KnotVertex* k, int n) {
   std::cout << "number of crossings: " << numOcross << std::endl;
   #endif
 
-  generateNotation(k, numberOfCrossings);
-
   //failsafe:
-  while (!generateNotation(k, numberOfCrossings)){
+  if (!generateNotation(k, numberOfCrossings)){
     free(k);
     KnotVertex * k = new KnotVertex;
     generateKnot(k, n);
