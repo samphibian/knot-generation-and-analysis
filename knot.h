@@ -8,6 +8,7 @@
 #define KNOT_H
 
 #include <iostream>
+#include <fstream>
 #include <stdio.h>
 #include <vector>
 #include <string>
@@ -92,6 +93,6 @@ class KnotVertex{
 // vector<knotNot> generateNotation(KnotVertex * head);
 void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n);
 void testKnot();
-void generateKnot(KnotVertex* k, int n);
+void generateKnot(KnotVertex* k, int n, ofstream & outputFile);
 
 #endif

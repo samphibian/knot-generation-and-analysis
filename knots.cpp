@@ -8,9 +8,10 @@
 
 int main(){
 	srand(time(NULL));
-  KnotVertex * knot = new KnotVertex();
+  KnotVertex * knot;
 
   int n;
+  std::string outputFileName = "generatedKnots.txt";
   
   #ifdef DEBUG
   testKnot();
@@ -19,5 +20,17 @@ int main(){
   std::cout << "How many points would you like to generate for the knot? ";
   std::cin >> n;
   std::cout << std::endl;
-  generateKnot(knot, n);
+
+  ofstream outputFile;
+
+  outputFile.open(outputFileName.c_str(), std::ios_base::app);
+  for(int i=0; i<10; ++i){
+    knot = new KnotVertex();
+    // outputFile << i+1 << ". ";
+    generateKnot(knot, n, outputFile);
+    outputFile << "\n";
+    free(knot);
+    knot = NULL;
+  }
+  outputFile.close();
 }
