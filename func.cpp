@@ -81,8 +81,12 @@ void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n){
        knt4.printNot();
       #endif
 
-       k->insert(knotNot(over1, over2, under1, under2));
-       last->insert(knotNot(over1, over2, under1, under2));
+       knotNot newCrossing = knotNot(over1, over2, under1, under2);
+
+       over1->insert(newCrossing);
+       over2->insert(newCrossing);
+       under1->insert(newCrossing);
+       under2->insert(newCrossing);
      }
    }
 
@@ -90,6 +94,20 @@ void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n){
    k = k->next;
  }
 }
+
+/*
+
+vector<knotNot>* vectorCrossings = (crossingList[i].*traceLetters[j])()->getC();
+int vertexNumOcross = vectorCrossings->size();
+
+knotNot orderedCrossings[vertexNumOcross] = {};
+
+for(int vertI = 0; vertI < vertexNumOcross; ++vertI){
+  for(int vertJ = 0; vertJ < vertexNumOcross - vertI - 1; ++vertJ){
+    //find closest intersection between vectorCrossings[vertI] and end
+  }
+}
+*/
 
 bool generateNotation(KnotVertex * head, int numOcross){
   int crossComps = 4; //a, b, c, d
