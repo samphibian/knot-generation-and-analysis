@@ -23,5 +23,5 @@ knots.o: knots.cpp
 	g++ -c knots.cpp -o knots.o
 
 clean:
-	rm run
 	rm -f *.o
+	rm run

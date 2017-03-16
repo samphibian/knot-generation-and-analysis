@@ -6,9 +6,15 @@
 
 #include "knot.h"
 
- using namespace std;
+using namespace std;
 
- KnotVertex::KnotVertex(){
+
+typedef KnotVertex * (knotNot::*traceLettersFuncs)();
+
+//get function pointers
+traceLettersFuncs lettersToTrace[] = { &knotNot::getA, &knotNot::getB, &knotNot::getC, &knotNot::getD };
+
+KnotVertex::KnotVertex(){
   ident = 1;
   this->x = NULL;
   this->y = NULL;
@@ -53,45 +59,66 @@ void KnotVertex::add(KnotVertex* v){
     float curSlopeToNext = (float)(*(temp->next->y)-*(temp->y))/(*(temp->next->x)-*(temp->x));
     temp->slopeToNext = curSlopeToNext;
     
-#ifdef DEBUG
+  #ifdef DEBUG
     std::cout << "temp x: " << *(temp->getX()) << ", temp y: " << *(temp->getY()) << ", tempnext x: " << *(temp->next->getX()) << ", tempnext y: " << *(temp->next->getY()) << " - slope: " << curSlopeToNext << std::endl;
-#endif
+  #endif
     
     float vSlopeToNext =  (float)(*(v->next->y)-*(v->y))/(*(v->next->x)-*(v->x));
     v->slopeToNext = vSlopeToNext;
     
-#ifdef DEBUG
+  #ifdef DEBUG
     std::cout << "v x: " << *(v->getX()) << ", v y: " << *(v->getY()) << ", vnext x: " << *(v->next->getX()) << ", vnext y: " << *(v->next->getY()) << " - slope: "  << vSlopeToNext << std::endl;
-#endif
+  #endif
   }
 }
 
 void KnotVertex::insert(knotNot crossing){
   int loc = 0; //location of crossing
+  std::cout << "Knot " << ident << ": ";
+
+  KnotVertex * check = new KnotVertex();
+
+  for(int i=0; i < crossComps; ++i){
+    if (this == (crossing.*lettersToTrace[i])()){
+      check = (crossing.*lettersToTrace[(i+2)%crossComps])();
+    }   
+  }
 
   Point intersectionOfCrossing = crossing.getIntersection();
   //find proper location
   for(int i = 0; i<this->c->size(); ++i){
-    if(*(this->next->getX()) - *(this->getX()) < 0){
+    bool checkAgainstI = true;
+    for(int j=0; j < crossComps; ++j){
+      if (this == (this->c->at(i).*lettersToTrace[j])() &&
+      check != (this->c->at(i).*lettersToTrace[(j+2)%crossComps])()){
+        checkAgainstI = false;
+      }   
+    }
+
+    if(*(check->getX()) - *(this->getX()) < 0 && checkAgainstI){
       //compare x vals
       if(*(intersectionOfCrossing.getX()) > *(this->c->at(i).getIntersection().getX())){
+        std::cout << "if" << std::endl;
         goto foundloc;
       }
     }
-    else if(*(this->next->getY())-*(this->getY()) < 0){
+    else if(*(check->getY())-*(this->getY()) < 0 && checkAgainstI){
       //compare y vals
       if(*(intersectionOfCrossing.getY()) > *(this->c->at(i).getIntersection().getY())){
+        std::cout << "elif" << std::endl;
         goto foundloc;
       }
     }
-    else{
+    else if (checkAgainstI){
       //compare x vals
       if(*(intersectionOfCrossing.getX()) < *(this-> c->at(i).getIntersection().getX())){
+        std::cout << "else" << std::endl;
         goto foundloc;
       }
     }
     ++loc;
   }
+  std::cout << "n/a" << std::endl;
 
   foundloc:
   std::vector<knotNot>::iterator it;

@@ -13,6 +13,8 @@
 #include <string>
 #include <cmath>
 
+#define crossComps 4 //crossing components: a, b, c, d
+
 using namespace std;
 
 class Point;
