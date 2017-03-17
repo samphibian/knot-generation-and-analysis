@@ -13,21 +13,31 @@ This project is designed to find the average shape of a Legendrian Knot. It does
 5) Output the percentage of each knot created
 
 Working:
+
 -Knot-Generation
+
 -Crossing Generation
+
 -Crossing Labelling
 
+
 Notation Generation:
+
 -No-crossing knots
+
 -One-crossing knots
 
+
 Note:
+
 -so far has only correctly generated crossing notation for unknots with various numbers of crossings. Not sure if it just isn't handling non-unknots or if it's miscategorizing
 
 Known bugs:
+
 -Occasional infinite loops in the different next/prev sections -> stopgap fix of scrapping the knot and generating a new one
 
 /****
+
 Sources:
 http://stackoverflow.com/questions/9878965/c-rand-between-0-and-1
 http://www.cplusplus.com/forum/beginner/49408/ (Disch's answer)
@@ -39,6 +49,7 @@ https://www.codeproject.com/Articles/7150/Member-Function-Pointers-and-the-Faste
 http://www.cplusplus.com/forum/beginner/27582/
 http://stackoverflow.com/questions/1560492/how-to-tell-whether-a-point-is-to-the-right-or-left-side-of-a-line
 https://msdn.microsoft.com/en-us/library/7k66t42c.aspx
+
 *****/
 
 **Special thanks to Charles and Harold for letting me talk at them about this and acting as sounding boards**
