@@ -74,7 +74,9 @@ void KnotVertex::add(KnotVertex* v){
 
 void KnotVertex::insert(knotNot crossing){
   int loc = 0; //location of crossing
+  #ifdef DEBUG
   std::cout << "Knot " << ident << ": ";
+  #endif
 
   KnotVertex * check = new KnotVertex();
 
@@ -98,27 +100,35 @@ void KnotVertex::insert(knotNot crossing){
     if(*(check->getX()) - *(this->getX()) < 0 && checkAgainstI){
       //compare x vals
       if(*(intersectionOfCrossing.getX()) > *(this->c->at(i).getIntersection().getX())){
+        #ifdef DEBUG
         std::cout << "if" << std::endl;
+        #endif
         goto foundloc;
       }
     }
     else if(*(check->getY())-*(this->getY()) < 0 && checkAgainstI){
       //compare y vals
       if(*(intersectionOfCrossing.getY()) > *(this->c->at(i).getIntersection().getY())){
+        #ifdef DEBUG
         std::cout << "elif" << std::endl;
+        #endif
         goto foundloc;
       }
     }
     else if (checkAgainstI){
       //compare x vals
       if(*(intersectionOfCrossing.getX()) < *(this-> c->at(i).getIntersection().getX())){
+        #ifdef DEBUG
         std::cout << "else" << std::endl;
+        #endif
         goto foundloc;
       }
     }
     ++loc;
   }
+  #ifdef DEBUG
   std::cout << "n/a" << std::endl;
+  #endif
 
   foundloc:
   std::vector<knotNot>::iterator it;

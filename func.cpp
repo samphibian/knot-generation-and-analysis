@@ -210,7 +210,8 @@ bool generateNotation(KnotVertex * head, int numOcross){
     }
 
     for (int j = 0; j < crossComps; ++j){
-      if(!notLetters[i][j]) checkSameLine(notNumbers, notLetters,crossingList, i, j);
+      //if(!notLetters[i][j]) 
+      checkSameLine(notNumbers, notLetters,crossingList, i, j);
 
       if(!notLetters[i][j]){
         std::cout << "Setting: " << letters[j] << i+1 << std::endl;

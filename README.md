@@ -13,17 +13,19 @@ This project is designed to find the average shape of a Legendrian Knot. It does
 5) Output the percentage of each knot created
 
 Working:
-Knot-Generation
-Crossing Generation
-Crossing Labelling
+-Knot-Generation
+-Crossing Generation
+-Crossing Labelling
 
 Notation Generation:
-No-crossing knots
-One-crossing knots
+-No-crossing knots
+-One-crossing knots
+
+Note:
+-so far has only correctly generated crossing notation for unknots with various numbers of crossings. Not sure if it just isn't handling non-unknots or if it's miscategorizing
 
 Known bugs:
--Occasional infinite loops in the different next/prev sections
---Probably due to miscalculation of CABD and similar same lines
+-Occasional infinite loops in the different next/prev sections -> stopgap fix of scrapping the knot and generating a new one
 
 /****
 Sources:
