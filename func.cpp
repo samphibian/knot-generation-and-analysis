@@ -158,6 +158,47 @@ void checkSameLine(int (* notNumbers)[crossComps], char (* notLetters)[crossComp
   }
 }
 
+void checkIfV(int (* notNumbers)[crossComps], char (* notLetters)[crossComps], knotNot * crossingList, int i, int j){
+  KnotVertex * initVertex = (crossingList[i].*traceLetters[j])(),
+    * finalVertex = (crossingList[i].*traceLetters[(j+2)%crossComps])();
+  vector<knotNot>* vectorCrossings = initVertex->getC();
+  int vertexNumOcross = vectorCrossings->size();
+
+  if(vertexNumOcross > 1){
+    int curI = 0;
+    for(int vertI = 0; vertI < vertexNumOcross; ++vertI){
+      knotNot crossingToCheck = vectorCrossings->at(vertI);
+      if (i+1 == crossingToCheck.getLabel()) curI = vertI;
+    }
+
+    std::cout << "There are: " << vertexNumOcross << " crossings in vertex " << i << std::endl;
+
+    int indexToCheck = curI+1;
+    if(curI == vertexNumOcross - 1){
+      indexToCheck = curI-1;
+    }
+
+    knotNot crossingToCheck = vectorCrossings->at(indexToCheck);
+
+    //check if v
+    for(int vertJ = 0; vertJ < crossComps; ++vertJ){
+      if((crossingToCheck.*traceLetters[vertJ])() == initVertex &&
+        (crossingToCheck.*traceLetters[(vertJ+2)%crossComps])() != finalVertex){
+        //is v
+
+        notNumbers[curI][j] = crossingToCheck.getLabel();
+        notLetters[curI][j] = letters[vertJ];
+
+        notNumbers[crossingToCheck.getLabel()][vertJ] = curI;
+        notLetters[crossingToCheck.getLabel()][vertJ] = letters[j];
+
+        std::cout << "v: " << curI << " is " << letters[j] << " to "
+         << letters[vertJ] << " with " << crossingToCheck.getLabel() << std::endl;
+      }
+    }
+  }
+}
+
 bool generateNotation(KnotVertex * head, int numOcross){
   KnotVertex * k = head;
   knotNot crossingList[numOcross] = {};
@@ -212,33 +253,36 @@ bool generateNotation(KnotVertex * head, int numOcross){
     for (int j = 0; j < crossComps; ++j){
       //if(!notLetters[i][j]) 
       checkSameLine(notNumbers, notLetters,crossingList, i, j);
+      checkIfV(notNumbers, notLetters,crossingList, i, j);
+    }
 
+    for (int j = 0; j < crossComps; ++j){
       if(!notLetters[i][j]){
         std::cout << "Setting: " << letters[j] << i+1 << std::endl;
         int checkIndex = (j+2)%crossComps;
 
-        if ((crossingList[i].*traceLetters[j])() == (crossingList[numsToCheck[j]].*traceLetters[j])() &&
-         i!= numsToCheck[j] &&
-         !notNumbers[numsToCheck[j]][j]){
-          //v
-          notLetters[i][j] = letters[j];
-          notNumbers[i][j] = crossingList[numsToCheck[j]].getLabel();
+        // if ((crossingList[i].*traceLetters[j])() == (crossingList[numsToCheck[j]].*traceLetters[j])() &&
+        //  i!= numsToCheck[j] &&
+        //  !notNumbers[numsToCheck[j]][j]){
+        //   //v
+        //   notLetters[i][j] = letters[j];
+        //   notNumbers[i][j] = crossingList[numsToCheck[j]].getLabel();
 
-          notLetters[numsToCheck[j]][j] = letters[j];
-          notNumbers[numsToCheck[j]][j] = crossingList[i].getLabel();
-          std::cout << "V i->numsToCheck: " << i << " is " << letters[j] << " to " << letters[j] << " with " << numsToCheck[j] << std::endl;
-        }
-        else if (i == 0  && numOcross > 2 &&
-          (crossingList[i].*traceLetters[j])() == (crossingList[numOcross - 1].*traceLetters[j])() &&
-         !notNumbers[numOcross - 1][j]){
-          //v
-          notLetters[i][j] = letters[j];
-          notNumbers[i][j] = crossingList[numOcross - 1].getLabel();
+        //   notLetters[numsToCheck[j]][j] = letters[j];
+        //   notNumbers[numsToCheck[j]][j] = crossingList[i].getLabel();
+        //   std::cout << "V i->numsToCheck: " << i << " is " << letters[j] << " to " << letters[j] << " with " << numsToCheck[j] << std::endl;
+        // }
+        // else if (i == 0  && numOcross > 2 &&
+        //   (crossingList[i].*traceLetters[j])() == (crossingList[numOcross - 1].*traceLetters[j])() &&
+        //  !notNumbers[numOcross - 1][j]){
+        //   //v
+        //   notLetters[i][j] = letters[j];
+        //   notNumbers[i][j] = crossingList[numOcross - 1].getLabel();
 
-          notLetters[numOcross - 1][j] = letters[j];
-          notNumbers[numOcross - 1][j] = crossingList[i].getLabel();
-          std::cout << "V i->numOcross-1: " << i << " is " << letters[j] << " to " << letters[j] << " with " << numOcross - 1 << std::endl;
-        }
+        //   notLetters[numOcross - 1][j] = letters[j];
+        //   notNumbers[numOcross - 1][j] = crossingList[i].getLabel();
+        //   std::cout << "V i->numOcross-1: " << i << " is " << letters[j] << " to " << letters[j] << " with " << numOcross - 1 << std::endl;
+        // }
         // else{
           KnotVertex * initial = (crossingList[i].*traceLetters[j])(),
             * check = initial;

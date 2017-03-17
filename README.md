@@ -26,6 +26,7 @@ Note:
 
 Known bugs:
 -Occasional infinite loops in the different next/prev sections -> stopgap fix of scrapping the knot and generating a new one
+-V not being correctly interpreted
 
 /****
 Sources:
