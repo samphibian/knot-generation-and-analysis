@@ -186,14 +186,14 @@ void checkIfV(int (* notNumbers)[crossComps], char (* notLetters)[crossComps], k
         (crossingToCheck.*traceLetters[(vertJ+2)%crossComps])() != finalVertex){
         //is v
 
-        notNumbers[curI][j] = crossingToCheck.getLabel();
+        notNumbers[curI][j] = crossingToCheck.getLabel() - 1;
         notLetters[curI][j] = letters[vertJ];
 
-        notNumbers[crossingToCheck.getLabel()][vertJ] = curI;
-        notLetters[crossingToCheck.getLabel()][vertJ] = letters[j];
+        notNumbers[crossingToCheck.getLabel() - 1][vertJ] = curI;
+        notLetters[crossingToCheck.getLabel() - 1][vertJ] = letters[j];
 
         std::cout << "v: " << curI << " is " << letters[j] << " to "
-         << letters[vertJ] << " with " << crossingToCheck.getLabel() << std::endl;
+         << letters[vertJ] << " with " << crossingToCheck.getLabel() - 1 << std::endl;
       }
     }
   }
