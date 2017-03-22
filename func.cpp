@@ -120,24 +120,7 @@ void checkSameLine(int (* notNumbers)[crossComps], char (* notLetters)[crossComp
     //run through ordered list and assign notation
     for(int vertI = 0; vertI < vertexNumOcross - 1; ++vertI){
       for(int vertJ = 0; vertJ < crossComps; ++vertJ){
-        if((orderedCrossings[vertI].*traceLetters[vertJ])() == initVertex &&
-        (orderedCrossings[vertI].*traceLetters[(vertJ+2)%crossComps])() == finalVertex && vertI != 0){
-          for(int vertM = 0; vertM < crossComps; ++vertM){
-            if((orderedCrossings[vertI + 1].*traceLetters[vertM])() == finalVertex &&
-              (orderedCrossings[vertI + 1].*traceLetters[(vertM+2)%crossComps])() == initVertex &&
-              vertI + 1 != vertexNumOcross - 1){
-              notNumbers[orderedCrossings[vertI].getLabel() - 1][vertJ] = orderedCrossings[vertI+1].getLabel();
-              notLetters[orderedCrossings[vertI].getLabel() - 1][vertJ] = letters[vertM];
-
-              notNumbers[orderedCrossings[vertI+1].getLabel() - 1][vertM] = orderedCrossings[vertI].getLabel();
-              notLetters[orderedCrossings[vertI+1].getLabel() - 1][vertM] = letters[vertJ];
-
-              std::cout << "same line if: " << orderedCrossings[vertI].getLabel() - 1 << " is " << letters[vertJ] << " to "
-               << letters[vertM] << " with " << orderedCrossings[vertI+1].getLabel() - 1 << std::endl;
-            }
-          }
-        }
-        else if((orderedCrossings[vertI].*traceLetters[vertJ])() == finalVertex &&
+        if((orderedCrossings[vertI].*traceLetters[vertJ])() == finalVertex &&
         (orderedCrossings[vertI].*traceLetters[(vertJ+2)%crossComps])() == initVertex &&  vertI != vertexNumOcross - 1){
           for(int vertM = 0; vertM < crossComps; ++vertM){
             if((orderedCrossings[vertI + 1].*traceLetters[vertM])() == initVertex &&
@@ -228,7 +211,7 @@ bool generateNotation(KnotVertex * head, int numOcross){
   //have array of crossings from above. Starting with first, follow [a/b/c/d]->next->next->... until reach crossing; record label and a/b/c/d
   for (int i = 0; i < numOcross; ++i){
     for (int j = 0; j < crossComps; ++j){
-      checkSameLine(notNumbers, notLetters,crossingList, i, j);
+      if (!notLetters[i][j]) checkSameLine(notNumbers, notLetters,crossingList, i, j);
     }
   }
   for (int i = 0; i < numOcross; ++i){
