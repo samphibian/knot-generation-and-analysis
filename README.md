@@ -1,4 +1,4 @@
-# knot-generation-and-analysis
+ # knot-generation-and-analysis
 
 This project is designed to find the average shape of a Legendrian Knot. It does so in the following way:
 
@@ -16,6 +16,7 @@ Working:
 - Knot-Generation
 - Crossing Generation
 - Crossing Labelling
+
 
 Notation Generation:
 - No-crossing knots
