@@ -13,20 +13,18 @@ This project is designed to find the average shape of a Legendrian Knot. It does
 5) Output the percentage of each knot created
 
 Working:
--Knot-Generation
--Crossing Generation
--Crossing Labelling
+- Knot-Generation
+- Crossing Generation
+- Crossing Labelling
 
 Notation Generation:
--No-crossing knots
--One-crossing knots
-
-Note:
--so far has only correctly generated crossing notation for unknots with various numbers of crossings. Not sure if it just isn't handling non-unknots or if it's miscategorizing
+- No-crossing knots
+- One-crossing knots
+- Unknots of most crossings
 
 Known bugs:
--Occasional infinite loops in the different next/prev sections -> stopgap fix of scrapping the knot and generating a new one
--V not being correctly interpreted
+- Occasional infinite loops in the different next/prev sections -> stopgap fix of scrapping the knot and generating a new one
+- V not always returning correct Vs
 
 /****
 Sources:
@@ -42,4 +40,4 @@ http://stackoverflow.com/questions/1560492/how-to-tell-whether-a-point-is-to-the
 https://msdn.microsoft.com/en-us/library/7k66t42c.aspx
 *****/
 
-**Special thanks to Charles and Harold for letting me talk at them about this and acting as sounding boards**
+*Special thanks to Charles and Harold for letting me talk at them about this and acting as sounding boards*
