@@ -2,7 +2,7 @@
 
 #include "knot.h"
 
-void parseHomflyOutput(ifstream parseFileName, int totalNumberOfKnots){
+void parseHomflyOutput(const char * parseFileName, int totalNumberOfKnots){
 	//if totalNumberOfKnots < number parse, add difference to total number of unknots
 }
 

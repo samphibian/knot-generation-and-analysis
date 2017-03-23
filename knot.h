@@ -101,4 +101,6 @@ void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n);
 void testKnot();
 void generateKnot(KnotVertex* k, int n, ofstream & outputFile);
 
+void parseHomflyOutput(const char * parseFileName, int totalNumberOfKnots);
+
 #endif

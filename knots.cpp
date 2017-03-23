@@ -36,7 +36,7 @@ std::string checkFileName (std::string fileName, std::string fileExt){
   }
       
   std::cout << "\nSaving file as " << fileName << fileExt << std::endl << std::endl;
-  
+
   return fileName + fileExt;
 }
 
@@ -48,20 +48,19 @@ int main(){
   std::string outputFileBaseName = "generatedKnots", outputFileExt = ".txt";
 
   std::string outputFileName = checkFileName(outputFileBaseName, outputFileExt);
-
-  std::cout << outputFileName << std::endl;
   
   #ifdef DEBUG
   testKnot();
   #endif
 
-  std::cout << "How many points would you like to generate for the knot? ";
+  std::cout << "How many points would you like to generate for each knot? ";
   std::cin >> n;
   std::cout << std::endl;
 
   ofstream outputFile;
 
   outputFile.open(outputFileName.c_str(), std::ios_base::trunc);
+
   for(int i=0; i < NUMBEROFKNOTS; ++i){
     knot = new KnotVertex();
     generateKnot(knot, n, outputFile);
