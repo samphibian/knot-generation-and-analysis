@@ -4,8 +4,8 @@
  
 all: run
 
-run: knots.o func.o knot.o  point.o knotNot.o
-	g++ knots.o func.o knot.o point.o knotNot.o -o run
+run: homflyExe.o knots.o func.o knot.o  point.o knotNot.o
+	g++ homflyExe.o knots.o func.o knot.o point.o knotNot.o -o run
 
 func.o: func.cpp
 	g++ -c func.cpp -o func.o
@@ -22,8 +22,8 @@ knot.o: knot.cpp
 knots.o: knots.cpp
 	g++ -c knots.cpp -o knots.o
 
-homflyExe: milletHomfly.c
-	gcc -c milletHomfly.c -o homflyExe
+homflyExe.o: milletHomfly.c
+	gcc -c milletHomfly.c -o homflyExe.o
 
 clean:
 	rm -f *.o

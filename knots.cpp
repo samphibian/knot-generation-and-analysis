@@ -6,6 +6,7 @@
 #include <time.h>
 #include "knot.h"
 
+#define NUMBEROFKNOTS 10
 //a knot should be a linked list of nodes with an xval, a yval and if it has a crossing. There should be a list of crossings. Each crossing should have the index of the points of the line it crosses with and say if it's top or bottom.
 
 
@@ -51,14 +52,19 @@ int main(){
 
   ofstream outputFile;
 
-  outputFile.open(outputFileName.c_str(), std::ios_base::app);
-  for(int i=0; i<10; ++i){
+  outputFile.open(outputFileName.c_str(), std::ios_base::trunc);
+  for(int i=0; i < NUMBEROFKNOTS; ++i){
     knot = new KnotVertex();
-    //outputFile << i+1 << ". ";
     generateKnot(knot, n, outputFile);
     outputFile << "\n\n";
     free(knot);
     knot = NULL;
   }
   outputFile.close();
+
+  const char * fileNameToPass = outputFileName.c_str();
+
+  const char * pass[] = {"lmpoly", fileNameToPass};
+
+  milletMain(2, pass);
 }

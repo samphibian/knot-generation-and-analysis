@@ -9,6 +9,7 @@
 #include <signal.h>
 #include <sys/types.h>
 #include <sys/times.h>
+#include "homfly.h"
 
   /* values the USER needs to define!! */
 #define XCNT       250     /* maximum crossings in knot (at most 255) */
@@ -26,9 +27,7 @@ unsigned char buf[XCSQTR], cbuf[10242], clist[XCNT+2], stc[XCNT*2];
 short numcrs, numlps, poslnk, neglnk, lowx, restrt, gapsto[65];
 short tt[XCNT+2], bstlst[XCNT], bilbuf[XCNTSQ], *bilion[XCNT], suplng;
 
-main(argc,argv)
-int argc;
-char *argv[];
+void milletMain(int argc, const char *argv[])
 {
  register short i, j, k, h, m, n, *sp;
  register unsigned char *p, *c;

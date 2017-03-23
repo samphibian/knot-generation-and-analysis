@@ -7,6 +7,10 @@
 #ifndef KNOT_H
 #define KNOT_H
 
+extern "C" {
+  #include "homfly.h"
+}
+
 #include <iostream>
 #include <fstream>
 #include <stdio.h>

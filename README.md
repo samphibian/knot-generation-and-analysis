@@ -16,16 +16,18 @@ Working:
 - Knot-Generation
 - Crossing Generation
 - Crossing Labelling
+- Notation Generation (?)
+- Passing File to Homfly code
 
 
 Notation Generation:
 - No-crossing knots
 - One-crossing knots
 - Unknots of most crossings
-- Seems to be working - haven't run into any errors in a while
+- Seems to be working - haven't run into any errors in a while  
 
-Known bugs:
-- Occasional infinite loops in the different next/prev sections -> stopgap fix of scrapping the knot and generating a new one
+- Known bugs:
+  - Occasional infinite loops in the different next/prev sections -> stopgap fix of scrapping the knot and generating a new one
 
 /****  
 Sources:
