@@ -6,9 +6,15 @@
 
 #include "knot.h"
 
- using namespace std;
+using namespace std;
 
- KnotVertex::KnotVertex(){
+
+typedef KnotVertex * (knotNot::*traceLettersFuncs)();
+
+//get function pointers
+traceLettersFuncs lettersToTrace[] = { &knotNot::getA, &knotNot::getB, &knotNot::getC, &knotNot::getD };
+
+KnotVertex::KnotVertex(){
   ident = 1;
   this->x = NULL;
   this->y = NULL;
@@ -53,45 +59,76 @@ void KnotVertex::add(KnotVertex* v){
     float curSlopeToNext = (float)(*(temp->next->y)-*(temp->y))/(*(temp->next->x)-*(temp->x));
     temp->slopeToNext = curSlopeToNext;
     
-#ifdef DEBUG
+  #ifdef DEBUG
     std::cout << "temp x: " << *(temp->getX()) << ", temp y: " << *(temp->getY()) << ", tempnext x: " << *(temp->next->getX()) << ", tempnext y: " << *(temp->next->getY()) << " - slope: " << curSlopeToNext << std::endl;
-#endif
+  #endif
     
     float vSlopeToNext =  (float)(*(v->next->y)-*(v->y))/(*(v->next->x)-*(v->x));
     v->slopeToNext = vSlopeToNext;
     
-#ifdef DEBUG
+  #ifdef DEBUG
     std::cout << "v x: " << *(v->getX()) << ", v y: " << *(v->getY()) << ", vnext x: " << *(v->next->getX()) << ", vnext y: " << *(v->next->getY()) << " - slope: "  << vSlopeToNext << std::endl;
-#endif
+  #endif
   }
 }
 
 void KnotVertex::insert(knotNot crossing){
   int loc = 0; //location of crossing
+  #ifdef DEBUG
+  std::cout << "Knot " << ident << ": ";
+  #endif
+
+  KnotVertex * check = new KnotVertex();
+
+  for(int i=0; i < crossComps; ++i){
+    if (this == (crossing.*lettersToTrace[i])()){
+      check = (crossing.*lettersToTrace[(i+2)%crossComps])();
+    }   
+  }
 
   Point intersectionOfCrossing = crossing.getIntersection();
   //find proper location
   for(int i = 0; i<this->c->size(); ++i){
-    if(*(this->next->getX()) - *(this->getX()) < 0){
+    bool checkAgainstI = true;
+    for(int j=0; j < crossComps; ++j){
+      if (this == (this->c->at(i).*lettersToTrace[j])() &&
+      check != (this->c->at(i).*lettersToTrace[(j+2)%crossComps])()){
+        checkAgainstI = false;
+      }   
+    }
+
+    if(*(check->getX()) - *(this->getX()) < 0 && checkAgainstI){
       //compare x vals
       if(*(intersectionOfCrossing.getX()) > *(this->c->at(i).getIntersection().getX())){
+        #ifdef DEBUG
+        std::cout << "if" << std::endl;
+        #endif
         goto foundloc;
       }
     }
-    else if(*(this->next->getY())-*(this->getY()) < 0){
+    else if(*(check->getY())-*(this->getY()) < 0 && checkAgainstI){
       //compare y vals
       if(*(intersectionOfCrossing.getY()) > *(this->c->at(i).getIntersection().getY())){
+        #ifdef DEBUG
+        std::cout << "elif" << std::endl;
+        #endif
         goto foundloc;
       }
     }
-    else{
+    else if (checkAgainstI){
       //compare x vals
       if(*(intersectionOfCrossing.getX()) < *(this-> c->at(i).getIntersection().getX())){
+        #ifdef DEBUG
+        std::cout << "else" << std::endl;
+        #endif
         goto foundloc;
       }
     }
     ++loc;
   }
+  #ifdef DEBUG
+  std::cout << "n/a" << std::endl;
+  #endif
 
   foundloc:
   std::vector<knotNot>::iterator it;
@@ -171,7 +208,7 @@ int KnotVertex::setCrossingVals(){
             * c = k->getC()->at(i).getC(), //check fromC to see if same a and d
             * d = k->getC()->at(i).getD(); //if not, check fromD
 
-          bool foundPair = false;
+          int numFound = 1;
           k->getC()->at(i).setLabel(lab);
 
           if(a->checkCrossing() && a != k){
@@ -183,12 +220,12 @@ int KnotVertex::setCrossingVals(){
                 std::cout << "Setting a\n\tLabel: " << a->getC()->at(j).getLabel() <<std::endl;checkCrossing
                 #endif
 
-                foundPair = true;
+                numFound++;
               }
             }
           }
 
-          if(b->checkCrossing() && b != k && !foundPair){
+          if(b->checkCrossing() && b != k && numFound < 4){
             for(int j=0; j<b->getC()->size(); ++j){
               if(b->getC()->at(j).getA() == a && b->getC()->at(j).getC() == c && b->getC()->at(j).getD() == d){
                 b->getC()->at(j).setLabel(lab);
@@ -197,12 +234,12 @@ int KnotVertex::setCrossingVals(){
                 std::cout << "Setting b\n\tLabel: " << b->getC()->at(j).getLabel() <<std::endl;
                 #endif
 
-                foundPair = true;
+                numFound++;
               }
             }
           }
 
-          if(c->checkCrossing() && c != k && !foundPair){
+          if(c->checkCrossing() && c != k && numFound < 4){
             for(int j=0; j<c->getC()->size(); ++j){
               if(c->getC()->at(j).getB() == b && c->getC()->at(j).getA() == a && c->getC()->at(j).getD() == d){
                 c->getC()->at(j).setLabel(lab);
@@ -211,12 +248,12 @@ int KnotVertex::setCrossingVals(){
                 std::cout << "Setting c\n\tLabel: " << c->getC()->at(j).getLabel() <<std::endl;
                 #endif
 
-                foundPair = true;
+                numFound++;
               }
             }
           }
 
-          if(d->checkCrossing() && d != k && !foundPair){
+          if(d->checkCrossing() && d != k && numFound < 4){
             for(int j=0; j<d->getC()->size(); ++j){
               if(d->getC()->at(j).getB() == b && d->getC()->at(j).getC() == c && d->getC()->at(j).getA() == a){
                 d->getC()->at(j).setLabel(lab);
@@ -225,7 +262,7 @@ int KnotVertex::setCrossingVals(){
                 std::cout << "Setting d\n\tLabel: " << d->getC()->at(j).getLabel() <<std::endl;
                 #endif
 
-                foundPair = true;
+                numFound++;
               }
             }
           }
@@ -250,7 +287,7 @@ int KnotVertex::setCrossingVals(){
           * c = k->getC()->at(i).getC(), //check fromC to see if same a and d
           * d = k->getC()->at(i).getD(); //if not, check fromD
 
-        bool foundPair = false;
+        int numFound = 1;
         k->getC()->at(i).setLabel(lab);
 
         if(a->checkCrossing() && a != k){
@@ -262,12 +299,12 @@ int KnotVertex::setCrossingVals(){
               std::cout << "Setting a\n\tLabel: " << a->getC()->at(j).getLabel() <<std::endl;checkCrossing
               #endif
 
-              foundPair = true;
+              numFound++;
             }
           }
         }
 
-        if(b->checkCrossing() && b != k && !foundPair){
+        if(b->checkCrossing() && b != k && numFound < 4){
           for(int j=0; j<b->getC()->size(); ++j){
             if(b->getC()->at(j).getA() == a && b->getC()->at(j).getC() == c && b->getC()->at(j).getD() == d){
               b->getC()->at(j).setLabel(lab);
@@ -276,12 +313,12 @@ int KnotVertex::setCrossingVals(){
               std::cout << "Setting b\n\tLabel: " << b->getC()->at(j).getLabel() <<std::endl;
               #endif
 
-              foundPair = true;
+              numFound++;
             }
           }
         }
 
-        if(c->checkCrossing() && c != k && !foundPair){
+        if(c->checkCrossing() && c != k && numFound < 4){
           for(int j=0; j<c->getC()->size(); ++j){
             if(c->getC()->at(j).getB() == b && c->getC()->at(j).getA() == a && c->getC()->at(j).getD() == d){
               c->getC()->at(j).setLabel(lab);
@@ -290,12 +327,12 @@ int KnotVertex::setCrossingVals(){
               std::cout << "Setting c\n\tLabel: " << c->getC()->at(j).getLabel() <<std::endl;
               #endif
 
-              foundPair = true;
+              numFound++;
             }
           }
         }
 
-        if(d->checkCrossing() && d != k && !foundPair){
+        if(d->checkCrossing() && d != k && numFound < 4){
           for(int j=0; j<d->getC()->size(); ++j){
             if(d->getC()->at(j).getB() == b && d->getC()->at(j).getC() == c && d->getC()->at(j).getA() == a){
               d->getC()->at(j).setLabel(lab);
@@ -304,7 +341,7 @@ int KnotVertex::setCrossingVals(){
               std::cout << "Setting d\n\tLabel: " << d->getC()->at(j).getLabel() <<std::endl;
               #endif
 
-              foundPair = true;
+              numFound++;
             }
           }
         }

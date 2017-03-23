@@ -22,6 +22,9 @@ knot.o: knot.cpp
 knots.o: knots.cpp
 	g++ -c knots.cpp -o knots.o
 
+homflyExe: milletHomfly.c
+	gcc -c milletHomfly.c -o homflyExe
+
 clean:
-	rm run
 	rm -f *.o
+	rm run

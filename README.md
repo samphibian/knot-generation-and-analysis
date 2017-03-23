@@ -1,4 +1,4 @@
-# knot-generation-and-analysis
+ # knot-generation-and-analysis
 
 This project is designed to find the average shape of a Legendrian Knot. It does so in the following way:
 
@@ -13,19 +13,21 @@ This project is designed to find the average shape of a Legendrian Knot. It does
 5) Output the percentage of each knot created
 
 Working:
-Knot-Generation
-Crossing Generation
-Crossing Labelling
+- Knot-Generation
+- Crossing Generation
+- Crossing Labelling
+
 
 Notation Generation:
-No-crossing knots
-One-crossing knots
+- No-crossing knots
+- One-crossing knots
+- Unknots of most crossings
+- Seems to be working - haven't run into any errors in a while
 
 Known bugs:
--Occasional infinite loops in the different next/prev sections
---Probably due to miscalculation of CABD and similar same lines
+- Occasional infinite loops in the different next/prev sections -> stopgap fix of scrapping the knot and generating a new one
 
-/****
+/****  
 Sources:
 http://stackoverflow.com/questions/9878965/c-rand-between-0-and-1
 http://www.cplusplus.com/forum/beginner/49408/ (Disch's answer)
@@ -37,6 +39,8 @@ https://www.codeproject.com/Articles/7150/Member-Function-Pointers-and-the-Faste
 http://www.cplusplus.com/forum/beginner/27582/
 http://stackoverflow.com/questions/1560492/how-to-tell-whether-a-point-is-to-the-right-or-left-side-of-a-line
 https://msdn.microsoft.com/en-us/library/7k66t42c.aspx
+http://stackoverflow.com/questions/4316442/stdofstream-check-if-file-exists-before-writing
+http://stackoverflow.com/questions/191757/how-to-concatenate-a-stdstring-and-an-int  
 *****/
 
-**Special thanks to Charles and Harold for letting me talk at them about this and acting as sounding boards**
+*Special thanks to Charles and Harold for letting me talk at them about this and acting as sounding boards*
