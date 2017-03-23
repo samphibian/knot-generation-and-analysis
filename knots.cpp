@@ -19,28 +19,37 @@ bool fileExists(const std::string& filename){
   return false;
 }
 
+std::string checkFileName (std::string fileName, std::string fileExt){
+  if(fileExists(fileName + fileExt)){
+    char answer;
+    std::cout << "Would you like to overwrite the current " << fileName << fileExt << " file? (y/n) ";
+    std::cin >> answer;
+    if (answer != 'y' && answer != 'Y'){
+      int i=0;
+      while (fileExists(fileName + fileExt)){
+        ++i;
+        std::stringstream sstm;
+        sstm << i;
+        fileName = fileName + sstm.str();
+      }
+    }
+  }
+      
+  std::cout << "\nSaving file as " << fileName << fileExt << std::endl << std::endl;
+  
+  return fileName + fileExt;
+}
+
 int main(){
 	srand(time(NULL));
   KnotVertex * knot;
 
   int n;
-  std::string outputFileName = "generatedKnots.txt";
+  std::string outputFileBaseName = "generatedKnots", outputFileExt = ".txt";
 
-  if(fileExists(outputFileName)){
-    char answer;
-    std::cout << "Would you like to overwrite the current " << outputFileName << " file? (y/n)";
-    std::cin >> answer;
-    if (answer != 'y' && answer != 'Y'){
-      int i = 0;
-      while (fileExists(outputFileName)){
-        ++i;
-        std::stringstream sstm;
-        sstm << i;
-        outputFileName = "generatedKnots" + sstm.str() + ".txt";
-      }
-      std::cout << "\nSaving file as " << outputFileName << std::endl << std::endl;
-    }
-  }
+  std::string outputFileName = checkFileName(outputFileBaseName, outputFileExt);
+
+  std::cout << outputFileName << std::endl;
   
   #ifdef DEBUG
   testKnot();
@@ -66,5 +75,9 @@ int main(){
 
   const char * pass[] = {"lmpoly", fileNameToPass};
 
-  milletMain(2, pass);
+  std::string homflyOutputFileBaseName = "lmknot", homflyOutputFileExt = ".out";
+
+  std::string homflyOutputFileName = checkFileName(homflyOutputFileBaseName, homflyOutputFileExt);
+
+  milletMain(2, pass, homflyOutputFileName.c_str());
 }

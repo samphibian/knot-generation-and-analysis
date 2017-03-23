@@ -12,6 +12,13 @@ This project is designed to find the average shape of a Legendrian Knot. It does
 
 5) Output the percentage of each knot created
 
+TODO:
+- parse homfly output
+- compute percentage of each not created
+- clean up generateNotation in func.cpp
+- change checkSameLine in func.cpp to be KnotVertex rather than knotNot based
+- change checkIfV in func.cpp to be KnotVertex rather than knotNot based
+
 Working:
 - Knot-Generation
 - Crossing Generation

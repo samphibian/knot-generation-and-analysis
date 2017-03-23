@@ -27,7 +27,7 @@ unsigned char buf[XCSQTR], cbuf[10242], clist[XCNT+2], stc[XCNT*2];
 short numcrs, numlps, poslnk, neglnk, lowx, restrt, gapsto[65];
 short tt[XCNT+2], bstlst[XCNT], bilbuf[XCNTSQ], *bilion[XCNT], suplng;
 
-void milletMain(int argc, const char *argv[])
+void milletMain(int argc, const char *argv[], const char* knotFileNameFromGeneration)
 {
  register short i, j, k, h, m, n, *sp;
  register unsigned char *p, *c;
@@ -77,8 +77,8 @@ void milletMain(int argc, const char *argv[])
   write (1,"usage:  lmpoly -rs knotfile [knotfile ...]\n",43);
   exit (1);
  }
- if ((out=open("lmknot.out",1))== -1){
-  if ((out=creat("lmknot.out",0644))== -1){
+ if ((out=open(knotFileNameFromGeneration,1))== -1){
+  if ((out=creat(knotFileNameFromGeneration,0644))== -1){
    write (1,"fatal: cannot create output file 'lmknot.out'\n",46);
    exit (1);
   }
@@ -232,7 +232,7 @@ NEWNOT:
    while (--i!=0 && *lp1==0 && *(sp++)==0) ++lp1;
   }
   if (i!=0){
-   if ((out= open("lmknot.out",1))<0) out=open("temp.out",1);
+   if ((out= open(knotFileNameFromGeneration,1))<0) out=open("temp.out",1);
    lseek (out,(long) 0,2);
    write (out,nbuf,strlen(nbuf));
    write (out,"\n",1);     /* write out polynomial for knot just completed */

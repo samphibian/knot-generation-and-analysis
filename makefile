@@ -26,5 +26,7 @@ homflyExe.o: milletHomfly.c
 	gcc -c milletHomfly.c -o homflyExe.o
 
 clean:
-	rm -f *.o
+	rm *.o
+	rm *.txt
+	rm *.out
 	rm run
