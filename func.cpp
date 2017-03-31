@@ -1,7 +1,6 @@
 #include "knot.h"
 #include <algorithm>
 
-#include <fstream>
 
 typedef KnotVertex * (knotNot::*traceLettersFuncs)();
 
@@ -180,7 +179,8 @@ void checkIfV(int (* notNumbers)[crossComps], char (* notLetters)[crossComps], k
   }
 }
 
-bool generateNotation(KnotVertex * head, int numOcross){
+
+bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName){
   KnotVertex * k = head;
   knotNot crossingList[numOcross] = {};
 
@@ -210,11 +210,13 @@ bool generateNotation(KnotVertex * head, int numOcross){
   }
 
 
+  #ifdef KNOTDETAILS
   std::cout << "CrossingList with " << numOcross << " crossings: " << std::endl;
 
     for(int i=0; i<numOcross; ++i){
       crossingList[i].printNot();
     }
+  #endif
 
   //change so it uses vertices instead of crossings to minimize repeats
   for (int i = 0; i < numOcross; ++i){
@@ -228,6 +230,7 @@ bool generateNotation(KnotVertex * head, int numOcross){
       if(!notLetters[i][j]) checkIfV(notNumbers, notLetters, crossingList, i, j);
     }
   }
+
   for (int i = 0; i < numOcross; ++i){
     int nextI, prevI;
 
@@ -311,31 +314,37 @@ bool generateNotation(KnotVertex * head, int numOcross){
     }
   }
 
-  ofstream outputFile;
+  ofstream tempOutputFile;
   k = head;
 
-  outputFile.open("generatedNotation.txt");
+  tempOutputFile.open(tempFileName.c_str());
 
+  #ifdef KNOTDETAILS
   std::cout << std::endl << "Generated Notation: " << std::endl;
+  #endif
 
   for (int i = 0; i < numOcross; ++i){
     char sign = '+';
     if (crossingList[i].getSign()==-1) sign = '-';
-    outputFile << i+1 << sign;
+    tempOutputFile << i+1 << sign;
     for (int j = 0; j < crossComps; ++j){
       //write to file
-      outputFile << notNumbers[i][j] << notLetters[i][j];
+      tempOutputFile << notNumbers[i][j] << notLetters[i][j];
       //print to console
+      #ifdef KNOTDETAILS
       std::cout << notLetters[i][j] << notNumbers[i][j] << " ";
+      #endif
     }
+    #ifdef KNOTDETAILS
     std::cout << std::endl;
+    #endif
   }
 
-  outputFile.close();
+  tempOutputFile.close();
   return true;
 }
 
-void generateKnot(KnotVertex* k, int n) {
+void generateKnot(KnotVertex* k, int n, ofstream &outputFile) {
   double xvals[n], yvals[n];
 
   for (int i=0; i<n; ++i){
@@ -354,17 +363,32 @@ void generateKnot(KnotVertex* k, int n) {
 
   int numberOfCrossings = k->setCrossingVals();
 
+
+  #ifdef KNOTDETAILS
   k->printAll();
+  #endif
 
 
   #ifdef DEBUG
   std::cout << "number of crossings: " << numOcross << std::endl;
   #endif
 
+  // generateNotation(k, numberOfCrossings);
+
+  std::string generatedFileName = "tempGeneratedFile.txt";
+
   //failsafe:
-  if (!generateNotation(k, numberOfCrossings)){
+  if (!generateNotation(k, numberOfCrossings, generatedFileName)){
     free(k);
-    KnotVertex * k = new KnotVertex;
-    generateKnot(k, n);
+    KnotVertex * k = new KnotVertex();
+    generateKnot(k, n, outputFile);
   }
+
+  ifstream tempOutputFile;
+
+  tempOutputFile.open(generatedFileName.c_str());
+
+  outputFile << tempOutputFile.rdbuf();
+
+  tempOutputFile.close();
 }

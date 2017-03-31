@@ -7,11 +7,17 @@
 #ifndef KNOT_H
 #define KNOT_H
 
+extern "C" {
+  #include "homfly.h"
+}
+
 #include <iostream>
+#include <fstream>
 #include <stdio.h>
 #include <vector>
 #include <string>
 #include <cmath>
+#include <map>
 
 #define crossComps 4 //crossing components: a, b, c, d
 
@@ -94,6 +100,8 @@ class KnotVertex{
 // vector<knotNot> generateNotation(KnotVertex * head);
 void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n);
 void testKnot();
-void generateKnot(KnotVertex* k, int n);
+void generateKnot(KnotVertex* k, int n, ofstream & outputFile);
+
+std::map<string, int> parseHomflyOutput(const char * parseFileName);
 
 #endif
