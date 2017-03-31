@@ -27,7 +27,7 @@ unsigned char buf[XCSQTR], cbuf[10242], clist[XCNT+2], stc[XCNT*2];
 short numcrs, numlps, poslnk, neglnk, lowx, restrt, gapsto[65];
 short tt[XCNT+2], bstlst[XCNT], bilbuf[XCNTSQ], *bilion[XCNT], suplng;
 
-void milletMain(int argc, const char *argv[], const char* knotFileNameFromGeneration)
+int milletMain(int argc, const char *argv[], const char* knotFileNameFromGeneration)
 {
  register short i, j, k, h, m, n, *sp;
  register unsigned char *p, *c;
@@ -64,7 +64,7 @@ void milletMain(int argc, const char *argv[], const char* knotFileNameFromGenera
  *lp2= *lp1;
  if (*nbuf!=1 || nbuf[1]!=2 || nbuf[2]!=3 || nbuf[3]!=4){
   write (1,"4 byte copy problem -- use PORTABLE PROGRAM version!\n",53);
-  exit (1);
+  return (1);
  }
  if (sizeof(lngi)== (suplng=2)){
   write(1,"halt/restart won't work, and watch for coefficient overflows\n",61);
@@ -75,12 +75,12 @@ void milletMain(int argc, const char *argv[], const char* knotFileNameFromGenera
  if (sizeof(lngi)== 8) suplng= 1;
  if (argc<2){
   write (1,"usage:  lmpoly -rs knotfile [knotfile ...]\n",43);
-  exit (1);
+  return (1);
  }
  if ((out=open(knotFileNameFromGeneration,1))== -1){
   if ((out=creat(knotFileNameFromGeneration,0644))== -1){
    write (1,"fatal: cannot create output file 'lmknot.out'\n",46);
-   exit (1);
+   return (1);
   }
  }
  else lseek (out,(long) 0,2);
@@ -121,11 +121,11 @@ NEWFIL:
   close (stats);
   unlink(t);
  }
- if (--argc==0) exit(0);
+ if (--argc==0) return(0);
  if (restrt!=0){           /* if I am restarting an old calculation */
   if ((in=open("lmpoly.restrt",0))== -1){
    write (1,"couldn't find restart file\n",27);
-   exit (0);
+   return (0);
   }
   read (in,nbuf,82);
   read (in,cbuf,12);
@@ -371,7 +371,7 @@ NEWNOT:
  lngi= XCNT*XCNT;
  while (--lngi!=0) *(lp1++)= *(sp++)= 0;
  notbeg=numlps=poslnk=neglnk= xpow= ypow= 0;
- if (conchk()!=0) exit(0);
+ if (conchk()!=0) return(0);
  *count=1;
 STEP1:
  skflag=0;
@@ -412,7 +412,7 @@ RESTRT:
    write (out,(char *) bilbuf,2*XCNT*XCNT);
    close (out);
    close (stats);
-   exit(0);
+   return(0);
   }
   write (1,"couldn't create restart file 'lmpoly.restrt'\n",45);
   restrt=0;

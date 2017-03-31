@@ -210,11 +210,13 @@ bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName
   }
 
 
+  #ifdef KNOTDETAILS
   std::cout << "CrossingList with " << numOcross << " crossings: " << std::endl;
 
     for(int i=0; i<numOcross; ++i){
       crossingList[i].printNot();
     }
+  #endif
 
   //change so it uses vertices instead of crossings to minimize repeats
   for (int i = 0; i < numOcross; ++i){
@@ -317,7 +319,9 @@ bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName
 
   tempOutputFile.open(tempFileName.c_str());
 
+  #ifdef KNOTDETAILS
   std::cout << std::endl << "Generated Notation: " << std::endl;
+  #endif
 
   for (int i = 0; i < numOcross; ++i){
     char sign = '+';
@@ -327,9 +331,13 @@ bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName
       //write to file
       tempOutputFile << notNumbers[i][j] << notLetters[i][j];
       //print to console
+      #ifdef KNOTDETAILS
       std::cout << notLetters[i][j] << notNumbers[i][j] << " ";
+      #endif
     }
+    #ifdef KNOTDETAILS
     std::cout << std::endl;
+    #endif
   }
 
   tempOutputFile.close();
@@ -355,7 +363,10 @@ void generateKnot(KnotVertex* k, int n, ofstream &outputFile) {
 
   int numberOfCrossings = k->setCrossingVals();
 
+
+  #ifdef KNOTDETAILS
   k->printAll();
+  #endif
 
 
   #ifdef DEBUG

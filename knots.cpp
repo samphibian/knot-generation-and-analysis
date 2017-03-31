@@ -6,7 +6,7 @@
 #include <time.h>
 #include "knot.h"
 
-#define NUMBEROFKNOTS 10
+#define NUMBEROFKNOTS 25
 //a knot should be a linked list of nodes with an xval, a yval and if it has a crossing. There should be a list of crossings. Each crossing should have the index of the points of the line it crosses with and say if it's top or bottom.
 
 
@@ -35,7 +35,7 @@ std::string checkFileName (std::string fileName, std::string fileExt){
     }
   }
       
-  std::cout << "\nSaving file as " << fileName << fileExt << std::endl << std::endl;
+  std::cout << "\nSaving output file as " << fileName << fileExt << std::endl << std::endl;
 
   return fileName + fileExt;
 }
@@ -78,5 +78,20 @@ int main(){
 
   std::string homflyOutputFileName = checkFileName(homflyOutputFileBaseName, homflyOutputFileExt);
 
-  milletMain(2, pass, homflyOutputFileName.c_str());
+  int k = milletMain(2, pass, homflyOutputFileName.c_str());
+
+  std::map<string, int> homOutCount =  parseHomflyOutput(homflyOutputFileName.c_str());
+
+  for(map<string, int>::const_iterator it = homOutCount.begin(); it != homOutCount.end(); ++it){
+    if (it->second == 1){
+      std::cout << "There was " << it->second << "\n" << it->first << "knot." << std::endl
+      << "This is " << 100.0*it->second/NUMBEROFKNOTS << "%" << std::endl << std::endl;
+    }
+    else{
+      std::cout << "There were " << it->second << "\n" << it->first << "knots." << std::endl
+      << "This is " << 100.0*it->second/NUMBEROFKNOTS << "%" << std::endl << std::endl;
+    }
+  }
+
+
 }

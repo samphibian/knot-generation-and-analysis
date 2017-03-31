@@ -13,8 +13,6 @@ This project is designed to find the average shape of a Legendrian Knot. It does
 5) Output the percentage of each knot created
 
 TODO:
-- parse homfly output
-- compute percentage of each not created
 - clean up generateNotation in func.cpp
 - change checkSameLine in func.cpp to be KnotVertex rather than knotNot based
 - change checkIfV in func.cpp to be KnotVertex rather than knotNot based
@@ -25,6 +23,8 @@ Working:
 - Crossing Labelling
 - Notation Generation (?)
 - Passing File to Homfly code
+- parse homfly output
+- compute percentage of each knot created
 
 
 Notation Generation:
@@ -37,18 +37,18 @@ Notation Generation:
   - Occasional infinite loops in the different next/prev sections -> stopgap fix of scrapping the knot and generating a new one
 
 /****  
-Sources:
-http://stackoverflow.com/questions/9878965/c-rand-between-0-and-1
-http://www.cplusplus.com/forum/beginner/49408/ (Disch's answer)
-http://stackoverflow.com/questions/14176776/find-out-if-2-lines-intersect
-http://www.codeproject.com/Tips/862988/Find-the-intersection-point-of-two-line-segments
-http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
-http://stackoverflow.com/questions/20010909/how-to-loop-through-multiple-functions-in-c
-https://www.codeproject.com/Articles/7150/Member-Function-Pointers-and-the-Fastest-Possible
-http://www.cplusplus.com/forum/beginner/27582/
-http://stackoverflow.com/questions/1560492/how-to-tell-whether-a-point-is-to-the-right-or-left-side-of-a-line
-https://msdn.microsoft.com/en-us/library/7k66t42c.aspx
-http://stackoverflow.com/questions/4316442/stdofstream-check-if-file-exists-before-writing
+Sources:  
+http://stackoverflow.com/questions/9878965/c-rand-between-0-and-1  
+http://www.cplusplus.com/forum/beginner/49408/ (Disch's answer)  
+http://stackoverflow.com/questions/14176776/find-out-if-2-lines-intersect  
+http://www.codeproject.com/Tips/862988/Find-the-intersection-point-of-two-line-segments  
+http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect  
+http://stackoverflow.com/questions/20010909/how-to-loop-through-multiple-functions-in-c  
+https://www.codeproject.com/Articles/7150/Member-Function-Pointers-and-the-Fastest-Possible  
+http://www.cplusplus.com/forum/beginner/27582/  
+http://stackoverflow.com/questions/1560492/how-to-tell-whether-a-point-is-to-the-right-or-left-side-of-a-line  
+https://msdn.microsoft.com/en-us/library/7k66t42c.aspx  
+http://stackoverflow.com/questions/4316442/stdofstream-check-if-file-exists-before-writing  
 http://stackoverflow.com/questions/191757/how-to-concatenate-a-stdstring-and-an-int  
 *****/
 

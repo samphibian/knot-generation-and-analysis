@@ -17,6 +17,7 @@ extern "C" {
 #include <vector>
 #include <string>
 #include <cmath>
+#include <map>
 
 #define crossComps 4 //crossing components: a, b, c, d
 
@@ -101,6 +102,6 @@ void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n);
 void testKnot();
 void generateKnot(KnotVertex* k, int n, ofstream & outputFile);
 
-void parseHomflyOutput(const char * parseFileName, int totalNumberOfKnots);
+std::map<string, int> parseHomflyOutput(const char * parseFileName);
 
 #endif
