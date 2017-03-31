@@ -26,12 +26,14 @@ std::string checkFileName (std::string fileName, std::string fileExt){
     std::cin >> answer;
     if (answer != 'y' && answer != 'Y'){
       int i=0;
-      while (fileExists(fileName + fileExt)){
+      string curFileName = fileName;
+      while (fileExists(curFileName + fileExt)){
         ++i;
         std::stringstream sstm;
         sstm << i;
-        fileName = fileName + sstm.str();
+        curFileName = fileName + sstm.str();
       }
+      fileName = curFileName;
     }
   }
       
