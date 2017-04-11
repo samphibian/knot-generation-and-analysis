@@ -110,6 +110,7 @@ class KnotVertex{
   void printAll(); // prints all data
   void print(int index); // prints the data index points away from the given one
   bool validPoint(double *xval, double *yval); // check if new point valid
+  void getAllCrossings(knotNot * crossingList, int numOcross);
 };
 
 

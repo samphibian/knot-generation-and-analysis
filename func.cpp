@@ -119,6 +119,114 @@ void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n){
  }
 }
 
+bool checkPosCusp(bool posSignV1, bool posSignV2){
+  if (posSignV1 && !posSignV2){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
+int totalPosCusps(KnotVertex * head){
+
+}
+
+bool isCusp(bool slope1pos, bool slope2pos){
+  if (slope1pos && !slope2pos){
+    return true;
+  }
+  return false;
+}
+
+//r = totalDownCusps (prevY>nextY) - totalUpCusps (prevY<negY)
+
+int calculateR(KnotVertex * head){
+
+  bool upCusp = head->prev->getY() < head->next->getY();
+
+  int count = 0;
+  bool prevSign = signbit(head->prev->getSlopeToNext());
+  KnotVertex * cur = head;
+  bool curSign = signbit(cur->getSlopeToNext());
+  if (isCusp(prevSign, curSign)){
+    if (upCusp){
+      count --;
+    }
+    else{
+      count ++;
+    }
+  }
+  cur = cur->next;
+  prevSign = curSign;
+
+  while(cur != head){
+    curSign = signbit(cur->getSlopeToNext());
+    upCusp = cur->prev->getY() < cur->next->getY();
+    if (isCusp(prevSign, curSign)){
+      if (upCusp){
+        count --;
+      }
+      else{
+        count ++;
+      }
+    }
+    cur = cur->next;
+    prevSign = curSign;
+  }
+
+  return (count/2);
+}
+
+int totalNumberOfCusps(KnotVertex * head){
+  int count = 0;
+  bool prevSign = signbit(head->prev->getSlopeToNext());
+  KnotVertex * cur = head;
+  bool curSign = signbit(cur->getSlopeToNext());
+  if (isCusp(prevSign, curSign)){
+    count ++;
+  }
+  cur = cur->next;
+  prevSign = curSign;
+
+  while(cur != head){
+    curSign = signbit(cur->getSlopeToNext());
+    if (isCusp(prevSign, curSign)){
+      count ++;
+    }
+    prevSign = curSign;
+    cur = cur->next;
+  }
+
+  return count;
+}
+
+int sumSigns(KnotVertex * head, int numOcross){  
+  KnotVertex * k = head;
+  knotNot crossingList[numOcross] = {};
+  int count = 0;
+
+  head->getAllCrossings(crossingList, numOcross);
+
+  for(int i=0; i<numOcross; ++i){
+    count += crossingList[i].getSign();
+  }
+
+  return count;
+}
+
+int calculateB(KnotVertex * head, int numOcross){
+  int s = sumSigns(head, numOcross),
+    c = totalNumberOfCusps(head); //note that c will always be even
+  int b = s - (c/2);
+
+  #ifdef DEBUG
+  std::cout << s << " " << c << " " << b << std::endl;
+  #endif
+
+  return b;
+}
+
 void checkSameLine(int (* notNumbers)[crossComps], char (* notLetters)[crossComps], knotNot * crossingList, int i, int j){
   KnotVertex * initVertex = (crossingList[i].*traceLetters[j])(),
     * finalVertex = (crossingList[i].*traceLetters[(j+2)%crossComps])();
@@ -206,28 +314,7 @@ bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName
   char notLetters[numOcross][4] = {};
   int notNumbers[numOcross][4] = {};
 
-  //check each crossing. note that the last doesn't need to be checked as all in that one shoud be duplicaties
-  while(k->next != head){
-    if (k->checkCrossing()){
-      for(int i=0; i<k->getC()->size(); ++i){
-        #ifdef DEBUG
-        std::cout << "current crossing label is: " << crossingList[k->getC()->at(i).getLabel() - 1].getLabel() << std::endl;
-        #endif
-        //empty crossing generated with label -1, filled between 0 and number of crossings
-        if(crossingList[k->getC()->at(i).getLabel() - 1].getLabel() < 0 || crossingList[k->getC()->at(i).getLabel() - 1].getLabel() > numOcross + 1){
-          crossingList[k->getC()->at(i).getLabel() - 1] = k->getC()->at(i);
-
-          #ifdef DEBUG
-          std::cout << "label: " << k->getC()->at(i).getLabel() - 1 << std::endl;
-          crossingList[k->getC()->at(i).getLabel() - 1].printNot();
-          #endif
-        }
-      }
-    }
-
-    k = k->next;
-  }
-
+  head->getAllCrossings(crossingList, numOcross);
 
   #ifdef KNOTDETAILS
   std::cout << "CrossingList with " << numOcross << " crossings: " << std::endl;
@@ -402,6 +489,9 @@ void generateKnot(KnotVertex* k, int n, ofstream &outputFile) {
     KnotVertex * k = new KnotVertex();
     generateKnot(k, n, outputFile);
   }
+
+  std::cout << "B is: " << calculateB(k, numberOfCrossings) << std::endl;
+  std::cout << "R is: " << calculateR(k) << std::endl;
 
   ifstream tempOutputFile;
 
