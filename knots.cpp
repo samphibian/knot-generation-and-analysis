@@ -24,7 +24,7 @@
 #include <time.h>
 #include "knot.h"
 
-#define NUMBEROFKNOTS 25
+#define NUMBEROFKNOTS 10
 //a knot should be a linked list of nodes with an xval, a yval and if it has a crossing. There should be a list of crossings. Each crossing should have the index of the points of the line it crosses with and say if it's top or bottom.
 
 
@@ -77,11 +77,15 @@ int main(){
 
   std::cout << "How many points would you like to generate for each knot? ";
   std::cin >> n;
+  if (n < 3){
+    std::cerr << "Cannot create a knot with " << n << " vertices. Good-bye." << std::endl;
+    exit(1);
+  }
   std::cout << std::endl;
 
   ofstream outputFile;
 
-  outputFile.open(outputFileName.c_str(), std::ios_base::trunc);
+  outputFile.open(outputFileName.c_str());
 
   for(int i=0; i < NUMBEROFKNOTS; ++i){
     knot = new KnotVertex();
@@ -102,18 +106,20 @@ int main(){
 
   int k = milletMain(2, pass, homflyOutputFileName.c_str());
 
-  std::map<string, int> homOutCount =  parseHomflyOutput(homflyOutputFileName.c_str());
+  std::map<string, int> homOutCount =  parseHomflyOutput(homflyOutputFileName.c_str(), NUMBEROFKNOTS);
 
-  for(map<string, int>::const_iterator it = homOutCount.begin(); it != homOutCount.end(); ++it){
-    if (it->second == 1){
-      std::cout << "There was " << it->second << "\n" << it->first << "knot." << std::endl
-      << "This is " << 100.0*it->second/NUMBEROFKNOTS << "%" << std::endl << std::endl;
-    }
-    else{
-      std::cout << "There were " << it->second << "\n" << it->first << "knots." << std::endl
-      << "This is " << 100.0*it->second/NUMBEROFKNOTS << "%" << std::endl << std::endl;
-    }
-  }
+  printMap(homOutCount, NUMBEROFKNOTS);
+
+  // for(map<string, int>::const_iterator it = homOutCount.begin(); it != homOutCount.end(); ++it){
+    // if (it->second == 1){
+    //   std::cout << "There was " << it->second << "\n" << it->first << "knot." << std::endl
+    //   << "This is " << 100.0*it->second/NUMBEROFKNOTS << "%" << std::endl << std::endl;
+    // }
+    // else{
+    //   std::cout << "There were " << it->second << "\n" << it->first << "knots." << std::endl
+    //   << "This is " << 100.0*it->second/NUMBEROFKNOTS << "%" << std::endl << std::endl;
+    // }
+  // }
 
 
 }

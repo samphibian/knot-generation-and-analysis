@@ -19,6 +19,7 @@
 
 #include "knot.h"
 
+#include <functional>
 /*
 For the oriented polynomial, if the polynomial
 for two distant circles can be written as:
@@ -29,10 +30,10 @@ the beginning of the file (printed first).  A pair of square brackets surrounds
 the zero power of both variables everywhere they occur.
 */
 
-std::map<string, int> parseHomflyOutput(const char * parseFileName){
+std::map<string, int> parseHomflyOutput(const char * parseFileName, int totalNumberOfKnots){
   //if totalNumberOfKnots < number parse, add difference to total number of unknots
 
-  int unknot = 0;
+  int knotCount = 0;
 
   std::map<string,int> outputMap;
 
@@ -59,6 +60,7 @@ std::map<string, int> parseHomflyOutput(const char * parseFileName){
       else{
         outputMap[totalLine] = 1;
       }
+      ++knotCount;
     }
 
     homflyOutput.close();
@@ -69,6 +71,43 @@ std::map<string, int> parseHomflyOutput(const char * parseFileName){
     }
     #endif
 
+    if (knotCount < totalNumberOfKnots){
+      outputMap["[[1]]\n"] += (totalNumberOfKnots - knotCount);
+    }
+
   return outputMap;
 }
 
+void printMap(std::map<string, int> mapToSort, int totalNumberOfKnots){
+  // code between /**/ from http://thispointer.com/how-to-sort-a-map-by-value-in-c/
+  /**/
+  // Declaring the type of Predicate that accepts 2 pairs and return a bool
+  typedef std::function<bool(std::pair<string, int>, std::pair<string, int>)> Comparator;
+ 
+  // Defining a lambda function to compare two pairs. It will compare two pairs using second field
+  Comparator compFunctor =
+      [](std::pair<string, int> elem1 ,std::pair<string, int> elem2)
+      {
+        return elem1.second <= elem2.second;
+      };
+ 
+  // Declaring a set that will store the pairs using above comparision logic
+  std::set<std::pair<std::string, int>, Comparator> sortedSet(
+      mapToSort.begin(), mapToSort.end(), compFunctor);
+  /**/
+
+  #ifdef DEBUG
+  std::cout << mapToSort.size() << " " << sortedSet.size() << std::endl;
+  #endif
+
+  for (std::pair<std::string, int> element : sortedSet){
+    if (element.second == 1){
+      std::cout << "There was " << element.second << "\n" << element.first << "knot." << std::endl
+      << "This is " << 100.0*element.second/totalNumberOfKnots << "%" << std::endl << std::endl;
+    }
+    else{
+      std::cout << "There were " << element.second << "\n" << element.first << "knots." << std::endl
+      << "This is " << 100.0*element.second/totalNumberOfKnots << "%" << std::endl << std::endl;
+    }
+  }
+}

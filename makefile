@@ -23,7 +23,7 @@ run: homflyExe.o knots.o func.o knot.o  point.o knotNot.o parse.o
 	g++ homflyExe.o knots.o func.o knot.o point.o knotNot.o parse.o -o run
 
 parse.o: parseHomflyOutput.cpp
-	g++ -c parseHomflyOutput.cpp -o parse.o
+	g++ -std=c++11 -c parseHomflyOutput.cpp -o parse.o
 
 func.o: func.cpp
 	g++ -c func.cpp -o func.o
