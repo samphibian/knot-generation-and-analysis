@@ -43,8 +43,16 @@ std::map<string, int> parseHomflyOutput(const char * parseFileName, int totalNum
 
     string line;
 
+    ifstream br;
+    br.open("storeBR.txt");
+
+    string brNot;
+
     while(std::getline(homflyOutput, line)){
-      string totalLine = "";
+
+      std::getline(br, brNot);
+
+      string totalLine = brNot + "\n";
 
       while (line == "") std::getline(homflyOutput, line);
 

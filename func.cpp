@@ -490,8 +490,10 @@ void generateKnot(KnotVertex* k, int n, ofstream &outputFile) {
     generateKnot(k, n, outputFile);
   }
 
+  #ifdef KNOTDETAILS
   std::cout << "B is: " << calculateB(k, numberOfCrossings) << std::endl;
   std::cout << "R is: " << calculateR(k) << std::endl;
+  #endif
 
   ifstream tempOutputFile;
 
@@ -500,4 +502,8 @@ void generateKnot(KnotVertex* k, int n, ofstream &outputFile) {
   outputFile << tempOutputFile.rdbuf();
 
   tempOutputFile.close();
+
+  ofstream storeBR;
+  storeBR.open("storeBR.txt", std::ios_base::app);
+  storeBR << calculateB(k, numberOfCrossings) << " " << calculateR(k) << std::endl;
 }
