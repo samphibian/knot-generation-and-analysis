@@ -31,10 +31,6 @@ the zero power of both variables everywhere they occur.
 */
 
 std::map<string, int> parseHomflyOutput(const char * parseFileName, int totalNumberOfKnots){
-  //if totalNumberOfKnots < number parse, add difference to total number of unknots
-
-  int knotCount = 0;
-
   std::map<string,int> outputMap;
 
   ifstream homflyOutput;
@@ -48,40 +44,61 @@ std::map<string, int> parseHomflyOutput(const char * parseFileName, int totalNum
 
     string brNot;
 
+    ifstream gk;
+    gk.open("generatedKnots.txt");
+
+    string genKnot;
+
     while(std::getline(homflyOutput, line)){
+      int gkLineCount = 0;
+      std::getline(gk, genKnot);
+      if(genKnot != "") std::getline(gk, genKnot);
+
+      while(genKnot == "" && gkLineCount < 3){
+        std::getline(gk, genKnot);
+        ++gkLineCount;
+      }
 
       std::getline(br, brNot);
-
-      string totalLine = brNot + "\n";
-
-      while (line == "") std::getline(homflyOutput, line);
-
-      while (line != ""){
-        totalLine += line + "\n";
-        std::getline(homflyOutput, line);
+      if (brNot == "0 0" && gkLineCount == 3){
+        string key = brNot +"\n[[1]]\n";
+        if (outputMap[key]) {
+          ++outputMap[key];
+        }
+        else {
+          outputMap[key]=1;
+        }
       }
 
-      if(outputMap[totalLine]){
-        outputMap[totalLine]++;
-      }
+      else {
+        string totalLine = brNot + "\n";
 
-      else{
-        outputMap[totalLine] = 1;
+        while (line == "") std::getline(homflyOutput, line);
+
+        while (line != ""){
+          totalLine += line + "\n";
+          std::getline(homflyOutput, line);
+        }
+
+        if(outputMap[totalLine]){
+          outputMap[totalLine]++;
+        }
+
+        else{
+          outputMap[totalLine] = 1;
+        }
       }
-      ++knotCount;
     }
 
     homflyOutput.close();
+    br.close();
+    gk.close();
 
     #ifdef DEBUG
     for(map<string, int>::const_iterator it = outputMap.begin(); it != outputMap.end(); ++it){
         std::cout << it->first << " " << it->second << std::endl;
     }
     #endif
-
-    if (knotCount < totalNumberOfKnots){
-      outputMap["[[1]]\n"] += (totalNumberOfKnots - knotCount);
-    }
 
   return outputMap;
 }
