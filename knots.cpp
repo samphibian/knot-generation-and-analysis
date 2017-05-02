@@ -109,17 +109,4 @@ int main(){
   std::map<string, int> homOutCount =  parseHomflyOutput(homflyOutputFileName.c_str(), NUMBEROFKNOTS);
 
   printMap(homOutCount, NUMBEROFKNOTS);
-
-  // for(map<string, int>::const_iterator it = homOutCount.begin(); it != homOutCount.end(); ++it){
-    // if (it->second == 1){
-    //   std::cout << "There was " << it->second << "\n" << it->first << "knot." << std::endl
-    //   << "This is " << 100.0*it->second/NUMBEROFKNOTS << "%" << std::endl << std::endl;
-    // }
-    // else{
-    //   std::cout << "There were " << it->second << "\n" << it->first << "knots." << std::endl
-    //   << "This is " << 100.0*it->second/NUMBEROFKNOTS << "%" << std::endl << std::endl;
-    // }
-  // }
-
-
 }

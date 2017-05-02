@@ -308,6 +308,14 @@ void checkIfV(int (* notNumbers)[crossComps], char (* notLetters)[crossComps], k
 
 
 bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName){
+  if (numOcross == 0) return true;
+
+  ofstream storeBR;
+  storeBR.open("storeBR.txt", std::ios_base::app);
+  storeBR << calculateB(head, numOcross) << " " << calculateR(head) << std::endl;
+  storeBR.close();
+
+
   KnotVertex * k = head;
   knotNot crossingList[numOcross] = {};
 
@@ -502,8 +510,4 @@ void generateKnot(KnotVertex* k, int n, ofstream &outputFile) {
   outputFile << tempOutputFile.rdbuf();
 
   tempOutputFile.close();
-
-  ofstream storeBR;
-  storeBR.open("storeBR.txt", std::ios_base::app);
-  storeBR << calculateB(k, numberOfCrossings) << " " << calculateR(k) << std::endl;
 }
