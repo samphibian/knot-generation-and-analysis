@@ -75,12 +75,23 @@ int main(){
   testKnot();
   #endif
 
-  std::cout << "How many points would you like to generate for each knot? ";
-  std::cin >> n;
-  if (n < 3){
-    std::cerr << "Cannot create a knot with " << n << " vertices. Good-bye." << std::endl;
-    exit(1);
+  char ans;
+  std::cout << "Would you like to generate knots by vertices (v) or crossings (c)?";
+  std::cin >> ans;
+  if (ans == 'c'){
+    std::cout << "How many crossings would you like to generate for each knot?";
+    std::cin >> n;
   }
+  else if (ans == 'v'){
+    std::cout << "How many points would you like to generate for each knot? ";
+    std::cin >> n;
+
+    if (n < 3){
+      std::cerr << "Cannot create a knot with " << n << " vertices. Good-bye." << std::endl;
+      exit(1);
+    }
+  }
+
   std::cout << std::endl;
 
   ofstream outputFile;
