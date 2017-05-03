@@ -91,6 +91,7 @@ std::string getFileSuffix (std::string fileName, std::string fileExt){
 int main(){
 	srand(time(NULL));
   KnotVertex * knot;
+  bool br;
 
   std::cout << "\nknot-generation-and-analysis Copyright (C) 2017 Samantha Kacir\nThis program comes with ABSOLUTELY NO WARRANTY.\nThis is free software, and you are welcome to redistribute it under certain conditions."
     << std::endl << std::endl;
@@ -101,10 +102,17 @@ int main(){
 
   string suffix = getFileSuffix(outputFileBaseName, outputFileExt);
 
+  char ans;
+  std::cout << "Would you like to generate the tb and r as well? (y/n) ";
+  std::cin >> ans;
+  if(ans == 'y') br = true;
+  else br = false;
+  std::cout << std::endl;
+
   if(suffix == "x"){
     remove((outputFileBaseName+outputFileExt).c_str());
     remove((homflyOutputFileBaseName+homflyOutputFileExt).c_str());
-    remove("storeBR.txt");
+    if (br) remove("storeBR.txt");
     suffix = "";
   }
   std::string outputFileName = outputFileBaseName + suffix + outputFileExt;
@@ -127,7 +135,7 @@ int main(){
 
   for(int i=0; i < NUMBEROFKNOTS; ++i){
     knot = new KnotVertex();
-    generateKnot(knot, n, outputFile, suffix);
+    generateKnot(knot, n, outputFile, br, suffix);
     outputFile << "\n\n";
     free(knot);
     knot = NULL;
@@ -142,7 +150,9 @@ int main(){
 
   int k = milletMain(2, pass, homflyOutputFileName.c_str());
 
-  std::map<string, int> homOutCount =  parseHomflyOutput(homflyOutputFileName.c_str(), NUMBEROFKNOTS, suffix);
+  std::map<string, int> homOutCount;
+  if (br) homOutCount =  parseHomflyBROutput(homflyOutputFileName.c_str(), NUMBEROFKNOTS, suffix);
+  else homOutCount = parseHomflyOutput(homflyOutputFileName.c_str(), NUMBEROFKNOTS);
 
   printMap(homOutCount, NUMBEROFKNOTS);
 }

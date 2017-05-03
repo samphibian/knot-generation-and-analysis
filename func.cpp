@@ -318,10 +318,18 @@ void checkIfV(int (* notNumbers)[crossComps], char (* notLetters)[crossComps], k
 }
 
 
-bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName, bool br?,std::string fileSuffix){
-  if (numOcross == 0) return true;
+bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName, bool br,std::string fileSuffix){
+  if (numOcross == 0){
+    if(br){
+    ofstream storeBR;
+    storeBR.open(("storeBR" + fileSuffix + "-NoCrossing" + ".txt").c_str(), std::ios_base::app);
+    storeBR << calculateB(head, numOcross) << " " << calculateR(head) << std::endl;
+    storeBR.close();
+    }
+    return true; 
+  }
 
-  if (br?){
+  if (br){
     ofstream storeBR;
     storeBR.open(("storeBR" + fileSuffix + ".txt").c_str(), std::ios_base::app);
     storeBR << calculateB(head, numOcross) << " " << calculateR(head) << std::endl;
@@ -471,7 +479,7 @@ bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName
   return true;
 }
 
-void generateKnot(KnotVertex* k, int n, ofstream &outputFile, std::string fileSuffix) {
+void generateKnot(KnotVertex* k, int n, ofstream &outputFile, bool br, std::string fileSuffix) {
   double xvals[n], yvals[n];
 
   for (int i=0; i<n; ++i){
@@ -497,18 +505,16 @@ void generateKnot(KnotVertex* k, int n, ofstream &outputFile, std::string fileSu
 
 
   #ifdef DEBUG
-  std::cout << "number of crossings: " << numOcross << std::endl;
+  std::cout << "number of crossings: " << numberOfCrossings << std::endl;
   #endif
-
-  // generateNotation(k, numberOfCrossings);
 
   std::string generatedFileName = "tempGeneratedFile.txt";
 
   //failsafe:
-  if (!generateNotation(k, numberOfCrossings, generatedFileName, fileSuffix)){
+  if (!generateNotation(k, numberOfCrossings, generatedFileName, br, fileSuffix)){
     free(k);
     KnotVertex * k = new KnotVertex();
-    generateKnot(k, n, outputFile, fileSuffix);
+    generateKnot(k, n, outputFile, br, fileSuffix);
   }
 
   #ifdef KNOTDETAILS
@@ -523,4 +529,5 @@ void generateKnot(KnotVertex* k, int n, ofstream &outputFile, std::string fileSu
   outputFile << tempOutputFile.rdbuf();
 
   tempOutputFile.close();
+  remove(generatedFileName.c_str());
 }

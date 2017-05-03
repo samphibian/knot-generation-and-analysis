@@ -30,8 +30,57 @@ the beginning of the file (printed first).  A pair of square brackets surrounds
 the zero power of both variables everywhere they occur.
 */
 
-std::map<string, int> parseHomflyOutput(const char * parseFileName, int totalNumberOfKnots, std::string fileSuffix){
+std::map<string, int> parseHomflyOutput(const char * parseFileName, int totalNumberOfKnots){
+  //if totalNumberOfKnots < number parse, add difference to total number of unknots
+
+  int knotCount = 0;
+
   std::map<string,int> outputMap;
+
+  ifstream homflyOutput;
+
+    homflyOutput.open(parseFileName);
+
+    string line;
+
+    while(std::getline(homflyOutput, line)){
+      string totalLine = "";
+
+      while (line == "") std::getline(homflyOutput, line);
+
+      while (line != ""){
+        totalLine += line + "\n";
+        std::getline(homflyOutput, line);
+      }
+
+      if(outputMap[totalLine]){
+        outputMap[totalLine]++;
+      }
+
+      else{
+        outputMap[totalLine] = 1;
+      }
+      ++knotCount;
+    }
+
+    homflyOutput.close();
+
+    #ifdef DEBUG
+    for(map<string, int>::const_iterator it = outputMap.begin(); it != outputMap.end(); ++it){
+        std::cout << it->first << " " << it->second << std::endl;
+    }
+    #endif
+
+    if (knotCount < totalNumberOfKnots){
+      outputMap["[[1]]\n"] += (totalNumberOfKnots - knotCount);
+    }
+
+  return outputMap;
+}
+
+std::map<string, int> parseHomflyBROutput(const char * parseFileName, int totalNumberOfKnots, std::string fileSuffix){
+  std::map<string,int> outputMap;
+  int knotCount = 0;
 
   ifstream homflyOutput;
 
@@ -44,55 +93,55 @@ std::map<string, int> parseHomflyOutput(const char * parseFileName, int totalNum
 
     string brNot;
 
-    ifstream gk;
-    gk.open("generatedKnots.txt");
-
-    string genKnot;
-
     while(std::getline(homflyOutput, line)){
-      int gkLineCount = 0;
-      std::getline(gk, genKnot);
-      if(genKnot != "") std::getline(gk, genKnot);
-
-      while(genKnot == "" && gkLineCount < 3){
-        std::getline(gk, genKnot);
-        ++gkLineCount;
-      }
-
       std::getline(br, brNot);
-      if (brNot == "0 0" && gkLineCount == 3){
-        string key = brNot +"\n[[1]]\n";
-        if (outputMap[key]) {
-          ++outputMap[key];
-        }
-        else {
-          outputMap[key]=1;
-        }
+
+      string totalLine = brNot + "\n";
+
+      while (line == "") std::getline(homflyOutput, line);
+
+      while (line != ""){
+        totalLine += line + "\n";
+        std::getline(homflyOutput, line);
       }
 
-      else {
-        string totalLine = brNot + "\n";
-
-        while (line == "") std::getline(homflyOutput, line);
-
-        while (line != ""){
-          totalLine += line + "\n";
-          std::getline(homflyOutput, line);
-        }
-
-        if(outputMap[totalLine]){
-          outputMap[totalLine]++;
-        }
-
-        else{
-          outputMap[totalLine] = 1;
-        }
+      if(outputMap[totalLine]){
+        outputMap[totalLine]++;
       }
+
+      else{
+        outputMap[totalLine] = 1;
+      }
+      ++knotCount;
     }
-
     homflyOutput.close();
+
+    while(std::getline(br, brNot)){
+      string noCross = brNot+"\n[[1]]";
+      if(outputMap[noCross]){
+        outputMap[noCross]++;
+      }
+      else{
+        outputMap[noCross] = 1;
+      }
+      ++knotCount;
+    }
     br.close();
-    gk.close();
+
+    ifstream brNoCross;
+    brNoCross.open("storeBR" + fileSuffix + "-NoCrossing" + ".txt");
+
+    while(std::getline(brNoCross, line)){
+      string noCross = line+"\n[[1]]";
+      if(outputMap[noCross]){
+        outputMap[noCross]++;
+      }
+      else{
+        outputMap[noCross] = 1;
+      }
+      ++knotCount;
+    }
+    brNoCross.close();
 
     #ifdef DEBUG
     for(map<string, int>::const_iterator it = outputMap.begin(); it != outputMap.end(); ++it){
@@ -128,12 +177,12 @@ void printMap(std::map<string, int> mapToSort, int totalNumberOfKnots)
 
   for(map<int, string>::const_iterator it = sortedMap.begin(); it != sortedMap.end(); ++it){
     if (it->first == 1){
-      std::cout << "There was " << it->first << "\n" << it->second << "knot." << std::endl
+      std::cout << "There was " << it->first << "\n" << it->second << " knot." << std::endl
       << "This is " << 100.0*it->first/totalNumberOfKnots << "%" << std::endl << std::endl;
     }
 
     else{
-      std::cout << "There were " << it->first << "\n" << it->second << "knots." << std::endl
+      std::cout << "There were " << it->first << "\n" << it->second << " knots." << std::endl
       << "This is " << 100.0*it->first/totalNumberOfKnots << "%" << std::endl << std::endl;
     }
   }

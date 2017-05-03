@@ -117,9 +117,10 @@ class KnotVertex{
 
 void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n);
 void testKnot();
-void generateKnot(KnotVertex* k, int n, ofstream & outputFile, std::string fileSuffix);
+void generateKnot(KnotVertex* k, int n, ofstream & outputFile, bool br, std::string fileSuffix);
 
-std::map<string, int> parseHomflyOutput(const char * parseFileName, int totalNumberOfKnots, std::string fileSuffix);
+std::map<string, int> parseHomflyOutput(const char * parseFileName, int totalNumberOfKnots);
+std::map<string, int> parseHomflyBROutput(const char * parseFileName, int totalNumberOfKnots, std::string fileSuffix);
 
 void printMap(std::map<string, int> mapToSort, int totalNumberOfKnots);
 
