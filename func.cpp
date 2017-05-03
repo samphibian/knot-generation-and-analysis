@@ -119,59 +119,70 @@ void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n){
  }
 }
 
-bool checkPosCusp(bool posSignV1, bool posSignV2){
-  if (posSignV1 && !posSignV2){
-    return true;
-  }
-  else{
-    return false;
-  }
-}
-
-int totalPosCusps(KnotVertex * head){
-
-}
-
-bool isCusp(bool slope1pos, bool slope2pos){
-  if (slope1pos && !slope2pos){
-    return true;
-  }
+bool checkUpRightCusp(float slopeFirst, float slopeSecond){
+  if (slopeFirst < slopeSecond) return true;
   return false;
 }
 
+bool checkDownRightCusp(float slopeFirst, float slopeSecond){
+  if (slopeFirst > slopeSecond) return true;
+  return false;
+}
+
+bool checkIfRightCusp(double x1, double x2, double x3){
+  if(x1 <= x2 && x3 <= x2 && (x1 != x2 || x2 != x3)) return true;
+  return false;
+}
+
+bool checkIfLeftCusp(double x1, double x2, double x3){
+  if(x1 >= x2 && x3 >= x2 && (x1 != x2 || x2 != x3)) return true;
+  return false;
+}
+
+bool checkIfCusp(double x1, double x2, double x3){
+  if(checkIfRightCusp) return true;
+  if(checkIfLeftCusp) return true;
+  return false;
+}
+
+//cusp if x1 <= x2 >= x3
+
 //r = totalDownCusps (prevY>nextY) - totalUpCusps (prevY<negY)
 
+//|b + r| <= -1
+
 int calculateR(KnotVertex * head){
-
-  bool upCusp = head->prev->getY() < head->next->getY();
-
   int count = 0;
-  bool prevSign = signbit(head->prev->getSlopeToNext());
   KnotVertex * cur = head;
-  bool curSign = signbit(cur->getSlopeToNext());
-  if (isCusp(prevSign, curSign)){
-    if (upCusp){
-      count --;
-    }
-    else{
-      count ++;
-    }
+  double * x1 = cur->prev->getX(), * x2 = cur->getX(), * x3 = cur->next->getX();
+  bool prevSign = signbit(head->prev->getSlopeToNext()),
+   curSign = signbit(cur->getSlopeToNext());
+
+  if (checkIfRightCusp(*x1, *x2, *x3)){
+    if (checkUpRightCusp(prevSign, curSign)) --count;
+    else if (checkDownRightCusp(prevSign, curSign)) ++count;
+  }
+  else if (checkIfLeftCusp(*x1, *x2, *x3)){
+    if (checkDownRightCusp(prevSign, curSign)) --count;
+    else if (checkUpRightCusp(prevSign, curSign)) ++count;
   }
   cur = cur->next;
   prevSign = curSign;
 
   while(cur != head){
+    x1 = x2;
+    x2 = x3;
+    x3 = cur->next->getX();
     curSign = signbit(cur->getSlopeToNext());
-    upCusp = cur->prev->getY() < cur->next->getY();
-    if (isCusp(prevSign, curSign)){
-      if (upCusp){
-        count --;
-      }
-      else{
-        count ++;
-      }
+    if (checkIfRightCusp(*x1, *x2, *x3)){
+      if (checkUpRightCusp(prevSign, curSign)) --count;
+      else if (checkDownRightCusp(prevSign, curSign)) ++count;
     }
-    cur = cur->next;
+    else if (checkIfLeftCusp(*x1, *x2, *x3)){
+      if (checkDownRightCusp(prevSign, curSign)) --count;
+      else if (checkUpRightCusp(prevSign, curSign)) ++count;
+    }
+    cur = cur -> next;
     prevSign = curSign;
   }
 
@@ -180,22 +191,22 @@ int calculateR(KnotVertex * head){
 
 int totalNumberOfCusps(KnotVertex * head){
   int count = 0;
-  bool prevSign = signbit(head->prev->getSlopeToNext());
   KnotVertex * cur = head;
-  bool curSign = signbit(cur->getSlopeToNext());
-  if (isCusp(prevSign, curSign)){
+  double * x1 = cur->prev->getX(), * x2 = cur->getX(), * x3 = cur->next->getX();
+
+  if (checkIfCusp(*x1, *x2, *x3)){
     count ++;
   }
-  cur = cur->next;
-  prevSign = curSign;
+  cur = cur->next->next;
 
   while(cur != head){
-    curSign = signbit(cur->getSlopeToNext());
-    if (isCusp(prevSign, curSign)){
+    x1 = x2;
+    x2 = x3;
+    x3 = cur->getX();
+    if (checkIfCusp(*x1, *x2, *x3)){
       count ++;
     }
-    prevSign = curSign;
-    cur = cur->next;
+    cur = cur -> next;
   }
 
   return count;
