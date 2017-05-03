@@ -100,7 +100,7 @@ int main(){
   std::string homflyOutputFileBaseName = "lmknot", homflyOutputFileExt = ".out";
 
   string suffix = getFileSuffix(outputFileBaseName, outputFileExt);
-  
+
   if(suffix == "x"){
     remove((outputFileBaseName+outputFileExt).c_str());
     remove((homflyOutputFileBaseName+homflyOutputFileExt).c_str());
@@ -142,7 +142,7 @@ int main(){
 
   int k = milletMain(2, pass, homflyOutputFileName.c_str());
 
-  std::map<string, int> homOutCount =  parseHomflyOutput(homflyOutputFileName.c_str(), NUMBEROFKNOTS);
+  std::map<string, int> homOutCount =  parseHomflyOutput(homflyOutputFileName.c_str(), NUMBEROFKNOTS, suffix);
 
   printMap(homOutCount, NUMBEROFKNOTS);
 }

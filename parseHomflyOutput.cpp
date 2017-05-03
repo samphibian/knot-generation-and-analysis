@@ -30,7 +30,7 @@ the beginning of the file (printed first).  A pair of square brackets surrounds
 the zero power of both variables everywhere they occur.
 */
 
-std::map<string, int> parseHomflyOutput(const char * parseFileName, int totalNumberOfKnots){
+std::map<string, int> parseHomflyOutput(const char * parseFileName, int totalNumberOfKnots, std::string fileSuffix){
   std::map<string,int> outputMap;
 
   ifstream homflyOutput;
@@ -40,7 +40,7 @@ std::map<string, int> parseHomflyOutput(const char * parseFileName, int totalNum
     string line;
 
     ifstream br;
-    br.open("storeBR.txt");
+    br.open("storeBR" + fileSuffix +".txt");
 
     string brNot;
 
