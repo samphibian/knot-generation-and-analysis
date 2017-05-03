@@ -318,13 +318,15 @@ void checkIfV(int (* notNumbers)[crossComps], char (* notLetters)[crossComps], k
 }
 
 
-bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName, std::string fileSuffix){
+bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName, bool br?,std::string fileSuffix){
   if (numOcross == 0) return true;
 
-  ofstream storeBR;
-  storeBR.open(("storeBR" + fileSuffix + ".txt").c_str(), std::ios_base::app);
-  storeBR << calculateB(head, numOcross) << " " << calculateR(head) << std::endl;
-  storeBR.close();
+  if (br?){
+    ofstream storeBR;
+    storeBR.open(("storeBR" + fileSuffix + ".txt").c_str(), std::ios_base::app);
+    storeBR << calculateB(head, numOcross) << " " << calculateR(head) << std::endl;
+    storeBR.close();
+  }
 
 
   KnotVertex * k = head;
