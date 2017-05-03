@@ -53,11 +53,39 @@ std::string checkFileName (std::string fileName, std::string fileExt){
       }
       fileName = curFileName;
     }
+    else if (answer == 'y'){
+      remove ((fileName + fileExt).c_str());
+    }
   }
       
   std::cout << "\nSaving output file as " << fileName << fileExt << std::endl << std::endl;
 
   return fileName + fileExt;
+}
+
+std::string getFileSuffix (std::string fileName, std::string fileExt){
+  std::string ret = "x";
+  if(fileExists(fileName + fileExt)){
+    char answer;
+    std::cout << "Would you like to overwrite the current " << fileName << fileExt << " files? (y/n) ";
+    std::cin >> answer;
+    if (answer != 'y' && answer != 'Y'){
+      int i=0;
+      string curFileName = fileName;
+      while (fileExists(curFileName + fileExt)){
+        ++i;
+        std::stringstream sstm;
+        sstm << i;
+        ret = sstm.str();
+        curFileName = fileName + ret;
+      }
+      std::cout << "\nSaving output files with the suffix " << i << ". Ex: " << curFileName << fileExt << std::endl << std::endl;
+      return ret;
+    }
+    else if (answer == 'y'){
+      return ret;
+    }
+  }
 }
 
 int main(){
@@ -69,8 +97,18 @@ int main(){
   int n;
   std::string outputFileBaseName = "generatedKnots", outputFileExt = ".txt";
 
-  std::string outputFileName = checkFileName(outputFileBaseName, outputFileExt);
+  std::string homflyOutputFileBaseName = "lmknot", homflyOutputFileExt = ".out";
+
+  string suffix = getFileSuffix(outputFileBaseName, outputFileExt);
   
+  if(suffix == "x"){
+    remove((outputFileBaseName+outputFileExt).c_str());
+    remove((homflyOutputFileBaseName+homflyOutputFileExt).c_str());
+    remove("storeBR.txt");
+    suffix = "";
+  }
+  std::string outputFileName = outputFileBaseName + suffix + outputFileExt;
+
   #ifdef DEBUG
   testKnot();
   #endif
@@ -89,7 +127,7 @@ int main(){
 
   for(int i=0; i < NUMBEROFKNOTS; ++i){
     knot = new KnotVertex();
-    generateKnot(knot, n, outputFile);
+    generateKnot(knot, n, outputFile, suffix);
     outputFile << "\n\n";
     free(knot);
     knot = NULL;
@@ -100,9 +138,7 @@ int main(){
 
   const char * pass[] = {"lmpoly", fileNameToPass};
 
-  std::string homflyOutputFileBaseName = "lmknot", homflyOutputFileExt = ".out";
-
-  std::string homflyOutputFileName = checkFileName(homflyOutputFileBaseName, homflyOutputFileExt);
+  std::string homflyOutputFileName = homflyOutputFileBaseName + suffix + homflyOutputFileExt;
 
   int k = milletMain(2, pass, homflyOutputFileName.c_str());
 

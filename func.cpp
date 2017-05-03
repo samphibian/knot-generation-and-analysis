@@ -318,11 +318,11 @@ void checkIfV(int (* notNumbers)[crossComps], char (* notLetters)[crossComps], k
 }
 
 
-bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName){
+bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName, std::string fileSuffix){
   if (numOcross == 0) return true;
 
   ofstream storeBR;
-  storeBR.open("storeBR.txt", std::ios_base::app);
+  storeBR.open(("storeBR" + fileSuffix + ".txt").c_str(), std::ios_base::app);
   storeBR << calculateB(head, numOcross) << " " << calculateR(head) << std::endl;
   storeBR.close();
 
@@ -469,7 +469,7 @@ bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName
   return true;
 }
 
-void generateKnot(KnotVertex* k, int n, ofstream &outputFile) {
+void generateKnot(KnotVertex* k, int n, ofstream &outputFile, std::string fileSuffix) {
   double xvals[n], yvals[n];
 
   for (int i=0; i<n; ++i){
@@ -503,10 +503,10 @@ void generateKnot(KnotVertex* k, int n, ofstream &outputFile) {
   std::string generatedFileName = "tempGeneratedFile.txt";
 
   //failsafe:
-  if (!generateNotation(k, numberOfCrossings, generatedFileName)){
+  if (!generateNotation(k, numberOfCrossings, generatedFileName, fileSuffix)){
     free(k);
     KnotVertex * k = new KnotVertex();
-    generateKnot(k, n, outputFile);
+    generateKnot(k, n, outputFile, fileSuffix);
   }
 
   #ifdef KNOTDETAILS
