@@ -115,8 +115,6 @@ class KnotVertex{
   void getAllCrossings(knotNot * crossingList, int numOcross);
 };
 
-
-// vector<knotNot> generateNotation(KnotVertex * head);
 void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n);
 void testKnot();
 void generateKnot(KnotVertex* k, int n, ofstream & outputFile);

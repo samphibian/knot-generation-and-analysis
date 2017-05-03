@@ -103,69 +103,6 @@ std::map<string, int> parseHomflyOutput(const char * parseFileName, int totalNum
   return outputMap;
 }
 
-// void printMap(std::map<string, int> mapToSort, int totalNumberOfKnots){
-//   // code between /**/ from http://thispointer.com/how-to-sort-a-map-by-value-in-c/
-//   /**/
-//   // Declaring the type of Predicate that accepts 2 pairs and return a bool
-//   typedef std::function<bool(std::pair<string, int>, std::pair<string, int>)> Comparator;
- 
-//   // Defining a lambda function to compare two pairs. It will compare two pairs using second field
-//   Comparator compFunctor =
-//       [](std::pair<string, int> elem1 ,std::pair<string, int> elem2)
-//       {
-//         return elem1.second <= elem2.second;
-//       };
- 
-//   // Declaring a set that will store the pairs using above comparision logic
-//   std::set<std::pair<std::string, int>, Comparator> sortedSet(
-//       mapToSort.begin(), mapToSort.end(), compFunctor);
-//   /**/
-
-//   // #ifdef DEBUG
-//   std::cout << mapToSort.size() << " " << sortedSet.size() << std::endl;
-//   // #endif
-
-//   for (auto element : sortedSet){
-//     // std::cout << element.second << " " << element.first << std::endl;
-//     if (element.second == 1){
-//       std::cout << "There was " << element.second << "\n" << element.first << "knot." << std::endl
-//       << "This is " << 100.0*element.second/totalNumberOfKnots << "%" << std::endl << std::endl;
-//     }
-//     else{
-//       std::cout << "There were " << element.second << "\n" << element.first << "knots." << std::endl
-//       << "This is " << 100.0*element.second/totalNumberOfKnots << "%" << std::endl << std::endl;
-//     }
-//   }
-
-//   //   set<unsigned long>::iterator it;
-//   // for (it = sortedSet.begin(); it != sortedSet.end(); it++){
-
-//   //   std::cout << *it.second << " " << *it.first << std::endl;
-//   //   if (*it.second == 1){
-//   //     std::cout << "There was " << *it.second << "\n" << *it.first << "knot." << std::endl
-//   //     << "This is " << 100.0*(*it.second/totalNumberOfKnots << "%" << std::endl << std::endl;
-//   //   }
-//   //   else{
-//   //     std::cout << "There were " << *it.second << "\n" << *it.first << "knots." << std::endl
-//   //     << "This is " << 100.0*sortedSet.get(i).second/totalNumberOfKnots << "%" << std::endl << std::endl;
-//   //   }
-//   // }
-// }
-
-// void makeMap(std::map<string, int> mapToSort, int totalNumberOfKnots){
-//   for(map<string, int>::const_iterator it = homOutCount.begin(); it != homOutCount.end(); ++it){
-//     if (it->second == 1){
-//       std::cout << "There was " << it->second << "\n" << it->first << "knot." << std::endl
-//       << "This is " << 100.0*it->second/NUMBEROFKNOTS << "%" << std::endl << std::endl;
-//     }
-
-//     else{
-//       std::cout << "There were " << it->second << "\n" << it->first << "knots." << std::endl
-//       << "This is " << 100.0*it->second/NUMBEROFKNOTS << "%" << std::endl << std::endl;
-//     }
-//   }
-// }
-
 //everything between /**/ from http://stackoverflow.com/questions/5056645/sorting-stdmap-using-value (Oliver Charlesworth's answer)
 /**/
 template<typename A, typename B>

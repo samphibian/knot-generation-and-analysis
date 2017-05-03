@@ -24,7 +24,7 @@
 #include <time.h>
 #include "knot.h"
 
-#define NUMBEROFKNOTS 10
+#define NUMBEROFKNOTS 1000
 //a knot should be a linked list of nodes with an xval, a yval and if it has a crossing. There should be a list of crossings. Each crossing should have the index of the points of the line it crosses with and say if it's top or bottom.
 
 
