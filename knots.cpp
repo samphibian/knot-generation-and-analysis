@@ -151,8 +151,13 @@ int main(){
   int k = milletMain(2, pass, homflyOutputFileName.c_str());
 
   std::map<string, int> homOutCount;
-  if (br) homOutCount =  parseHomflyBROutput(homflyOutputFileName.c_str(), NUMBEROFKNOTS, suffix);
-  else homOutCount = parseHomflyOutput(homflyOutputFileName.c_str(), NUMBEROFKNOTS);
-
+  if (br) {
+    homOutCount =  parseHomflyBROutput(homflyOutputFileName.c_str(), NUMBEROFKNOTS, suffix);
+    printMap(homOutCount, NUMBEROFKNOTS);
+    std::cout << "Do you want to see the results without the Thurston-Bennequin notation? (y/n) ";
+    std::cin >> ans;
+    if (ans == 'n') exit(0);
+  }
+  homOutCount = parseHomflyOutput(homflyOutputFileName.c_str(), NUMBEROFKNOTS);
   printMap(homOutCount, NUMBEROFKNOTS);
 }
