@@ -171,19 +171,30 @@ std::multimap<B,A> flip_map(const std::map<A,B> &src)
 
 /**/
 
-void printMap(std::map<string, int> mapToSort, int totalNumberOfKnots)
+void printMap(std::map<string, int> mapToSort, int totalNumberOfKnots, const char * fileOutputName)
 {
    std::multimap<int, string> sortedMap = flip_map(mapToSort);
 
+
+  ofstream outputFile;
+
+  outputFile.open(fileOutputName);
+
   for(map<int, string>::const_iterator it = sortedMap.begin(); it != sortedMap.end(); ++it){
+    float percent = 100.0*it->first/totalNumberOfKnots;
+    std::string oneLine = it->second;
+    replace(oneLine.begin(), oneLine.end(), '\n', ' ');
+    outputFile << it->first << "," << oneLine << "," << percent << "\n";
+
     if (it->first == 1){
       std::cout << "There was " << it->first << "\n" << it->second << " knot." << std::endl
-      << "This is " << 100.0*it->first/totalNumberOfKnots << "%" << std::endl << std::endl;
+      << "This is " << percent << "%" << std::endl << std::endl;
     }
 
     else{
       std::cout << "There were " << it->first << "\n" << it->second << " knots." << std::endl
-      << "This is " << 100.0*it->first/totalNumberOfKnots << "%" << std::endl << std::endl;
+      << "This is " << percent << "%" << std::endl << std::endl;
     }
   }
+  outputFile.close();
 }

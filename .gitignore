@@ -2,5 +2,6 @@
 *.o
 *.out
 *.txt
+*.csv
 run
 homflyExe

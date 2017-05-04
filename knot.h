@@ -122,6 +122,6 @@ void generateKnot(KnotVertex* k, int n, ofstream & outputFile, bool br, std::str
 std::map<string, int> parseHomflyOutput(const char * parseFileName, int totalNumberOfKnots);
 std::map<string, int> parseHomflyBROutput(const char * parseFileName, int totalNumberOfKnots, std::string fileSuffix);
 
-void printMap(std::map<string, int> mapToSort, int totalNumberOfKnots);
+void printMap(std::map<string, int> mapToSort, int totalNumberOfKnots, const char * finalOutputName);
 
 #endif
