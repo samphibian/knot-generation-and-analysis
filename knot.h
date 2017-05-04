@@ -112,15 +112,15 @@ class KnotVertex{
   void printAll(); // prints all data
   void print(int index); // prints the data index points away from the given one
   bool validPoint(double *xval, double *yval); // check if new point valid
+  void getAllCrossings(knotNot * crossingList, int numOcross);
 };
 
-
-// vector<knotNot> generateNotation(KnotVertex * head);
 void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n);
 void testKnot();
-void generateKnot(KnotVertex* k, int n, ofstream & outputFile);
+void generateKnot(KnotVertex* k, int n, ofstream & outputFile, bool br, std::string fileSuffix);
 
 std::map<string, int> parseHomflyOutput(const char * parseFileName, int totalNumberOfKnots);
+std::map<string, int> parseHomflyBROutput(const char * parseFileName, int totalNumberOfKnots, std::string fileSuffix);
 
 void printMap(std::map<string, int> mapToSort, int totalNumberOfKnots);
 
