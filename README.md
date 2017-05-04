@@ -12,6 +12,13 @@ This project is designed to find the average shape of a Legendrian Knot. It does
 
 5) Output the percentage of each knot created
 
+To use on a Linux machine:
+-  `make`
+-  `./run`
+-  follow the prompts  
+  
+*Note that it will create multiple files for manual inspection/analysis*
+
 TODO:
 - add ability to generate by number of crossings
 - clean up generateNotation in func.cpp
