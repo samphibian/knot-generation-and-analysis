@@ -5,6 +5,7 @@
 /* University of California */
 /* Santa Barbara, CA 93106 */
 /* there is a hard limit of 255 crossings in this program */
+// "exit"s changed to "return"s and variable file name added by Samantha Kacir, 2017
 
 #include <signal.h>
 #include <sys/types.h>

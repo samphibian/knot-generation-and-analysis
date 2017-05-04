@@ -1,4 +1,4 @@
- # knot-generation-and-analysis
+# knot-generation-and-analysis
 
 This project is designed to find the average shape of a Legendrian Knot. It does so in the following way:
 
@@ -11,6 +11,13 @@ This project is designed to find the average shape of a Legendrian Knot. It does
 4) Repeat some large number of times, keeping track of the knot classification.
 
 5) Output the percentage of each knot created
+
+To use on a Linux machine:
+-  `make`
+-  `./run`
+-  follow the prompts  
+  
+*Note that it will create multiple files for manual inspection/analysis*
 
 TODO:
 - add ability to generate by number of crossings
@@ -49,7 +56,7 @@ https://msdn.microsoft.com/en-us/library/7k66t42c.aspx
 http://stackoverflow.com/questions/4316442/stdofstream-check-if-file-exists-before-writing  
 http://stackoverflow.com/questions/191757/how-to-concatenate-a-stdstring-and-an-int  
 http://stackoverflow.com/questions/14070940/c-printing-out-map-values  
-http://stackoverflow.com/questions/5056645/sorting-stdmap-using-value
+http://stackoverflow.com/questions/5056645/sorting-stdmap-using-value  
 *****/
 
 *Special thanks to Charles and Harold for letting me talk at them about this and acting as sounding boards*
