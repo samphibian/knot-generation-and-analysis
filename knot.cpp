@@ -438,6 +438,31 @@ bool KnotVertex::validPoint(double *xval, double *yval){
   return true;
 }
 
+void KnotVertex::getAllCrossings(knotNot * crossingList, int numOcross){  
+  KnotVertex * k = this;
+  //check each crossing. note that the last doesn't need to be checked as all in that one shoud be duplicaties
+  while(k->next != this){
+    if (k->checkCrossing()){
+      for(int i=0; i<k->getC()->size(); ++i){
+        #ifdef DEBUG
+        std::cout << "current crossing label is: " << crossingList[k->getC()->at(i).getLabel() - 1].getLabel() << std::endl;
+        #endif
+        //empty crossing generated with label -1, filled between 0 and number of crossings
+        if(crossingList[k->getC()->at(i).getLabel() - 1].getLabel() < 0 || crossingList[k->getC()->at(i).getLabel() - 1].getLabel() > numOcross + 1){
+          crossingList[k->getC()->at(i).getLabel() - 1] = k->getC()->at(i);
+
+          #ifdef DEBUG
+          std::cout << "label: " << k->getC()->at(i).getLabel() - 1 << std::endl;
+          crossingList[k->getC()->at(i).getLabel() - 1].printNot();
+          #endif
+        }
+      }
+    }
+
+    k = k->next;
+  }
+}
+
 void testKnot(){
   int numKnot = 2;
   double d1 = 1.0, d2 = 2.0, dt = 1.5;

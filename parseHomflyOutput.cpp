@@ -78,36 +78,123 @@ std::map<string, int> parseHomflyOutput(const char * parseFileName, int totalNum
   return outputMap;
 }
 
-void printMap(std::map<string, int> mapToSort, int totalNumberOfKnots){
-  // code between /**/ from http://thispointer.com/how-to-sort-a-map-by-value-in-c/
-  /**/
-  // Declaring the type of Predicate that accepts 2 pairs and return a bool
-  typedef std::function<bool(std::pair<string, int>, std::pair<string, int>)> Comparator;
- 
-  // Defining a lambda function to compare two pairs. It will compare two pairs using second field
-  Comparator compFunctor =
-      [](std::pair<string, int> elem1 ,std::pair<string, int> elem2)
-      {
-        return elem1.second <= elem2.second;
-      };
- 
-  // Declaring a set that will store the pairs using above comparision logic
-  std::set<std::pair<std::string, int>, Comparator> sortedSet(
-      mapToSort.begin(), mapToSort.end(), compFunctor);
-  /**/
+std::map<string, int> parseHomflyBROutput(const char * parseFileName, int totalNumberOfKnots, std::string fileSuffix){
+  std::map<string,int> outputMap;
+  int knotCount = 0;
 
-  #ifdef DEBUG
-  std::cout << mapToSort.size() << " " << sortedSet.size() << std::endl;
-  #endif
+  ifstream homflyOutput;
 
-  for (std::pair<std::string, int> element : sortedSet){
-    if (element.second == 1){
-      std::cout << "There was " << element.second << "\n" << element.first << "knot." << std::endl
-      << "This is " << 100.0*element.second/totalNumberOfKnots << "%" << std::endl << std::endl;
+    homflyOutput.open(parseFileName);
+
+    string line;
+
+    ifstream br;
+    br.open("storeBR" + fileSuffix +".txt");
+
+    string brNot;
+
+    while(std::getline(homflyOutput, line)){
+      std::getline(br, brNot);
+
+      string totalLine = brNot + "\n";
+
+      while (line == "") std::getline(homflyOutput, line);
+
+      while (line != ""){
+        totalLine += line + "\n";
+        std::getline(homflyOutput, line);
+      }
+
+      if(outputMap[totalLine]){
+        outputMap[totalLine]++;
+      }
+
+      else{
+        outputMap[totalLine] = 1;
+      }
+      ++knotCount;
     }
+    homflyOutput.close();
+
+    while(std::getline(br, brNot)){
+      string noCross = brNot+"\n[[1]]";
+      if(outputMap[noCross]){
+        outputMap[noCross]++;
+      }
+      else{
+        outputMap[noCross] = 1;
+      }
+      ++knotCount;
+    }
+    br.close();
+
+    ifstream brNoCross;
+    brNoCross.open("storeBR" + fileSuffix + "-NoCrossing" + ".txt");
+
+    while(std::getline(brNoCross, line)){
+      string noCross = line+"\n[[1]]";
+      if(outputMap[noCross]){
+        outputMap[noCross]++;
+      }
+      else{
+        outputMap[noCross] = 1;
+      }
+      ++knotCount;
+    }
+    brNoCross.close();
+
+    #ifdef DEBUG
+    for(map<string, int>::const_iterator it = outputMap.begin(); it != outputMap.end(); ++it){
+        std::cout << it->first << " " << it->second << std::endl;
+    }
+    #endif
+
+  return outputMap;
+}
+
+//everything between /**/ from http://stackoverflow.com/questions/5056645/sorting-stdmap-using-value (Oliver Charlesworth's answer)
+/**/
+template<typename A, typename B>
+std::pair<B,A> flip_pair(const std::pair<A,B> &p)
+{
+    return std::pair<B,A>(p.second, p.first);
+}
+
+template<typename A, typename B>
+std::multimap<B,A> flip_map(const std::map<A,B> &src)
+{
+    std::multimap<B,A> dst;
+    std::transform(src.begin(), src.end(), std::inserter(dst, dst.begin()), 
+                   flip_pair<A,B>);
+    return dst;
+}
+
+/**/
+
+void printMap(std::map<string, int> mapToSort, int totalNumberOfKnots, const char * fileOutputName)
+{
+   std::multimap<int, string> sortedMap = flip_map(mapToSort);
+
+
+  ofstream outputFile;
+
+  outputFile.open(fileOutputName);
+
+  for(map<int, string>::const_iterator it = sortedMap.begin(); it != sortedMap.end(); ++it){
+    float percent = 100.0*it->first/totalNumberOfKnots;
+    std::string oneLine = it->second;
+    replace(oneLine.begin(), oneLine.end(), '\n', ' ');
+    outputFile << it->first << "," << oneLine << "," << percent << "\n";
+
+    if (it->first == 1){
+      std::cout << "There was " << it->first << "\n" << it->second << " knot." << std::endl
+      << "This is " << percent << "%" << std::endl << std::endl;
+    }
+
     else{
-      std::cout << "There were " << element.second << "\n" << element.first << "knots." << std::endl
-      << "This is " << 100.0*element.second/totalNumberOfKnots << "%" << std::endl << std::endl;
+      std::cout << "There were " << it->first << "\n" << it->second << " knots." << std::endl
+      << "This is " << percent << "%" << std::endl << std::endl;
     }
   }
+  outputFile.close();
 }
