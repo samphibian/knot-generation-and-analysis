@@ -17,7 +17,7 @@ To use on a Linux machine:
 -  `./run`
 -  follow the prompts  
   
-*Note that it will create multiple files for manual inspection/analysis*
+*Note that it will create multiple files for manual inspection/analysis - the final counts/percents will be in finalResults files and those including Bennequin will be in finalResultsBR files.*
 
 TODO:
 - add ability to generate by number of crossings
