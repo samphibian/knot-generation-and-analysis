@@ -91,7 +91,7 @@ std::string getFileSuffix (std::string fileName, std::string fileExt){
 int main(){
 	srand(time(NULL));
   KnotVertex * knot;
-  bool br;
+  bool br, genByCross;
 
   std::cout << "\nknot-generation-and-analysis Copyright (C) 2017 Samantha Kacir\nThis program comes with ABSOLUTELY NO WARRANTY.\nThis is free software, and you are welcome to redistribute it under certain conditions."
     << std::endl << std::endl;
@@ -121,12 +121,18 @@ int main(){
   testKnot();
   #endif
 
-  char ans;
-  std::cout << "Would you like to generate knots by vertices (v) or crossings (c)?";
+  std::cout << "Would you like to generate knots by vertices (v) or crossings (c)? ";
   std::cin >> ans;
   if (ans == 'c'){
-    std::cout << "How many crossings would you like to generate for each knot?";
+    std::cout << "How many crossings would you like to generate for each knot? ";
     std::cin >> n;
+
+    if (n < 0){
+      std::cerr << "Cannot create a knot with " << n << " vertices. Good-bye." << std::endl;
+      exit(1);
+    }
+
+    genByCross = true;
   }
   else if (ans == 'v'){
     std::cout << "How many points would you like to generate for each knot? ";
@@ -136,6 +142,8 @@ int main(){
       std::cerr << "Cannot create a knot with " << n << " vertices. Good-bye." << std::endl;
       exit(1);
     }
+
+    genByCross = false;
   }
 
   std::cout << std::endl;
@@ -146,7 +154,8 @@ int main(){
 
   for(int i=0; i < NUMBEROFKNOTS; ++i){
     knot = new KnotVertex();
-    generateKnot(knot, n, outputFile, br, suffix);
+    if (genByCross) generateKnotWithCrossings(knot, n, outputFile, br, suffix);
+    else generateKnot(knot, n, outputFile, br, suffix);
     outputFile << "\n\n";
     free(knot);
     knot = NULL;
