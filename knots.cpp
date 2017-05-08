@@ -170,6 +170,8 @@ int main(){
 
   int k = milletMain(2, pass, homflyOutputFileName.c_str());
 
+  if (k != 0) exit(k);
+
   std::string finalOutputName;
   finalOutputName = "finalResultsBR" + suffix + ".csv";
 

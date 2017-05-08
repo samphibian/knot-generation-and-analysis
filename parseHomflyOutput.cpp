@@ -181,7 +181,7 @@ void printMap(std::map<string, int> mapToSort, int totalNumberOfKnots, const cha
   outputFile.open(fileOutputName);
 
   for(map<int, string>::const_iterator it = sortedMap.begin(); it != sortedMap.end(); ++it){
-    float percent = 100.0*it->first/totalNumberOfKnots;
+    float percent = (float)100.0*(float)it->first/(float)totalNumberOfKnots;
     std::string oneLine = it->second;
     replace(oneLine.begin(), oneLine.end(), '\n', ' ');
     outputFile << it->first << "," << oneLine << "," << percent << "\n";

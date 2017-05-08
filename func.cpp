@@ -498,18 +498,24 @@ void generateKnotWithCrossings(KnotVertex* k, int n, ofstream & outputFile, bool
     k->add(new KnotVertex(xvals + i, yvals + i));
     returnCrossingIfCrossing(k, k);
 
-    numberOfCrossings = k->getC()->size();
-    ++i;
+    int newNumberOfCrossings = numberOfCrossings + k->prev->getC()->size();
+
+    if (newNumberOfCrossings > n) k->remove();
+    else {
+      numberOfCrossings = newNumberOfCrossings;
+      ++i;
+    }
   }
 
-  numberOfCrossings = k->setCrossingVals();
+  bool t = numberOfCrossings == k->setCrossingVals();
 
-  // #ifdef KNOTDETAILS
+  #ifdef KNOTDETAILS
   k->printAll();
-  // #endif
+  #endif
 
 
   #ifdef DEBUG
+  std::cout << t << std::endl;
   std::cout << "number of crossings: " << numberOfCrossings << std::endl;
   #endif
 
