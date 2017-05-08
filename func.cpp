@@ -120,28 +120,28 @@ void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n){
 }
 
 bool checkUpRightCusp(float slopeFirst, float slopeSecond){
-  if (slopeFirst < slopeSecond) return true;
-  return false;
-}
-
-bool checkDownRightCusp(float slopeFirst, float slopeSecond){
   if (slopeFirst > slopeSecond) return true;
   return false;
 }
 
+bool checkDownRightCusp(float slopeFirst, float slopeSecond){
+  if (slopeFirst < slopeSecond) return true;
+  return false;
+}
+
 bool checkIfRightCusp(double x1, double x2, double x3){
-  if(x1 <= x2 && x3 <= x2 && (x1 != x2 || x2 != x3)) return true;
+  if(x1 < x2 && x3 < x2) return true;
   return false;
 }
 
 bool checkIfLeftCusp(double x1, double x2, double x3){
-  if(x1 >= x2 && x3 >= x2 && (x1 != x2 || x2 != x3)) return true;
+  if(x1 > x2 && x3 > x2) return true;
   return false;
 }
 
 bool checkIfCusp(double x1, double x2, double x3){
-  if(checkIfRightCusp) return true;
-  if(checkIfLeftCusp) return true;
+  if(checkIfRightCusp(x1, x2, x3)) return true;
+  if(checkIfLeftCusp(x1, x2, x3)) return true;
   return false;
 }
 
@@ -201,7 +201,7 @@ int totalNumberOfCusps(KnotVertex * head){
   }
   cur = cur->next->next;
 
-  while(cur != head){
+  while(cur != head->next){
     x1 = x2;
     x2 = x3;
     x3 = cur->getX();
@@ -214,8 +214,7 @@ int totalNumberOfCusps(KnotVertex * head){
   return count;
 }
 
-int sumSigns(KnotVertex * head, int numOcross){  
-  KnotVertex * k = head;
+int sumSigns(KnotVertex * head, int numOcross){
   knotNot crossingList[numOcross] = {};
   int count = 0;
 
@@ -234,7 +233,7 @@ int calculateB(KnotVertex * head, int numOcross){
   int b = s - (c/2);
 
   #ifdef DEBUG
-  std::cout << s << " " << c << " " << b << std::endl;
+  std::cout << "B: " << s << " " << c << " " << b << std::endl;
   #endif
 
   return b;
