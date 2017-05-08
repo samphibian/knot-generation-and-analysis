@@ -238,7 +238,7 @@ int calculateB(KnotVertex * head, int numOcross){
   return b;
 }
 
-void checkSameLine(int (* notNumbers)[crossComps], char (* notLetters)[crossComps], knotNot * crossingList, int i, int j){
+void checkSameLine(int *(* notNumbers), char *(* notLetters), knotNot * crossingList, int i, int j){
   KnotVertex * initVertex = (crossingList[i].*traceLetters[j])(),
     * finalVertex = (crossingList[i].*traceLetters[(j+2)%crossComps])();
   vector<knotNot>* vectorCrossings = initVertex->getC();
@@ -282,7 +282,7 @@ void checkSameLine(int (* notNumbers)[crossComps], char (* notLetters)[crossComp
   }
 }
 
-void checkIfV(int (* notNumbers)[crossComps], char (* notLetters)[crossComps], knotNot * crossingList, int i, int j){
+void checkIfV(int *(* notNumbers), char *(* notLetters), knotNot * crossingList, int i, int j){
   KnotVertex * initVertex = (crossingList[i].*traceLetters[j])(),
     * finalVertex = (crossingList[i].*traceLetters[(j+2)%crossComps])();
   vector<knotNot>* vectorCrossings = initVertex->getC();
@@ -340,8 +340,8 @@ bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName
   KnotVertex * k = head;
   knotNot crossingList[numOcross] = {};
 
-  char notLetters[numOcross][4] = {};
-  int notNumbers[numOcross][4] = {};
+  char *notLetters[numOcross];
+  int *notNumbers[numOcross];
 
   head->getAllCrossings(crossingList, numOcross);
 
