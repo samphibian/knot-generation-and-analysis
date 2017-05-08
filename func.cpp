@@ -151,39 +151,41 @@ bool checkIfCusp(double x1, double x2, double x3){
 
 //|b + r| <= -1
 
+//b + r is odd
+
 int calculateR(KnotVertex * head){
   int count = 0;
   KnotVertex * cur = head;
   double * x1 = cur->prev->getX(), * x2 = cur->getX(), * x3 = cur->next->getX();
-  bool prevSign = signbit(head->prev->getSlopeToNext()),
-   curSign = signbit(cur->getSlopeToNext());
+  float prevSlope = cur->prev->getSlopeToNext(),
+   curSlope = cur->getSlopeToNext();
 
   if (checkIfRightCusp(*x1, *x2, *x3)){
-    if (checkUpRightCusp(prevSign, curSign)) --count;
-    else if (checkDownRightCusp(prevSign, curSign)) ++count;
+    if (checkUpRightCusp(prevSlope, curSlope)) --count;
+    else if (checkDownRightCusp(prevSlope, curSlope)) ++count;
   }
   else if (checkIfLeftCusp(*x1, *x2, *x3)){
-    if (checkDownRightCusp(prevSign, curSign)) --count;
-    else if (checkUpRightCusp(prevSign, curSign)) ++count;
+    if (checkDownRightCusp(prevSlope, curSlope)) --count;
+    else if (checkUpRightCusp(prevSlope, curSlope)) ++count;
   }
   cur = cur->next;
-  prevSign = curSign;
+  prevSlope = curSlope;
 
   while(cur != head){
     x1 = x2;
     x2 = x3;
     x3 = cur->next->getX();
-    curSign = signbit(cur->getSlopeToNext());
+    curSlope = cur->getSlopeToNext();
     if (checkIfRightCusp(*x1, *x2, *x3)){
-      if (checkUpRightCusp(prevSign, curSign)) --count;
-      else if (checkDownRightCusp(prevSign, curSign)) ++count;
+      if (checkUpRightCusp(prevSlope, curSlope)) --count;
+      else if (checkDownRightCusp(prevSlope, curSlope)) ++count;
     }
     else if (checkIfLeftCusp(*x1, *x2, *x3)){
-      if (checkDownRightCusp(prevSign, curSign)) --count;
-      else if (checkUpRightCusp(prevSign, curSign)) ++count;
+      if (checkDownRightCusp(prevSlope, curSlope)) --count;
+      else if (checkUpRightCusp(prevSlope, curSlope)) ++count;
     }
     cur = cur -> next;
-    prevSign = curSign;
+    prevSlope = curSlope;
   }
 
   return (count/2);
