@@ -215,7 +215,8 @@ int totalNumberOfCusps(KnotVertex * head){
 }
 
 int sumSigns(KnotVertex * head, int numOcross){
-  knotNot crossingList[numOcross] = {};
+  knotNot * crossingList;
+  crossingList = new knotNot[numOcross];
   int count = 0;
 
   head->getAllCrossings(crossingList, numOcross);
@@ -224,6 +225,7 @@ int sumSigns(KnotVertex * head, int numOcross){
     count += crossingList[i].getSign();
   }
 
+  delete [] crossingList;
   return count;
 }
 
@@ -247,7 +249,8 @@ void checkSameLine(int (* notNumbers)[crossComps], char (* notLetters)[crossComp
 
   if(vertexNumOcross > 1){
 
-    knotNot orderedCrossings[vertexNumOcross] = {};
+    knotNot * orderedCrossings;
+    orderedCrossings = new knotNot[vertexNumOcross];
 
     for(int vertI = 0; vertI < vertexNumOcross; ++vertI){
       orderedCrossings[vertI] = vectorCrossings->at(vertI);
@@ -280,6 +283,8 @@ void checkSameLine(int (* notNumbers)[crossComps], char (* notLetters)[crossComp
         }
       }
     }
+
+    delete [] orderedCrossings;
   }
 }
 
@@ -342,8 +347,10 @@ bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName
   knotNot * crossingList;
   crossingList = new knotNot[numOcross];
 
-  char notLetters[numOcross][4] = {};
-  int notNumbers[numOcross][4] = {};
+  char (* notLetters)[crossComps];
+  notLetters = new char[numOcross][crossComps];
+  int (* notNumbers)[crossComps];
+  notNumbers = new int[numOcross][crossComps];
 
   head->getAllCrossings(crossingList, numOcross);
 
@@ -437,6 +444,9 @@ bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName
         }
         if(check == initial){
           std::cout << "No solution found for " << notLetters[i][j] << notNumbers[i][j] << std::endl;
+          delete [] crossingList;
+          delete [] notLetters;
+          delete [] notNumbers;
           return false;
           break;
         }
@@ -478,6 +488,9 @@ bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName
   }
 
   tempOutputFile.close();
+  delete [] crossingList;
+  delete [] notLetters;
+  delete [] notNumbers;
   return true;
 }
 
