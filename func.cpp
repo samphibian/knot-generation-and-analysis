@@ -498,7 +498,7 @@ void generateKnotWithCrossings(KnotVertex* k, int n, ofstream & outputFile, bool
     k->add(new KnotVertex(xvals + i, yvals + i));
     returnCrossingIfCrossing(k, k);
 
-    int newNumberOfCrossings = numberOfCrossings + k->prev->getC()->size();
+    int newNumberOfCrossings = numberOfCrossings + k->getC()->size();
 
     if (newNumberOfCrossings > n) k->remove();
     else {
