@@ -339,7 +339,8 @@ bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName
 
 
   KnotVertex * k = head;
-  knotNot crossingList[numOcross] = {};
+  knotNot * crossingList;
+  crossingList = new knotNot[numOcross];
 
   char notLetters[numOcross][4] = {};
   int notNumbers[numOcross][4] = {};
