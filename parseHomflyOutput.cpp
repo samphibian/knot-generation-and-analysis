@@ -89,7 +89,7 @@ std::map<string, int> parseHomflyBROutput(const char * parseFileName, int totalN
     string line;
 
     ifstream br;
-    br.open("storeBR" + fileSuffix +".txt");
+    br.open(("storeBR" + fileSuffix +".txt").c_str());
 
     string brNot;
 
@@ -129,7 +129,7 @@ std::map<string, int> parseHomflyBROutput(const char * parseFileName, int totalN
     br.close();
 
     ifstream brNoCross;
-    brNoCross.open("storeBR" + fileSuffix + "-NoCrossing" + ".txt");
+    brNoCross.open(("storeBR" + fileSuffix + "-NoCrossing" + ".txt").c_str());
 
     while(std::getline(brNoCross, line)){
       string noCross = line+"\n[[1]]";
