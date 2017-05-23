@@ -58,6 +58,7 @@ http://stackoverflow.com/questions/191757/how-to-concatenate-a-stdstring-and-an-
 http://stackoverflow.com/questions/14070940/c-printing-out-map-values  
 http://stackoverflow.com/questions/5056645/sorting-stdmap-using-value  
 http://stackoverflow.com/questions/2896600/how-to-replace-all-occurrences-of-a-character-in-string  
+http://www.cplusplus.com/doc/tutorial/dynamic/  
 *****/
 
 *Special thanks to Charles and Harold for letting me talk at them about this and acting as sounding boards*
