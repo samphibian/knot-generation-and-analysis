@@ -120,28 +120,28 @@ void returnCrossingIfCrossing(KnotVertex *k, KnotVertex *n){
 }
 
 bool checkUpRightCusp(float slopeFirst, float slopeSecond){
-  if (slopeFirst < slopeSecond) return true;
-  return false;
-}
-
-bool checkDownRightCusp(float slopeFirst, float slopeSecond){
   if (slopeFirst > slopeSecond) return true;
   return false;
 }
 
+bool checkDownRightCusp(float slopeFirst, float slopeSecond){
+  if (slopeFirst < slopeSecond) return true;
+  return false;
+}
+
 bool checkIfRightCusp(double x1, double x2, double x3){
-  if(x1 <= x2 && x3 <= x2 && (x1 != x2 || x2 != x3)) return true;
+  if(x1 < x2 && x3 < x2) return true;
   return false;
 }
 
 bool checkIfLeftCusp(double x1, double x2, double x3){
-  if(x1 >= x2 && x3 >= x2 && (x1 != x2 || x2 != x3)) return true;
+  if(x1 > x2 && x3 > x2) return true;
   return false;
 }
 
 bool checkIfCusp(double x1, double x2, double x3){
-  if(checkIfRightCusp) return true;
-  if(checkIfLeftCusp) return true;
+  if(checkIfRightCusp(x1, x2, x3)) return true;
+  if(checkIfLeftCusp(x1, x2, x3)) return true;
   return false;
 }
 
@@ -151,39 +151,41 @@ bool checkIfCusp(double x1, double x2, double x3){
 
 //|b + r| <= -1
 
+//b + r is odd
+
 int calculateR(KnotVertex * head){
   int count = 0;
   KnotVertex * cur = head;
   double * x1 = cur->prev->getX(), * x2 = cur->getX(), * x3 = cur->next->getX();
-  bool prevSign = signbit(head->prev->getSlopeToNext()),
-   curSign = signbit(cur->getSlopeToNext());
+  float prevSlope = cur->prev->getSlopeToNext(),
+   curSlope = cur->getSlopeToNext();
 
   if (checkIfRightCusp(*x1, *x2, *x3)){
-    if (checkUpRightCusp(prevSign, curSign)) --count;
-    else if (checkDownRightCusp(prevSign, curSign)) ++count;
+    if (checkUpRightCusp(prevSlope, curSlope)) --count;
+    else if (checkDownRightCusp(prevSlope, curSlope)) ++count;
   }
   else if (checkIfLeftCusp(*x1, *x2, *x3)){
-    if (checkDownRightCusp(prevSign, curSign)) --count;
-    else if (checkUpRightCusp(prevSign, curSign)) ++count;
+    if (checkDownRightCusp(prevSlope, curSlope)) --count;
+    else if (checkUpRightCusp(prevSlope, curSlope)) ++count;
   }
   cur = cur->next;
-  prevSign = curSign;
+  prevSlope = curSlope;
 
   while(cur != head){
     x1 = x2;
     x2 = x3;
     x3 = cur->next->getX();
-    curSign = signbit(cur->getSlopeToNext());
+    curSlope = cur->getSlopeToNext();
     if (checkIfRightCusp(*x1, *x2, *x3)){
-      if (checkUpRightCusp(prevSign, curSign)) --count;
-      else if (checkDownRightCusp(prevSign, curSign)) ++count;
+      if (checkUpRightCusp(prevSlope, curSlope)) --count;
+      else if (checkDownRightCusp(prevSlope, curSlope)) ++count;
     }
     else if (checkIfLeftCusp(*x1, *x2, *x3)){
-      if (checkDownRightCusp(prevSign, curSign)) --count;
-      else if (checkUpRightCusp(prevSign, curSign)) ++count;
+      if (checkDownRightCusp(prevSlope, curSlope)) --count;
+      else if (checkUpRightCusp(prevSlope, curSlope)) ++count;
     }
     cur = cur -> next;
-    prevSign = curSign;
+    prevSlope = curSlope;
   }
 
   return (count/2);
@@ -199,7 +201,7 @@ int totalNumberOfCusps(KnotVertex * head){
   }
   cur = cur->next->next;
 
-  while(cur != head){
+  while(cur != head->next){
     x1 = x2;
     x2 = x3;
     x3 = cur->getX();
@@ -212,9 +214,9 @@ int totalNumberOfCusps(KnotVertex * head){
   return count;
 }
 
-int sumSigns(KnotVertex * head, int numOcross){  
-  KnotVertex * k = head;
-  knotNot crossingList[numOcross] = {};
+int sumSigns(KnotVertex * head, int numOcross){
+  knotNot * crossingList;
+  crossingList = new knotNot[numOcross];
   int count = 0;
 
   head->getAllCrossings(crossingList, numOcross);
@@ -223,6 +225,7 @@ int sumSigns(KnotVertex * head, int numOcross){
     count += crossingList[i].getSign();
   }
 
+  delete [] crossingList;
   return count;
 }
 
@@ -232,13 +235,13 @@ int calculateB(KnotVertex * head, int numOcross){
   int b = s - (c/2);
 
   #ifdef DEBUG
-  std::cout << s << " " << c << " " << b << std::endl;
+  std::cout << "B: " << s << " " << c << " " << b << std::endl;
   #endif
 
   return b;
 }
 
-void checkSameLine(int *(* notNumbers), char *(* notLetters), knotNot * crossingList, int i, int j){
+void checkSameLine(int (* notNumbers)[crossComps], char (* notLetters)[crossComps], knotNot * crossingList, int i, int j){
   KnotVertex * initVertex = (crossingList[i].*traceLetters[j])(),
     * finalVertex = (crossingList[i].*traceLetters[(j+2)%crossComps])();
   vector<knotNot>* vectorCrossings = initVertex->getC();
@@ -246,7 +249,8 @@ void checkSameLine(int *(* notNumbers), char *(* notLetters), knotNot * crossing
 
   if(vertexNumOcross > 1){
 
-    knotNot orderedCrossings[vertexNumOcross] = {};
+    knotNot * orderedCrossings;
+    orderedCrossings = new knotNot[vertexNumOcross];
 
     for(int vertI = 0; vertI < vertexNumOcross; ++vertI){
       orderedCrossings[vertI] = vectorCrossings->at(vertI);
@@ -279,10 +283,12 @@ void checkSameLine(int *(* notNumbers), char *(* notLetters), knotNot * crossing
         }
       }
     }
+
+    delete [] orderedCrossings;
   }
 }
 
-void checkIfV(int *(* notNumbers), char *(* notLetters), knotNot * crossingList, int i, int j){
+void checkIfV(int (* notNumbers)[crossComps], char (* notLetters)[crossComps], knotNot * crossingList, int i, int j){
   KnotVertex * initVertex = (crossingList[i].*traceLetters[j])(),
     * finalVertex = (crossingList[i].*traceLetters[(j+2)%crossComps])();
   vector<knotNot>* vectorCrossings = initVertex->getC();
@@ -338,10 +344,13 @@ bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName
 
 
   KnotVertex * k = head;
-  knotNot crossingList[numOcross] = {};
+  knotNot * crossingList;
+  crossingList = new knotNot[numOcross];
 
-  char *notLetters[numOcross];
-  int *notNumbers[numOcross];
+  char (* notLetters)[crossComps];
+  notLetters = new char[numOcross][crossComps];
+  int (* notNumbers)[crossComps];
+  notNumbers = new int[numOcross][crossComps];
 
   head->getAllCrossings(crossingList, numOcross);
 
@@ -435,6 +444,9 @@ bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName
         }
         if(check == initial){
           std::cout << "No solution found for " << notLetters[i][j] << notNumbers[i][j] << std::endl;
+          delete [] crossingList;
+          delete [] notLetters;
+          delete [] notNumbers;
           return false;
           break;
         }
@@ -476,6 +488,9 @@ bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName
   }
 
   tempOutputFile.close();
+  delete [] crossingList;
+  delete [] notLetters;
+  delete [] notNumbers;
   return true;
 }
 

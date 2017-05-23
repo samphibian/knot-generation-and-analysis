@@ -430,8 +430,8 @@ bool KnotVertex::validPoint(double *xval, double *yval){
 
     k = k->next;
   }
-  //test if point is already the last point in the knot
-  if(*(k->getX()) == *xval && *(k->getY()) == *(yval)){
+  //test if point is directly below the last point or is already the last point in the knot
+  if(*(k->getX()) == *(xval) || (*(k->getX()) == *xval && *(k->getY()) == *(yval))){
     return false;
   }
 
