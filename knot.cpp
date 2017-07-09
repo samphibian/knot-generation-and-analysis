@@ -221,7 +221,7 @@ void KnotVertex::remove(){
               ++j;
               found = true;
               for(int k=0; k<crossComps; ++k){
-                if((match->getC()->at(j).*lettersToTrace[k])() != (crossing.*lettersToTrace[k])()) found = false;
+                if(match->getC()->at(j).getLabel() != crossing.getLabel() || (match->getC()->at(j).*lettersToTrace[k])() != (crossing.*lettersToTrace[k])()) found = false;
               }
             }
             if (found) match->getC()->erase(match->getC()->begin() + j);
