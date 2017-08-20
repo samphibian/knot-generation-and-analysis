@@ -24,9 +24,9 @@ TODO:
 - change checkSameLine in func.cpp to be KnotVertex rather than knotNot based
 - change checkIfV in func.cpp to be KnotVertex rather than knotNot based
 
-Not Working:
-- generate by crossing doesn't always do correct number of crossings
-  - this is mostly due to the `returnCrossingIfCrossing(k, k);` being outside
+Work in Progress:
+- add knot generation by crossing  
+
 
 Working:
 - Knot-Generation

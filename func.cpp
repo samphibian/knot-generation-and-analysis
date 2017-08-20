@@ -481,11 +481,39 @@ bool generateNotation(KnotVertex * head, int numOcross, std::string tempFileName
   return true;
 }
 
+void addToFileFromTemp(std::string tempFileName, ofstream & outputFile){
+  ifstream tempOutputFile;
+
+  tempOutputFile.open(tempFileName.c_str());
+
+  outputFile << tempOutputFile.rdbuf();
+
+  tempOutputFile.close();
+}
+
 void generateKnotWithCrossings(KnotVertex* k, int n, ofstream & outputFile, bool br, std::string fileSuffix){
   double xvals[n], yvals[n];
   int numberOfCrossings = 0, i=0;
 
   while (numberOfCrossings < n){
+    KnotVertex * tempK = new KnotVertex();
+    KnotVertex * track = k;
+
+    while(track->next != k){
+      KnotVertex tempVert = *track;
+      tempK->add(&tempVert);
+      track = track->next;
+    }
+
+    KnotVertex * testTempK = tempK;
+
+    while(testTempK->next != tempK){
+      std::cout << testTempK << std::endl;
+      testTempK = testTempK->next;
+    }
+
+    std::cout << "broke out" << std::endl;
+
     double tempx = ((double) rand() / (RAND_MAX)),
     tempy = ((double) rand() / (RAND_MAX));
     while(!k->validPoint(&tempx, &tempy)){
@@ -495,26 +523,45 @@ void generateKnotWithCrossings(KnotVertex* k, int n, ofstream & outputFile, bool
     xvals[i] = tempx;
     yvals[i] = tempy;
 
-    k->add(new KnotVertex(xvals + i, yvals + i));
+    KnotVertex * newVert = new KnotVertex(xvals + i, yvals + i);
 
-    // returnCrossingIfCrossing(k, k);
+    // k->add(new KnotVertex(xvals + i, yvals + i));
 
-    int newNumberOfCrossings = numberOfCrossings + k->prev->getC()->size();
+    tempK->add(newVert);
+
+    returnCrossingIfCrossing(tempK, tempK);
+
+    int testNumOcross = tempK->setCrossingVals();
+
+    std::cout << testNumOcross << std::endl;
+
+    if(testNumOcross <= n){
+      std::cout << "adding newVert to k" << std::endl;
+      k->add(newVert);
+      numberOfCrossings = testNumOcross;
+      ++i;
+    }
+
+    tempK = NULL;
+    track = NULL;
+    // int newNumberOfCrossings = numberOfCrossings + k->prev->getC()->size();
 
     // std::cout << newNumberOfCrossings << " " << k->prev->getC()->size() << std::endl;
 
-    if (newNumberOfCrossings > n) k->remove();
-    else {
-      numberOfCrossings = newNumberOfCrossings;
-      ++i;
-    }
+    // if (newNumberOfCrossings > n) k->remove();
+    // else {
+    //   numberOfCrossings = newNumberOfCrossings;
+    //   ++i;
+    // }
   }
 
-  bool t = numberOfCrossings == k->setCrossingVals();
+    returnCrossingIfCrossing(k, k);
 
-  #ifdef KNOTDETAILS
-  k->printAll();
-  #endif
+  // bool t = numberOfCrossings == k->setCrossingVals();
+
+  // #ifdef KNOTDETAILS
+  // k->printAll();
+  // #endif
 
 
   #ifdef DEBUG
@@ -526,6 +573,8 @@ void generateKnotWithCrossings(KnotVertex* k, int n, ofstream & outputFile, bool
 
   //failsafe:
   if (!generateNotation(k, numberOfCrossings, generatedFileName, br, fileSuffix)){
+    std::cout << "Error generating knot; regenerating." << std::endl;
+    k->~KnotVertex();
     free(k);
     KnotVertex * newKnot = new KnotVertex();
     generateKnotWithCrossings(newKnot, n, outputFile, br, fileSuffix);
@@ -538,6 +587,7 @@ void generateKnotWithCrossings(KnotVertex* k, int n, ofstream & outputFile, bool
   outputFile << tempOutputFile.rdbuf();
 
   tempOutputFile.close();
+  remove(generatedFileName.c_str());
 }
 
 void generateKnot(KnotVertex* k, int n, ofstream &outputFile, bool br, std::string fileSuffix) {
@@ -573,6 +623,7 @@ void generateKnot(KnotVertex* k, int n, ofstream &outputFile, bool br, std::stri
 
   //failsafe:
   if (!generateNotation(k, numberOfCrossings, generatedFileName, br, fileSuffix)){
+    remove(generatedFileName.c_str());
     free(k);
     KnotVertex * newKnot = new KnotVertex();
     generateKnot(newKnot, n, outputFile, br, fileSuffix);
