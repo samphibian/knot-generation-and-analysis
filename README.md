@@ -27,7 +27,6 @@ TODO:
 Work in Progress:
 - add knot generation by crossing  
 
-
 Working:
 - Knot-Generation
 - Crossing Generation

@@ -54,9 +54,27 @@ KnotVertex::~KnotVertex(){
 }
 
 void KnotVertex::add(KnotVertex* v){
-  if(this->x == NULL){
+  if(this->prev == this && this->x == NULL){
     this->x = v->getX();
     this->y = v->getY();
+    this->prev = this;
+    this->next = this;
+  }
+  else if(this->prev == this && this->x != NULL){
+    
+    returnCrossingIfCrossing(this, v);
+    
+    v->ident = this->ident + 1;
+    this->next = v;
+    v->prev = this;
+    v->next = this;
+    this->prev = v;
+    
+    float curSlopeToNext = (float)(*(this->next->y)-*(this->y))/(*(this->next->x)-*(this->x));
+    this->slopeToNext = curSlopeToNext;
+    
+    float vSlopeToNext =  (float)(*(v->next->y)-*(v->y))/(*(v->next->x)-*(v->x));
+    v->slopeToNext = vSlopeToNext;
   }
   else{
     KnotVertex* temp = this->prev;
