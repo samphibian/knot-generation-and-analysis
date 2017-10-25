@@ -501,11 +501,8 @@ void generateKnotWithCrossings(KnotVertex* k, int n, ofstream & outputFile, bool
 
     KnotVertex tempVertices[numberOfVertices];
 
-    std::cout << "building " << numberOfVertices << std::endl;
-
     for (int tt = 0; tt<numberOfVertices; ++tt){
       tempVertices[tt] = KnotVertex(&xvals[tt], &yvals[tt]);
-      std::cout << "added " << tt << std::endl;
       tempK->add(tempVertices + tt);
     }
 
@@ -517,7 +514,6 @@ void generateKnotWithCrossings(KnotVertex* k, int n, ofstream & outputFile, bool
       tempy = ((double) rand() / (RAND_MAX));
     }
 
-    std::cout << "setting newVert" << std::endl;
     KnotVertex * tempVert = new KnotVertex(&tempx, &tempy);
 
     tempK->add(tempVert);
@@ -525,9 +521,11 @@ void generateKnotWithCrossings(KnotVertex* k, int n, ofstream & outputFile, bool
     returnCrossingIfCrossing(tempK, tempK);
 
     int testNumOcross = tempK->setCrossingVals();
-    tempK->printAll();
 
+    #ifdef DEBUG
+    tempK->printAll();
     std::cout << "testNumOcross: " << testNumOcross << "\t numOvert: " << numberOfVertices << std::endl;
+    #endif
 
     if(testNumOcross <= n){
       numberOfCrossings = testNumOcross;
@@ -547,9 +545,7 @@ void generateKnotWithCrossings(KnotVertex* k, int n, ofstream & outputFile, bool
     }
 
     delete tempK;
-    std::cout << "ONE REP DOWN" << std::endl << std::endl;
   }
-  std::cout << std::endl << "REPS DONE" << std::endl << std::endl;
 
   KnotVertex * vertices[numberOfVertices];
   for (int v = 0; v < numberOfVertices; ++v){
@@ -561,9 +557,9 @@ void generateKnotWithCrossings(KnotVertex* k, int n, ofstream & outputFile, bool
 
   bool t = numberOfCrossings == k->setCrossingVals();
 
-  // #ifdef KNOTDETAILS
+  #ifdef KNOTDETAILS
   k->printAll();
-  // #endif
+  #endif
 
 
   #ifdef DEBUG
