@@ -19,6 +19,7 @@
 
 #include "knot.h"
 #include <algorithm>
+#include <vector>
 
 
 typedef KnotVertex * (knotNot::*traceLettersFuncs)();
@@ -492,40 +493,41 @@ void addToFileFromTemp(std::string tempFileName, ofstream & outputFile){
 }
 
 void generateKnotWithCrossings(KnotVertex* k, int n, ofstream & outputFile, bool br, std::string fileSuffix){
-  double xvals[n], yvals[n];
-  int numberOfCrossings = 0, i=0;
+  std::vector<double> xvals, yvals;
+  int numberOfCrossings = 0, numberOfVertices = 0, i=0, limitTries = 0;
 
   while (numberOfCrossings < n){
     KnotVertex * tempK = new KnotVertex();
-    KnotVertex * track = k;
 
-    while(track->next != k){
-      KnotVertex tempVert = *track;
-      tempK->add(&tempVert);
-      track = track->next;
+    KnotVertex tempVertices[numberOfVertices];
+
+    std::cout << "building " << numberOfVertices << std::endl;
+
+    for (int tt = 0; tt<numberOfVertices; ++tt){
+      tempVertices[tt] = KnotVertex(&xvals[tt], &yvals[tt]);
+      std::cout << "added " << tt << std::endl;
+      tempK->add(tempVertices + tt);
+      ++tt;
     }
-
-    KnotVertex * testTempK = tempK;
-
-    while(testTempK->next != tempK){
-      std::cout << testTempK << std::endl;
-      testTempK = testTempK->next;
-    }
-
-    std::cout << "broke out" << std::endl;
 
     double tempx = ((double) rand() / (RAND_MAX)),
-    tempy = ((double) rand() / (RAND_MAX));
-    while(!k->validPoint(&tempx, &tempy)){
+      tempy = ((double) rand() / (RAND_MAX));
+
+    while(!tempK->validPoint(&tempx, &tempy)){
       tempx = ((double) rand() / (RAND_MAX));
       tempy = ((double) rand() / (RAND_MAX));
     }
-    xvals[i] = tempx;
-    yvals[i] = tempy;
 
-    KnotVertex * newVert = new KnotVertex(xvals + i, yvals + i);
+    std::cout << "creating newVert" << std::endl;
+    if (numberOfVertices < xvals.size())
+      xvals[i] = tempx;
+    else xvals.push_back(tempx);
+    if (numberOfVertices < yvals.size())
+      yvals[i] = tempy;
+    else yvals.push_back(tempy);
 
-    // k->add(new KnotVertex(xvals + i, yvals + i));
+    std::cout << "setting newVert" << std::endl;
+    KnotVertex * newVert = new KnotVertex(&xvals[i], &yvals[i]);
 
     tempK->add(newVert);
 
@@ -536,31 +538,37 @@ void generateKnotWithCrossings(KnotVertex* k, int n, ofstream & outputFile, bool
     std::cout << testNumOcross << std::endl;
 
     if(testNumOcross <= n){
-      std::cout << "adding newVert to k" << std::endl;
-      k->add(newVert);
       numberOfCrossings = testNumOcross;
+      ++numberOfVertices;
+      limitTries = 0;
       ++i;
     }
+    else{
+      if (limitTries > 10) {
+        --i;
+        --numberOfVertices;
+        limitTries = 0;
+      }
+      else ++limitTries;
+    }
 
-    tempK = NULL;
-    track = NULL;
-    // int newNumberOfCrossings = numberOfCrossings + k->prev->getC()->size();
+    delete tempK;
+    std::cout << "ONE REP DOWN" << std::endl << std::endl;
+  }
+  std::cout << std::endl << "REPS DONE" << std::endl << std::endl;
 
-    // std::cout << newNumberOfCrossings << " " << k->prev->getC()->size() << std::endl;
-
-    // if (newNumberOfCrossings > n) k->remove();
-    // else {
-    //   numberOfCrossings = newNumberOfCrossings;
-    //   ++i;
-    // }
+  KnotVertex * vertices[numberOfVertices];
+  for (int v = 0; v < numberOfVertices; ++v){
+    vertices[v] = new KnotVertex(&xvals[v], &yvals[v]);
+    k->add(vertices[v]);
   }
 
-    returnCrossingIfCrossing(k, k);
+  returnCrossingIfCrossing(k, k);
 
-  // bool t = numberOfCrossings == k->setCrossingVals();
+  bool t = numberOfCrossings == k->setCrossingVals();
 
   // #ifdef KNOTDETAILS
-  // k->printAll();
+  k->printAll();
   // #endif
 
 

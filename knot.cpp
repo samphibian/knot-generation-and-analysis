@@ -60,29 +60,9 @@ void KnotVertex::add(KnotVertex* v){
     this->prev = this;
     this->next = this;
   }
-  else if(this->prev == this && this->x != NULL){
-    
-    returnCrossingIfCrossing(this, v);
-    
-    v->ident = this->ident + 1;
-    this->next = v;
-    v->prev = this;
-    v->next = this;
-    this->prev = v;
-    
-    float curSlopeToNext = (float)(*(this->next->y)-*(this->y))/(*(this->next->x)-*(this->x));
-    this->slopeToNext = curSlopeToNext;
-    
-    float vSlopeToNext =  (float)(*(v->next->y)-*(v->y))/(*(v->next->x)-*(v->x));
-    v->slopeToNext = vSlopeToNext;
-  }
   else{
     KnotVertex* temp = this->prev;
-    // while(temp->next != this) {
-    //   std::cout<<this << " : " << temp->next<<std::endl;
-    //   temp = temp->next;
-    // }
-    
+
     returnCrossingIfCrossing(this, v);
     
     v->ident = temp->ident + 1;
