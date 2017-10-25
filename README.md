@@ -62,4 +62,5 @@ http://stackoverflow.com/questions/5056645/sorting-stdmap-using-value
 http://stackoverflow.com/questions/2896600/how-to-replace-all-occurrences-of-a-character-in-string  
 *****/
 
+This project was done as a math research project under the advisement of Professor Lisa Traynor of Bryn Mawr College's Department of Mathematics and Ph.D. candidate Samantha Pezzimenti.  
 *Special thanks to Charles and Harold for letting me talk at them about this and acting as sounding boards*
