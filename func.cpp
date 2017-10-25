@@ -494,7 +494,7 @@ void addToFileFromTemp(std::string tempFileName, ofstream & outputFile){
 
 void generateKnotWithCrossings(KnotVertex* k, int n, ofstream & outputFile, bool br, std::string fileSuffix){
   std::vector<double> xvals, yvals;
-  int numberOfCrossings = 0, numberOfVertices = 0, i=0, limitTries = 0;
+  int numberOfCrossings = 0, numberOfVertices = 0, limitTries = 0;
 
   while (numberOfCrossings < n){
     KnotVertex * tempK = new KnotVertex();
@@ -518,18 +518,10 @@ void generateKnotWithCrossings(KnotVertex* k, int n, ofstream & outputFile, bool
       tempy = ((double) rand() / (RAND_MAX));
     }
 
-    std::cout << "creating newVert" << std::endl;
-    if (numberOfVertices < xvals.size())
-      xvals[i] = tempx;
-    else xvals.push_back(tempx);
-    if (numberOfVertices < yvals.size())
-      yvals[i] = tempy;
-    else yvals.push_back(tempy);
-
     std::cout << "setting newVert" << std::endl;
-    KnotVertex * newVert = new KnotVertex(&xvals[i], &yvals[i]);
+    KnotVertex * tempVert = new KnotVertex(&tempx, &tempy);
 
-    tempK->add(newVert);
+    tempK->add(tempVert);
 
     returnCrossingIfCrossing(tempK, tempK);
 
@@ -539,13 +531,15 @@ void generateKnotWithCrossings(KnotVertex* k, int n, ofstream & outputFile, bool
 
     if(testNumOcross <= n){
       numberOfCrossings = testNumOcross;
+      xvals.push_back(tempx);
+      yvals.push_back(tempy);
       ++numberOfVertices;
       limitTries = 0;
-      ++i;
     }
     else{
       if (limitTries > 10) {
-        --i;
+        xvals.pop_back();
+        yvals.pop_back();
         --numberOfVertices;
         limitTries = 0;
       }
