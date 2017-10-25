@@ -507,7 +507,6 @@ void generateKnotWithCrossings(KnotVertex* k, int n, ofstream & outputFile, bool
       tempVertices[tt] = KnotVertex(&xvals[tt], &yvals[tt]);
       std::cout << "added " << tt << std::endl;
       tempK->add(tempVertices + tt);
-      ++tt;
     }
 
     double tempx = ((double) rand() / (RAND_MAX)),
@@ -526,8 +525,9 @@ void generateKnotWithCrossings(KnotVertex* k, int n, ofstream & outputFile, bool
     returnCrossingIfCrossing(tempK, tempK);
 
     int testNumOcross = tempK->setCrossingVals();
+    tempK->printAll();
 
-    std::cout << testNumOcross << std::endl;
+    std::cout << "testNumOcross: " << testNumOcross << "\t numOvert: " << numberOfVertices << std::endl;
 
     if(testNumOcross <= n){
       numberOfCrossings = testNumOcross;
