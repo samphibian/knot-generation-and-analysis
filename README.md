@@ -22,10 +22,7 @@ To use on a Linux machine:
 TODO:
 - clean up generateNotation in func.cpp
 - change checkSameLine in func.cpp to be KnotVertex rather than knotNot based
-- change checkIfV in func.cpp to be KnotVertex rather than knotNot based
-
-Work in Progress:
-- add knot generation by crossing  
+- change checkIfV in func.cpp to be KnotVertex rather than knotNot based  
 
 Working:
 - Knot-Generation
@@ -36,6 +33,7 @@ Working:
 - parse homfly output
 - compute percentage of each knot created
 - add B/R notation/parsing 
+- add knot generation by crossing  
 
 Notation Generation:
 - No-crossing knots
