@@ -36,8 +36,8 @@ KnotVertex::KnotVertex(){
   this->y = NULL;
   c = new vector<knotNot>();
   this->slopeToNext = 0;
-  prev = this;
-  next = this;
+  this->prev = this;
+  this->next = this;
 }
 
 KnotVertex::KnotVertex (double * x, double * y) {
@@ -46,31 +46,30 @@ KnotVertex::KnotVertex (double * x, double * y) {
   this->y = y;
   c = new vector<knotNot>();
   this->slopeToNext = 0;
-  prev = this;
-  next = this;
+  this->prev = this;
+  this->next = this;
 }
 
 KnotVertex::~KnotVertex(){
 }
 
 void KnotVertex::add(KnotVertex* v){
-  if(this->x == NULL){
+  if(this->prev == this && this->x == NULL){
     this->x = v->getX();
     this->y = v->getY();
+    this->prev = this;
+    this->next = this;
   }
   else{
-    KnotVertex* temp = this;
-    while(temp->next != this) {
-      temp = temp->next;
-    }
-    
+    KnotVertex* temp = this->prev;
+
     returnCrossingIfCrossing(this, v);
     
     v->ident = temp->ident + 1;
     temp->next = v;
     v->prev = temp;
     v->next = this;
-    this -> prev = v;
+    this->prev = v;
     
     float curSlopeToNext = (float)(*(temp->next->y)-*(temp->y))/(*(temp->next->x)-*(temp->x));
     temp->slopeToNext = curSlopeToNext;
@@ -193,13 +192,47 @@ void KnotVertex::remove(){
     c = NULL;
   }
   else{
-    KnotVertex* n = next;
-    this->next = n->next;
-    n->next->prev = this;
+    #ifdef DEBUG
+    std::cout << "removing last point" << std::endl;
+    #endif
+    
+    KnotVertex* n = this->prev;
+    this->prev = n->prev;
+    n->prev->next = this;
     n->prev = NULL;
     n->next = NULL;
     n->x = NULL;
     n->y = NULL;
+    if(n->checkCrossing()){
+      for(int m = 0; m < n->getC()->size(); ++m){
+        knotNot crossing = n->getC()->at(m);
+        for(int i=0; i<crossComps; ++i){
+          if((crossing.*lettersToTrace[i])() != n){
+            KnotVertex * match = (crossing.*lettersToTrace[i])();
+            bool found = false;
+            int j = -1, maxCount = match->getC()->size();
+            
+            #ifdef DEBUG
+            std::cout<<maxCount<<": ";
+            #endif
+
+            while(!found && j < maxCount){
+              ++j;
+              found = true;
+              for(int k=0; k<crossComps; ++k){
+                if((match->getC()->at(j).*lettersToTrace[k])() != (crossing.*lettersToTrace[k])()) found = false;
+              }
+            }
+            if (found) match->getC()->erase(match->getC()->begin() + j);
+            
+            #ifdef DEBUG
+            std::cout<<match->getC()->size()<<std::endl;
+            #endif
+
+          }
+        }
+      }
+    }
     n->c = NULL;
 
     this->slopeToNext = (float)(*(this->next->y)-*(this->y))/(*(this->next->x)-*(this->x));
@@ -233,7 +266,7 @@ int KnotVertex::setCrossingVals(){
                 a->getC()->at(j).setLabel(lab);
 
                 #ifdef DEBUG
-                std::cout << "Setting a\n\tLabel: " << a->getC()->at(j).getLabel() <<std::endl;checkCrossing
+                std::cout << "Setting a\n\tLabel: " << a->getC()->at(j).getLabel() <<std::endl;
                 #endif
 
                 numFound++;

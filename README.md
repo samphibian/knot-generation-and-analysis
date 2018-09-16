@@ -20,10 +20,9 @@ To use on a Linux machine:
 *Note that it will create multiple files for manual inspection/analysis - the final counts/percents will be in finalResults files and those including Bennequin will be in finalResultsBR files.*
 
 TODO:
-- add ability to generate by number of crossings
 - clean up generateNotation in func.cpp
 - change checkSameLine in func.cpp to be KnotVertex rather than knotNot based
-- change checkIfV in func.cpp to be KnotVertex rather than knotNot based
+- change checkIfV in func.cpp to be KnotVertex rather than knotNot based  
 
 Working:
 - Knot-Generation
@@ -34,6 +33,7 @@ Working:
 - parse homfly output
 - compute percentage of each knot created
 - add B/R notation/parsing 
+- add knot generation by crossing  
 
 Notation Generation:
 - No-crossing knots
@@ -60,4 +60,5 @@ http://stackoverflow.com/questions/5056645/sorting-stdmap-using-value
 http://stackoverflow.com/questions/2896600/how-to-replace-all-occurrences-of-a-character-in-string  
 *****/
 
+This project was done as a math research project under the advisement of Professor Lisa Traynor of Bryn Mawr College's Department of Mathematics and Ph.D. candidate Samantha Pezzimenti.  
 *Special thanks to Charles and Harold for letting me talk at them about this and acting as sounding boards*
